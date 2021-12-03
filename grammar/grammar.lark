@@ -1,0 +1,33 @@
+start:	statement*
+statement:	directive | WS+
+directive:	prefixid | triples WS* "." WS*
+
+prefixid:	"@prefix" WS+ prefixname? ":" WS+ uriref WS+ "."
+prefixname: NAMECHAR+
+uriref: "<" RELATIVEURI+ ">"
+
+triples: subject WS+ predicateobjectlist
+subject: resource
+resource: uriref | qname
+qname: prefixname? ":" name
+name: NAMECHAR+
+predicateobjectlist: verb WS+ objectlist ( WS* ";" WS* verb WS+ objectlist )* (WS* ";")?
+objectlist: object (WS* "," WS* object)*
+object: resource | literal | blank
+verb: predicate | "a"
+predicate: resource
+literal: quotedstring ( "@" language )?
+quotedstring:	"\"" NAMECHAR+ "\""
+language: ("a".."z")+ ("-" ("a".."z" | "0".."9")+ )*
+blank: "[" WS* predicateobjectlist WS* "]"
+
+// Tokens
+NAMECHAR: "A".."Z" | "_" | "a".."z" | "0".."9" | "-" | "," | "À".."ÿ"
+RELATIVEURI: "A".."Z" | "a".."z" | ":" | "/" | "." | "0".."9" | "#" | "-"
+COMMENT: /#[^\n]*/
+
+%import common.WS -> WS
+
+// Disregard spaces in text and comments
+%ignore WS
+%ignore COMMENT
