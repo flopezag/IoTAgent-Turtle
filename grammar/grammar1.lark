@@ -8,28 +8,43 @@ prefixname_ns: PREFIXNAME_PREFIX? ":"
 triples: subject predicateobjectlist
 subject: iri
 iri: URIREF | prefixedname
-predicateobjectlist: verb objectlist
+predicateobjectlist: verb objectlist (";" (verb objectlist)?)*
 objectlist: object ("," object)*
-object: iri
-verb: "a"
+object: iri | literal | blanknodepropertylist
+literal: rdfliteral
+rdfliteral: string (langtag | "^^" iri)?
+string: ESCAPED_STRING
+verb: predicate | "a"
+predicate: iri
 prefixedname: PNAME_LN | PNAME_NS
+blanknodepropertylist: "[" predicateobjectlist "]"
+langtag: LANGTAG
 
 // Tokens
 PREFIXNAME_PREFIX: PREFIXNAME_CHARS_BASE ((PREFIXNAME_CHARS | ".")* PREFIXNAME_CHARS)?
-PREFIXNAME_CHARS_BASE: "A".."Z" | "a".."z"
-PREFIXNAME_CHARS: PREFIXNAME_CHARS_U | "-" | "0".."9"
+PREFIXNAME_CHARS_BASE: LETTER
+PREFIXNAME_CHARS: PREFIXNAME_CHARS_U | "-" | DIGIT
 PREFIXNAME_CHARS_U: PREFIXNAME_CHARS_BASE | "_"
 PNAME_LN: PNAME_NS PN_LOCAL
 PNAME_NS: PREFIXNAME_PREFIX? ":"
-PN_LOCAL: (PREFIXNAME_CHARS_U | ":" | "0".."9" | PLX) ((PREFIXNAME_CHARS | "." | ":" | PLX)* (PREFIXNAME_CHARS | ":" | PLX))?
+PN_LOCAL: (PREFIXNAME_CHARS_U | ":" | DIGIT | PLX) ((PREFIXNAME_CHARS | "." | ":" | PLX)* (PREFIXNAME_CHARS | ":" | PLX))?
 PLX: PERCENT
-PERCENT: "%" HEX HEX
-HEX: "0".."9" | "A".."F" | "a".."f"
+PERCENT: "%" HEXDIGIT HEXDIGIT
+LANGTAG: "@" [LCASE_LETTER | UCASE_LETTER]+ ("-" [LCASE_LETTER | UCASE_LETTER | DIGIT]+)*
 URIREF: "<" /[^<>{}]+/ ">"
 COMMENT: /#[^\n]*/
 
 
+
 %import common.WS -> WS
+%import common.LCASE_LETTER -> LCASE_LETTER
+%import common.UCASE_LETTER -> UCASE_LETTER
+%import common.DIGIT -> DIGIT
+%import common.HEXDIGIT -> HEXDIGIT
+%import common.ESCAPED_STRING -> ESCAPED_STRING
+%import common.LETTER -> LETTER
+
+
 
 // Disregard spaces in text and comments
 %ignore WS
