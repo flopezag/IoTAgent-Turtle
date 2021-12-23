@@ -14,7 +14,7 @@ object: iri | literal | blanknodepropertylist
 literal: rdfliteral
 rdfliteral: string (langtag | "^^" iri)?
 string: ESCAPED_STRING
-verb: predicate | "a"
+verb: predicate | VERB
 predicate: iri
 prefixedname: PNAME_LN | PNAME_NS
 blanknodepropertylist: "[" predicateobjectlist "]"
@@ -33,6 +33,7 @@ PERCENT: "%" HEXDIGIT HEXDIGIT
 LANGTAG: "@" [LCASE_LETTER | UCASE_LETTER]+ ("-" [LCASE_LETTER | UCASE_LETTER | DIGIT]+)*
 URIREF: "<" /[^<>{}]+/ ">"
 COMMENT: /#[^\n]*/
+VERB: "a"
 
 
 

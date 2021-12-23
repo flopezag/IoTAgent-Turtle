@@ -1,14 +1,15 @@
 import sys
-from transformer import TreeToJson
+from transform.transformer import TreeToJson
 from lark import Lark
+from pprint import pprint
 
 
 def init():
     # Open the grammar file
-    with open("./grammar/grammar.lark") as f:
+    with open("./grammar/grammar1.lark") as f:
         grammar = f.read()
 
-    parser = Lark(grammar, start='start', parser='earley')
+    parser = Lark(grammar, start='start', parser='lalr')
 
     return parser
 
@@ -20,5 +21,5 @@ if __name__ == '__main__':
     with open(sys.argv[1]) as f:
         tree = myparser.parse(f.read())
         par = transform.transform(tree)
-    #with open(sys.argv[1]) as f:
-    #    print(json_parser.parse(f.read()))
+
+    pprint(transform.get_context())
