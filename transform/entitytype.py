@@ -33,10 +33,13 @@ class EntityType:
         return data, string
 
     def transform(self, string):
-        data_type, string = self.__find_entity_type__(string=string)
+        data_type, new_string = self.__find_entity_type__(string=string)
 
         if data_type == 'Component':
-            self.dataset.add_component(component=string)
+            self.dataset.add_components(component=new_string)
+        elif data_type == 'Dataset':
+            title = string[0].split(':')[1]
+            self.dataset.add_data(title=title, data=new_string)
 
     def get_dataset(self):
         return self.dataset.get()

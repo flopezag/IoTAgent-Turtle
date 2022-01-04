@@ -14,10 +14,7 @@ class TreeToJson(Transformer):
         self.context.add_context(context)
 
     def triples(self, triple):
-        print(triple)
-        print()
-
-        self.entity_type.__find_entity_type__(string=triple)
+        self.entity_type.transform(string=triple)
         return triple
 
     def predicate(self, pre):

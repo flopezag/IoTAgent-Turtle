@@ -59,6 +59,13 @@ JSON-LD
             "fr"
         ]
     },
+    "rdfs:label": {
+        "type": "LanguageProperty",
+        "LanguageMap": {
+            "en": "Population by sex, age and local administrative unit",
+            "fr": "Population par sexe, âge et unité administrative locale"
+        }
+    },
     "description": {     // what is the difference between description and datasetDescription
         "type": "Property",
         "value": [

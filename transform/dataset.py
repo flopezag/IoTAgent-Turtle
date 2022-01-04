@@ -11,9 +11,9 @@ class Dataset:
                 "type": "Property",
                 "value": list()
             },
-            "description": {
-                "type": "Property",
-                "value": list()
+            "rdfs:label": {
+                "type": "LanguageProperty",
+                "LanguageMap": dict()
             },
             "@context": dict()
         }
@@ -39,30 +39,43 @@ class Dataset:
             }
         }
 
-    def add_component(self, component):
+    def add_components(self, component):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
-        type = [x for x in ['qb:attribute', 'qb:dimension', 'qb:measure'] if x in component][0]
-        position = component.index(type) + 1
+        type_component = [x for x in ['qb:attribute', 'qb:dimension', 'qb:measure'] if x in component][0]
+        position = component.index(type_component) + 1
 
-        if type == 'qb:attribute':
-            self.attributes['stat:attribute']['value'].append(component[position])
-        elif type == 'qb:dimension':
-            self.dimensions['stat:dimension']['value'].append(component[position])
-        elif type == 'qb:measure':
-            self.unitMeasures['stat:unitMeasure']['value'].append(component[position])
+        if type_component == 'qb:attribute':
+            self.attributes['stat:attribute']['value'].append(component[position][0])
+        elif type_component == 'qb:dimension':
+            self.dimensions['stat:dimension']['value'].append(component[position][0])
+        elif type_component == 'qb:measure':
+            self.unitMeasures['stat:unitMeasure']['value'].append(component[position][0])
         else:
-            print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type}")
+            print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
             exit(-1)
 
     def get(self):
         self.data = self.data | self.dimensions | self.attributes | self.unitMeasures
         return self.data
 
+    def add_data(self, title, data):
+        print(data)
 
-if __name__ == '__main__':
-    a = Dataset()
+        # We need to complete the data corresponding to the Dataset: rdfs:label
+        position = data.index('rdfs:label') + 1
+        description = data[position]
 
-    # a.print_context()
-    # a.add_context({'rdf': '<http://www.w3.org/1999/02/22-rdf-syntax-ns#>'})
-    # a.print_context()
+        descriptions = [x[0].replace("\"", "") for x in description]
+        languages = [x[1].replace("@", "").lower() for x in description]
+
+        for i in range(0, len(languages)):
+            self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
+
+        # Complete the information of the language with the previous information
+        self.data['language']['value'] = languages
+
+        # Add the title
+        self.data['title']['value'] = title
+
+        print(self.data['rdfs:label'])
