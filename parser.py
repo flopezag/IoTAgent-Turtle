@@ -23,3 +23,4 @@ if __name__ == '__main__':
         par = transform.transform(tree)
 
     pprint(transform.get_context())
+    pprint(transform.get_dataset())

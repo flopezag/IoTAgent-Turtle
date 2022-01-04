@@ -1,10 +1,12 @@
 from lark import Transformer, Tree, Token
 from transform.context import Context
+from transform.entitytype import EntityType
 
 
 class TreeToJson(Transformer):
     def __init__(self):
         self.context = Context()
+        self.entity_type = EntityType()
 
     def prefixid(self, s):
         context = dict()
@@ -14,6 +16,8 @@ class TreeToJson(Transformer):
     def triples(self, triple):
         print(triple)
         print()
+
+        self.entity_type.__find_entity_type__(string=triple)
         return triple
 
     def predicate(self, pre):
@@ -70,3 +74,10 @@ class TreeToJson(Transformer):
 
     def get_context(self):
         return self.context.get_context()
+
+    def get_dataset(self):
+        return self.entity_type.get_dataset()
+
+    def blanknodepropertylist(self, property_list):
+        self.entity_type.transform(string=property_list)
+        return property_list
