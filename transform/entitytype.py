@@ -1,6 +1,7 @@
 from transform.dataset import Dataset
 from transform.dimension import Dimension
 from transform.conceptschema import ConceptSchema
+from transform.codelist import CodeList
 
 
 class EntityType:
@@ -10,17 +11,17 @@ class EntityType:
             'qb:ComponentSpecification': 'Component',
             'qb:CodedProperty': 'Dimension',
             'qb:DimensionProperty': 'Dimension',
-            'rdfs:Class': '...',
+            'rdfs:Class': 'Class',
+            'owl:Class': 'Class',
             'skos:ConceptScheme': 'ConceptScheme',
-            'skos:Concept': '...',
-            'isc:age': '...',  # Problem with this...
-            'isc:sex': '...',
-            'isc:lau': '...'
+            'skos:Concept': '...'
         }
 
         self.dataset = Dataset()
         self.dimensions = list()
         self.concept_schemas = list()
+        self.codeLists = list()
+        self.codeListIds = list()
 
     def __find_entity_type__(self, string):
         """
@@ -32,7 +33,15 @@ class EntityType:
 
         position = string.index('a') + 1
         data = string[position][0]
-        data = self.entities[data]
+
+        # We have two options, a well know object list to be found in the self.entities or
+        # the codelist defined in the turtle file
+        try:
+            data = self.entities[data]
+        except KeyError:
+            # We found a CodeList or any other thing, check the list of codeList found in the turtle file
+            if data not in self.codeListIds:
+                print(f"Received a unexpected entity type: {data}")
 
         return data, string
 
@@ -54,6 +63,12 @@ class EntityType:
             concept_schema_id = string[0].split(':')[1]
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=new_string)
             self.concept_schemas.append(concept_schema)
+        elif data_type == 'Class':
+            code_list = CodeList()
+            code_list_id = string[0].split(':')[1]
+            code_list.add_data(code_list_id=code_list_id, data=new_string)
+            self.codeLists.append(code_list)
+            self.codeListIds.append(string[0])
 
     def get_dataset(self):
         return self.dataset.get()
@@ -63,3 +78,6 @@ class EntityType:
 
     def get_concept_schemas(self):
         return self.concept_schemas
+
+    def get_code_lists(self):
+        return self.codeLists

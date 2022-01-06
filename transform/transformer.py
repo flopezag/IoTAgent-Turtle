@@ -84,3 +84,6 @@ class TreeToJson(Transformer):
 
     def get_concept_schemas(self):
         return self.entity_type.get_concept_schemas()
+
+    def get_code_lists(self):
+        return self.entity_type.get_code_lists()

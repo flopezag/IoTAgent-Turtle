@@ -26,3 +26,4 @@ if __name__ == '__main__':
     pprint(transform.get_dataset())
     [pprint(x.get()) for x in transform.get_dimensions()]
     [pprint(x.get()) for x in transform.get_concept_schemas()]
+    [pprint(x.get()) for x in transform.get_code_lists()]
