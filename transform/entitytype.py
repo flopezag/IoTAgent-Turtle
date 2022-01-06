@@ -1,4 +1,5 @@
 from transform.dataset import Dataset
+from transform.dimension import Dimension
 
 
 class EntityType:
@@ -17,6 +18,7 @@ class EntityType:
         }
 
         self.dataset = Dataset()
+        self.dimensions = list()
 
     def __find_entity_type__(self, string):
         """
@@ -40,9 +42,14 @@ class EntityType:
         elif data_type == 'Dataset':
             title = string[0].split(':')[1]
             self.dataset.add_data(title=title, data=new_string)
+        elif data_type == 'Dimension':
+            dimension = Dimension()
+            dimension_id = string[0].split(':')[1]
+            dimension.add_data(dimension_id=dimension_id, data=new_string)
+            self.dimensions.append(dimension)
 
     def get_dataset(self):
         return self.dataset.get()
 
-
-
+    def get_dimensions(self):
+        return self.dimensions

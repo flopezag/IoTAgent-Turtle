@@ -69,12 +69,15 @@ class TreeToJson(Transformer):
     def literal(self, literal):
         return literal[0]
 
+    def blanknodepropertylist(self, property_list):
+        self.entity_type.transform(string=property_list)
+        return property_list
+
     def get_context(self):
         return self.context.get_context()
 
     def get_dataset(self):
         return self.entity_type.get_dataset()
 
-    def blanknodepropertylist(self, property_list):
-        self.entity_type.transform(string=property_list)
-        return property_list
+    def get_dimensions(self):
+        return self.entity_type.get_dimensions()

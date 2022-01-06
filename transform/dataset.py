@@ -60,8 +60,6 @@ class Dataset:
         return self.data
 
     def add_data(self, title, data):
-        print(data)
-
         # We need to complete the data corresponding to the Dataset: rdfs:label
         position = data.index('rdfs:label') + 1
         description = data[position]
@@ -77,5 +75,3 @@ class Dataset:
 
         # Add the title
         self.data['title']['value'] = title
-
-        print(self.data['rdfs:label'])
