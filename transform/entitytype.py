@@ -1,5 +1,6 @@
 from transform.dataset import Dataset
 from transform.dimension import Dimension
+from transform.conceptschema import ConceptSchema
 
 
 class EntityType:
@@ -10,7 +11,7 @@ class EntityType:
             'qb:CodedProperty': 'Dimension',
             'qb:DimensionProperty': 'Dimension',
             'rdfs:Class': '...',
-            'skos:ConceptScheme': '...',
+            'skos:ConceptScheme': 'ConceptScheme',
             'skos:Concept': '...',
             'isc:age': '...',  # Problem with this...
             'isc:sex': '...',
@@ -19,6 +20,7 @@ class EntityType:
 
         self.dataset = Dataset()
         self.dimensions = list()
+        self.concept_schemas = list()
 
     def __find_entity_type__(self, string):
         """
@@ -47,9 +49,17 @@ class EntityType:
             dimension_id = string[0].split(':')[1]
             dimension.add_data(dimension_id=dimension_id, data=new_string)
             self.dimensions.append(dimension)
+        elif data_type == 'ConceptScheme':
+            concept_schema = ConceptSchema()
+            concept_schema_id = string[0].split(':')[1]
+            concept_schema.add_data(concept_schema_id=concept_schema_id, data=new_string)
+            self.concept_schemas.append(concept_schema)
 
     def get_dataset(self):
         return self.dataset.get()
 
     def get_dimensions(self):
         return self.dimensions
+
+    def get_concept_schemas(self):
+        return self.concept_schemas

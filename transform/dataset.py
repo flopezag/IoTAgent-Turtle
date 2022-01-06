@@ -53,13 +53,13 @@ class Dataset:
             self.unitMeasures['stat:unitMeasure']['value'].append(component[position][0])
         else:
             print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
-            exit(-1)
 
     def get(self):
         self.data = self.data | self.dimensions | self.attributes | self.unitMeasures
         return self.data
 
     def add_data(self, title, data):
+        # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the Dataset: rdfs:label
         position = data.index('rdfs:label') + 1
         description = data[position]

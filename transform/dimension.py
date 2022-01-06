@@ -19,6 +19,7 @@ class Dimension:
         }
 
     def add_data(self, dimension_id, data):
+        # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the Dimension: rdfs:label
         position = data.index('rdfs:label') + 1
         description = data[position]
