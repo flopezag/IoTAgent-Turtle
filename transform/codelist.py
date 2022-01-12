@@ -48,3 +48,6 @@ class CodeList:
 
     def get(self):
         return self.data
+
+    def get_id(self):
+        return self.data['id']

@@ -2,6 +2,7 @@ from transform.dataset import Dataset
 from transform.dimension import Dimension
 from transform.conceptschema import ConceptSchema
 from transform.codelist import CodeList
+from transform.datarange import DataRange
 
 
 class EntityType:
@@ -14,14 +15,14 @@ class EntityType:
             'rdfs:Class': 'Class',
             'owl:Class': 'Class',
             'skos:ConceptScheme': 'ConceptScheme',
-            'skos:Concept': '...'
+            'skos:Concept': 'Range'
         }
 
         self.dataset = Dataset()
         self.dimensions = list()
         self.concept_schemas = list()
         self.codeLists = list()
-        self.codeListIds = list()
+        self.codeListIds = dict()
 
     def __find_entity_type__(self, string):
         """
@@ -42,6 +43,8 @@ class EntityType:
             # We found a CodeList or any other thing, check the list of codeList found in the turtle file
             if data not in self.codeListIds:
                 print(f"Received a unexpected entity type: {data}")
+            else:
+                data = 'Range'
 
         return data, string
 
@@ -62,13 +65,24 @@ class EntityType:
             concept_schema = ConceptSchema()
             concept_schema_id = string[0].split(':')[1]
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=new_string)
-            self.concept_schemas.append(concept_schema)
+            self.concept_schemas.append(concept_schema.get())
         elif data_type == 'Class':
             code_list = CodeList()
             code_list_id = string[0].split(':')[1]
             code_list.add_data(code_list_id=code_list_id, data=new_string)
-            self.codeLists.append(code_list)
-            self.codeListIds.append(string[0])
+            self.codeLists.append(code_list.get())
+            self.codeListIds[string[0]] = code_list.get_id()
+        elif data_type == 'Range':
+            data_range = DataRange()
+            data_range.add_data(range_id=data_type, data=string)
+
+            for i in range(0, len(self.concept_schemas)):
+                concept_schema = self.concept_schemas[i]
+                has_top_concept_values = concept_schema['skos:hasTopConcept']['value']
+
+                out = [data_range.notation if x == data_range.id else x for x in has_top_concept_values]
+
+                self.concept_schemas[i]['skos:hasTopConcept']['value'] = out
 
     def get_dataset(self):
         return self.dataset.get()
