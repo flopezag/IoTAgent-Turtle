@@ -63,7 +63,12 @@ class EntityType:
             self.dimensions.append(dimension)
         elif data_type == 'ConceptScheme':
             concept_schema = ConceptSchema()
-            concept_schema_id = string[0].split(':')[1]
+
+            if ':' in string[0]:
+                concept_schema_id = string[0].split(':')[1]
+            else:
+                concept_schema_id = string[0]
+
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=new_string)
             self.concept_schemas.append(concept_schema.get())
         elif data_type == 'Class':

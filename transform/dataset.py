@@ -75,3 +75,6 @@ class Dataset:
 
         # Add the title
         self.data['title']['value'] = title
+
+        # Add the id
+        self.data['id'] = "urn:ngsi-ld:Dataset:" + title

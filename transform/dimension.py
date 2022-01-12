@@ -2,7 +2,7 @@ class Dimension:
     def __init__(self):
         self.data = {
             "id": str(),
-            "type": list(),
+            "type": "DimensionProperty",
             "rdfs:label": {
                 "type": "LanguageProperty",
                 "LanguageMap": dict()

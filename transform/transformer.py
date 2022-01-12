@@ -1,12 +1,19 @@
 from lark import Transformer, Tree, Token
 from transform.context import Context
 from transform.entitytype import EntityType
+import re
 
 
 class TreeToJson(Transformer):
     def __init__(self):
         self.context = Context()
         self.entity_type = EntityType()
+
+        # Regex to check valid URL
+        regex = "<http[s]?:\/\/(.*)>"
+
+        # Compile the Regex
+        self.re = re.compile(regex)
 
     def prefixid(self, s):
         context = dict()
@@ -27,15 +34,23 @@ class TreeToJson(Transformer):
         return result
 
     def subject(self, sub):
-        # sub[0].children can be a Token 'URIREF' -> e.g. <http://data.europa.eu/nuts/scheme/2016>
-        # or Tree -> e.g. Tree(Token('RULE', 'iri'), [Tree(Token('RULE', 'prefixedname'), [Token('PNAME_LN', 'isc:dsd1')])])
-        result = ''
-        if isinstance(sub[0], str):
+        # sub[0] can be an URIREF or a prefixedname
+        result = str()
+
+        # Return if the string matched the ReGex
+        out = self.re.match(sub[0])
+
+        if out == None:
+            # We have a prefixedname subject
             result = sub[0]
-        elif isinstance(sub[0].children[0], str):
-            result = sub[0].children[0]
         else:
-            result = str(sub[0].children[0].children[0])
+            # We have a URIREF
+            out = out.group(1)
+            out = out.split("/")
+
+            # we get the last 2 values to compose the the proper subject
+            out = out[(len(out) - 2):]
+            result = '_'.join(out)
 
         return result
 
