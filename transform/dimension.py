@@ -3,10 +3,23 @@ class Dimension:
         self.data = {
             "id": str(),
             "type": "DimensionProperty",
+
+
+            #################################################
+            # TODO: New ETSI CIM NGSI-LD specification 1.4.2
+            # Pending to implement in the Context Broker
+            #################################################
+            # "rdfs:label": {
+            #     "type": "LanguageProperty",
+            #     "LanguageMap": dict()
+            # },
+            #################################################
             "rdfs:label": {
-                "type": "LanguageProperty",
-                "LanguageMap": dict()
+                "type": "Property",
+                "value": dict()
             },
+
+
             "qb:codeList": {
                 "type": "Relationship",
                 "value": str()
@@ -27,8 +40,15 @@ class Dimension:
         descriptions = [x[0].replace("\"", "") for x in description]
         languages = [x[1].replace("@", "").lower() for x in description]
 
+        ###############################################################################
+        # TODO: New ETSI CIM NGSI-LD specification 1.4.2
+        # Pending to implement in the Context Broker
+        ###############################################################################
+        # for i in range(0, len(languages)):
+        #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
+        ###############################################################################
         for i in range(0, len(languages)):
-            self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
+            self.data['rdfs:label']['value'][languages[i]] = descriptions[i]
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:DimensionProperty:" + dimension_id
@@ -42,6 +62,11 @@ class Dimension:
         position = data.index('qb:concept') + 1
         concept = data[position][0]
         self.data['qb:concept']['value'] = concept
+
+
+    def add_context(self, context):
+        # TODO: We should assign only the needed context and not all the contexts
+        self.data['@context'] = context['@context']
 
     def get(self):
         return self.data

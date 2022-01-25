@@ -7,7 +7,8 @@ prefixid: "@prefix" prefixname_ns iri "."
 prefixname_ns: PREFIXNAME_PREFIX? ":"
 triples: subject predicateobjectlist
 subject: iri
-iri: URIREF | prefixedname
+iri: "<" uriref ">" | prefixedname
+uriref: URIREF
 predicateobjectlist: verb objectlist (";" (verb objectlist)?)*
 objectlist: object ("," object)*
 object: iri | literal | blanknodepropertylist
@@ -31,7 +32,7 @@ PN_LOCAL: (PREFIXNAME_CHARS_U | ":" | DIGIT | PLX) ((PREFIXNAME_CHARS | "." | ":
 PLX: PERCENT
 PERCENT: "%" HEXDIGIT HEXDIGIT
 LANGTAG: "@" [LCASE_LETTER | UCASE_LETTER]+ ("-" [LCASE_LETTER | UCASE_LETTER | DIGIT]+)*
-URIREF: "<" /[^<>{}]+/ ">"
+URIREF: /[^<>{}]+/
 COMMENT: /#[^\n]*/
 VERB: "a"
 

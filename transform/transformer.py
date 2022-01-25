@@ -6,6 +6,7 @@ import re
 
 class TreeToJson(Transformer):
     def __init__(self):
+        super().__init__()
         self.context = Context()
         self.entity_type = EntityType()
 
@@ -21,7 +22,7 @@ class TreeToJson(Transformer):
         self.context.add_context(context)
 
     def triples(self, triple):
-        self.entity_type.transform(string=triple)
+        self.entity_type.transform(string=triple, context=self.get_context())
         return triple
 
     def predicate(self, pre):
@@ -48,7 +49,7 @@ class TreeToJson(Transformer):
             out = out.group(1)
             out = out.split("/")
 
-            # we get the last 2 values to compose the the proper subject
+            # we get the last 2 values to compose the proper subject
             out = out[(len(out) - 2):]
             result = '_'.join(out)
 
@@ -84,8 +85,11 @@ class TreeToJson(Transformer):
     def literal(self, literal):
         return literal[0]
 
+    def uriref(self, uriref):
+        return str(uriref[0])
+
     def blanknodepropertylist(self, property_list):
-        self.entity_type.transform(string=property_list)
+        self.entity_type.transform(string=property_list, context=self.get_context())
         return property_list
 
     def get_context(self):

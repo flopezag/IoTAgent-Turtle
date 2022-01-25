@@ -11,10 +11,22 @@ class CodeList:
                 "type": "Property",
                 "value": str()
             },
+
+            #################################################
+            # TODO: New ETSI CIM NGSI-LD specification 1.4.2
+            # Pending to implement in the Context Broker
+            #################################################
+            # "skos:prefLabel": {
+            #     "type": "LanguageProperty",
+            #     "LanguageMap": dict()
+            # },
+            #################################################
             "skos:prefLabel": {
-                "type": "LanguageProperty",
-                "LanguageMap": dict()
+                "type": "Property",
+                "value": dict()
             },
+
+
             "@context": dict()
         }
 
@@ -32,8 +44,15 @@ class CodeList:
             print(f"\nThe CodeList {code_list_id} has a skos:prefLabel without languages: {descriptions}\n\n")
 
         # Complete the skos:prefLabel
+        ###############################################################################
+        # TODO: New ETSI CIM NGSI-LD specification 1.4.2
+        # Pending to implement in the Context Broker
+        ###############################################################################
+        # for i in range(0, len(languages)):
+        #     self.data['skos:prefLabel']['LanguageMap'][languages[i]] = descriptions[i]
+        ###############################################################################
         for i in range(0, len(languages)):
-            self.data['skos:prefLabel']['LanguageMap'][languages[i]] = descriptions[i]
+            self.data['skos:prefLabel']['value'][languages[i]] = descriptions[i]
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:CodeList:" + code_list_id
@@ -51,3 +70,7 @@ class CodeList:
 
     def get_id(self):
         return self.data['id']
+
+    def add_context(self, context):
+        # TODO: We should assign only the needed context and not all the contexts
+        self.data['@context'] = context['@context']

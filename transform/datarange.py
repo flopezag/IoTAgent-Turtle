@@ -19,7 +19,7 @@ class DataRange:
             for i in range(0, len(languages)):
                 self.labels[languages[i]] = descriptions[i]
         except IndexError:
-            print(f"\nThe Range {range_id} has a skos:prefLabel without languages: {descriptions}\n\n")
+            print(f"The Range {range_id} has a skos:prefLabel without languages: {descriptions}\n\n")
             self.labels = description[0][0].replace("\"", "")
 
         # skos:notation

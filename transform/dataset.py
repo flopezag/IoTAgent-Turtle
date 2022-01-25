@@ -11,10 +11,23 @@ class Dataset:
                 "type": "Property",
                 "value": list()
             },
+
+
+            #################################################
+            # TODO: New ETSI CIM NGSI-LD specification 1.4.2
+            # Pending to implement in the Context Broker
+            #################################################
+            # "rdfs:label": {
+            #     "type": "LanguageProperty",
+            #     "LanguageMap": dict()
+            # },
+            #################################################
             "rdfs:label": {
-                "type": "LanguageProperty",
-                "LanguageMap": dict()
+                "type": "Property",
+                "value": dict()
             },
+
+
             "@context": dict()
         }
 
@@ -67,8 +80,15 @@ class Dataset:
         descriptions = [x[0].replace("\"", "") for x in description]
         languages = [x[1].replace("@", "").lower() for x in description]
 
+        ###############################################################################
+        # TODO: New ETSI CIM NGSI-LD specification 1.4.2
+        # Pending to implement in the Context Broker
+        ###############################################################################
+        # for i in range(0, len(languages)):
+        #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
+        ###############################################################################
         for i in range(0, len(languages)):
-            self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
+            self.data['rdfs:label']['value'][languages[i]] = descriptions[i]
 
         # Complete the information of the language with the previous information
         self.data['language']['value'] = languages
@@ -78,3 +98,7 @@ class Dataset:
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:Dataset:" + title
+
+    def add_context(self, context):
+        # TODO: We should assign only the needed context and not all the contexts
+        self.data['@context'] = context['@context']

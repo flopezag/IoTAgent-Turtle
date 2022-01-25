@@ -29,7 +29,7 @@ class Parser:
         [pprint(x) for x in transform.get_concept_schemas()]
 
         # Just in case that we parse Codelists
-        # [pprint(x.get()) for x in transform.get_code_lists()]
+        [pprint(x) for x in transform.get_code_lists()]
 
 
 if __name__ == '__main__':

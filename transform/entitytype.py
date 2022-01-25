@@ -23,6 +23,7 @@ class EntityType:
         self.concept_schemas = list()
         self.codeLists = list()
         self.codeListIds = dict()
+        self.context = dict()
 
     def __find_entity_type__(self, string):
         """
@@ -48,7 +49,7 @@ class EntityType:
 
         return data, string
 
-    def transform(self, string):
+    def transform(self, string, context):
         data_type, new_string = self.__find_entity_type__(string=string)
 
         if data_type == 'Component':
@@ -56,10 +57,12 @@ class EntityType:
         elif data_type == 'Dataset':
             title = string[0].split(':')[1]
             self.dataset.add_data(title=title, data=new_string)
+            self.dataset.add_context(context=context)
         elif data_type == 'Dimension':
             dimension = Dimension()
             dimension_id = string[0].split(':')[1]
             dimension.add_data(dimension_id=dimension_id, data=new_string)
+            dimension.add_context(context=context)
             self.dimensions.append(dimension)
         elif data_type == 'ConceptScheme':
             concept_schema = ConceptSchema()
@@ -70,11 +73,13 @@ class EntityType:
                 concept_schema_id = string[0]
 
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=new_string)
+            concept_schema.add_context(context=context)
             self.concept_schemas.append(concept_schema.get())
         elif data_type == 'Class':
             code_list = CodeList()
             code_list_id = string[0].split(':')[1]
             code_list.add_data(code_list_id=code_list_id, data=new_string)
+            code_list.add_context(context=context)
             self.codeLists.append(code_list.get())
             self.codeListIds[string[0]] = code_list.get_id()
         elif data_type == 'Range':
