@@ -25,12 +25,13 @@ class Parser:
         if out:
             # Save the generated content into files
             print('Save the generated content into files')
+            transform.save()
         else:
             pprint(transform.get_context())
             pprint(transform.get_dataset())
             [pprint(x.get()) for x in transform.get_dimensions()]
-            [pprint(x) for x in transform.get_concept_schemas()]
-            [pprint(x) for x in transform.get_code_lists()]
+            [pprint(x.get()) for x in transform.get_concept_schemas()]
+            [pprint(x.get()) for x in transform.get_code_lists()]
 
 
 if __name__ == '__main__':

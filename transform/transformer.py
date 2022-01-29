@@ -106,3 +106,16 @@ class TreeToJson(Transformer):
 
     def get_code_lists(self):
         return self.entity_type.get_code_lists()
+
+    def save(self):
+        self.entity_type.save('dataset')
+
+        dimensions = self.entity_type.get_dimensions()
+        [dimension.save() for dimension in dimensions]
+
+        concept_schemas = self.entity_type.get_concept_schemas()
+        [x.save() for x in concept_schemas]
+
+        code_lists = self.entity_type.get_code_lists()
+        [x.save() for x in code_lists]
+

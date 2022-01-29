@@ -1,3 +1,6 @@
+from json import dumps
+
+
 class ConceptSchema:
     def __init__(self):
         self.data = {
@@ -64,3 +67,17 @@ class ConceptSchema:
     def add_context(self, context):
         # TODO: We should assign only the needed context and not all the contexts
         self.data['@context'] = context['@context']
+
+    def save(self):
+        data = self.get()
+
+        aux = data['id'].split(":")
+        length_aux = len(aux)
+        filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
+
+        # Serializing json
+        json_object = dumps(data, indent=4, ensure_ascii=False)
+
+        # Writing to sample.json
+        with open(filename, "w") as outfile:
+            outfile.write(json_object)

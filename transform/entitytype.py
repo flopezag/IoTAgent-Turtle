@@ -68,31 +68,33 @@ class EntityType:
             concept_schema = ConceptSchema()
 
             if ':' in string[0]:
-                concept_schema_id = string[0].split(':')[1]
+                aux = string[0].split(':')[1]
+                aux = aux.split('/')
+                concept_schema_id = '_'.join(aux[len(aux)-2:])
             else:
                 concept_schema_id = string[0]
 
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=new_string)
             concept_schema.add_context(context=context)
-            self.concept_schemas.append(concept_schema.get())
+            self.concept_schemas.append(concept_schema)
         elif data_type == 'Class':
             code_list = CodeList()
             code_list_id = string[0].split(':')[1]
             code_list.add_data(code_list_id=code_list_id, data=new_string)
             code_list.add_context(context=context)
-            self.codeLists.append(code_list.get())
+            self.codeLists.append(code_list)
             self.codeListIds[string[0]] = code_list.get_id()
         elif data_type == 'Range':
             data_range = DataRange()
             data_range.add_data(range_id=data_type, data=string)
 
             for i in range(0, len(self.concept_schemas)):
-                concept_schema = self.concept_schemas[i]
+                concept_schema = self.concept_schemas[i].data
                 has_top_concept_values = concept_schema['skos:hasTopConcept']['value']
 
                 out = [data_range.notation if x == data_range.id else x for x in has_top_concept_values]
 
-                self.concept_schemas[i]['skos:hasTopConcept']['value'] = out
+                self.concept_schemas[i].data['skos:hasTopConcept']['value'] = out
 
     def get_dataset(self):
         return self.dataset.get()
@@ -105,3 +107,6 @@ class EntityType:
 
     def get_code_lists(self):
         return self.codeLists
+
+    def save(self, param):
+        getattr(self, param).save()
