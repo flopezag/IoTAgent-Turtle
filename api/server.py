@@ -1,23 +1,20 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, Request, status
 from uvicorn import run
 from os.path import splitext
-from json import dumps
 from transform.parser import Parser
 from datetime import datetime
 from cli.command import __version__
-import secure
+from secure import Server, ContentSecurityPolicy, StrictTransportSecurity, \
+    ReferrerPolicy, PermissionsPolicy, CacheControl, Secure
+from logging import getLogger
+from pathlib import Path
+from api.custom_logging import CustomizeLogger
 
-'''
-script-src 'strict-dynamic' 'nonce-rAnd0m123' 'unsafe-inline' http: https:;
-object-src 'none';
-base-uri 'none';
-require-trusted-types-for 'script';
-report-uri https://csp.example.com;
-'''
-server = secure.Server().set("Secure")
+
+server = Server().set("Secure")
 
 csp = (
-    secure.ContentSecurityPolicy()
+    ContentSecurityPolicy()
     .default_src("'none'")
     .base_uri("'self'")
     .connect_src("'self'" "api.spam.com")
@@ -25,17 +22,17 @@ csp = (
     .img_src("'self'", "static.spam.com")
 )
 
-hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(2592000)
+hsts = StrictTransportSecurity().include_subdomains().preload().max_age(2592000)
 
-referrer = secure.ReferrerPolicy().no_referrer()
+referrer = ReferrerPolicy().no_referrer()
 
 permissions_value = (
-    secure.PermissionsPolicy().geolocation("self", "'spam.com'").vibrate()
+    PermissionsPolicy().geolocation("self", "'spam.com'").vibrate()
 )
 
-cache_value = secure.CacheControl().must_revalidate()
+cache_value = CacheControl().must_revalidate()
 
-secure_headers = secure.Secure(
+secure_headers = Secure(
     server=server,
     csp=csp,
     hsts=hsts,
@@ -45,8 +42,22 @@ secure_headers = secure.Secure(
 )
 
 
-application = FastAPI()
 initial_uptime = datetime.min
+
+
+logger = getLogger(__name__)
+
+
+def create_app() -> FastAPI:
+    app = FastAPI(title='IoTAgent-Turtle', debug=False)
+    config_path = Path(__file__).with_name("logging_config.json")
+    logger = CustomizeLogger.make_logger(config_path)
+    app.logger = logger
+
+    return app
+
+
+application = create_app()
 
 
 @application.middleware("http")
@@ -56,8 +67,9 @@ async def set_secure_headers(request, call_next):
     return response
 
 
-@application.get("/version")
-def version():
+@application.get("/version", status_code=status.HTTP_200_OK)
+def version(request: Request):
+    request.app.logger.info("Here Is Your Info Log")
     data = {
         "doc": "...",
         "git_hash": "nogitversion",
@@ -69,22 +81,20 @@ def version():
     return data
 
 
-@application.post("/parse")
-async def parse(file: UploadFile = File(...)):
-    print("filename = ", file.filename)  # getting filename
+@application.post("/parse", status_code=status.HTTP_201_CREATED)
+async def parse(request: Request, file: UploadFile):
+    request.app.logger.info(f'filename={file.filename}')
 
     # check if the post request has the file part
     if splitext(file.filename)[1] != '.ttl':
-        resp = dumps({'message': 'Allowed file type is only ttl'})
-        resp.status_code = 400
+        resp = {'message': 'Allowed file type is only ttl'}
     else:
         # Start parsing the file
         myparser = Parser()
         content = await file.read()
-        myparser.parsing(content=content)
+        myparser.parsing(content=content.decode("utf-8"))
 
-        resp = dumps({'message': 'File successfully uploaded'})
-        resp.status_code = 201
+        resp = {'message': 'File successfully uploaded'}
 
     return resp
 
@@ -106,7 +116,7 @@ def launch(app: str = "server:application", port: int = 5000, uptime: datetime =
     global initial_uptime
 
     initial_uptime = uptime
-    # uvicorn --no-server-header
+
     run(app=app, host="127.0.0.1", port=port, log_level="info", reload=True, server_header=False)
 
 

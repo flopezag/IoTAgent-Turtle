@@ -15,18 +15,19 @@ class Parser:
         transform = TreeToJson()
 
         if file is not None:
-            tree = self.parser.parse(file.read())
-            transform.transform(tree)
+            content = file.read()
+            tree = self.parser.parse(content)
         elif content is not None:
             # file is an UploadFile aka File
             tree = self.parser.parse(content)
-            transform.transform(tree)
+
+        transform.transform(tree)
 
         if out:
             # Save the generated content into files
             print('Save the generated content into files')
             transform.save()
-        else:
+        elif file is not None:
             pprint(transform.get_context())
             pprint(transform.get_dataset())
             [pprint(x.get()) for x in transform.get_dimensions()]
