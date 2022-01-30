@@ -1,6 +1,6 @@
 from cli.command import parseCLI
 from transform.parser import Parser
-from api.server import run
+from api.server import launch
 from datetime import datetime
 
 if __name__ == '__main__':
@@ -17,4 +17,4 @@ if __name__ == '__main__':
     elif args['server'] is True:
         port = int(args['--port'])
 
-        run(app="api.server:application", port=port, uptime=now)
+        launch(app="api.server:application", port=port, uptime=now)
