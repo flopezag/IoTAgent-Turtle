@@ -1,7 +1,7 @@
 from transform.dataset import Dataset
 from transform.dimension import Dimension
 from transform.conceptschema import ConceptSchema
-from transform.codelist import CodeList
+from transform.concept import Concept
 from transform.datarange import DataRange
 from transform.attribute import Attribute
 
@@ -22,9 +22,9 @@ class EntityType:
         self.dataset = Dataset()
         self.dimensions = list()
         self.attributes = list()
-        self.concept_schemas = list()
-        self.codeLists = list()
-        self.codeListIds = dict()
+        self.conceptSchemas = list()
+        self.conceptLists = list()
+        self.conceptListsIds = dict()
         self.context = dict()
 
     def __find_entity_type__(self, string):
@@ -40,12 +40,12 @@ class EntityType:
         data = string[position][len(string[position]) - 1]
 
         # We have two options, a well know object list to be found in the self.entities or
-        # the codelist defined in the turtle file
+        # the conceptList defined in the turtle file
         try:
             data = self.entities[data]
         except KeyError:
             # We found a CodeList or any other thing, check the list of codeList found in the turtle file
-            if data not in self.codeListIds:
+            if data not in self.conceptListsIds:
                 print(f"Received a unexpected entity type: {data}")
             else:
                 data = 'Range'
@@ -74,36 +74,39 @@ class EntityType:
             attribute.add_context(context=context)
             self.attributes.append(attribute)
         elif data_type == 'ConceptScheme':
-            concept_schema = ConceptSchema()
+            conceptSchema = ConceptSchema()
 
             if ':' in string[0]:
                 aux = string[0].split(':')[1]
                 aux = aux.split('/')
-                concept_schema_id = '_'.join(aux[len(aux)-2:])
+                conceptSchemaId = '_'.join(aux[len(aux)-2:])
             else:
-                concept_schema_id = string[0]
+                conceptSchemaId = string[0]
 
-            concept_schema.add_data(concept_schema_id=concept_schema_id, data=new_string)
-            concept_schema.add_context(context=context)
-            self.concept_schemas.append(concept_schema)
+            conceptSchema.add_data(concept_schema_id=conceptSchemaId, data=new_string)
+            conceptSchema.add_context(context=context)
+            self.conceptSchemas.append(conceptSchema)
         elif data_type == 'Class':
-            code_list = CodeList()
-            code_list_id = string[0].split(':')[1]
-            code_list.add_data(code_list_id=code_list_id, data=new_string)
-            code_list.add_context(context=context)
-            self.codeLists.append(code_list)
-            self.codeListIds[string[0]] = code_list.get_id()
+            # We need the Concept because each of the Range description is of the type Concept
+            conceptList = Concept()
+            conceptlistId = string[0].split(':')[1]
+            conceptList.add_data(conceptId=conceptlistId, data=new_string)
+            conceptList.add_context(context=context)
+            self.conceptLists.append(conceptList)
+            self.conceptListsIds[string[0]] = conceptList.get_id()
         elif data_type == 'Range':
             data_range = DataRange()
-            data_range.add_data(range_id=data_type, data=string)
+            data_range_id = string[0].split(':')[1].split('/')
+            data_range_id = data_range_id[len(data_range_id)-1]
+            data_range.add_data(range_id=data_range_id, data=string)
 
-            for i in range(0, len(self.concept_schemas)):
-                concept_schema = self.concept_schemas[i].data
+            for i in range(0, len(self.conceptSchemas)):
+                concept_schema = self.conceptSchemas[i].data
                 has_top_concept_values = concept_schema['skos:hasTopConcept']['value']
 
                 out = [data_range.notation if x == data_range.id else x for x in has_top_concept_values]
 
-                self.concept_schemas[i].data['skos:hasTopConcept']['value'] = out
+                self.conceptSchemas[i].data['skos:hasTopConcept']['value'] = out
 
     def get_dataset(self):
         return self.dataset.get()
@@ -114,11 +117,11 @@ class EntityType:
     def get_attributes(self):
         return self.attributes
 
-    def get_concept_schemas(self):
-        return self.concept_schemas
+    def get_conceptSchemas(self):
+        return self.conceptSchemas
 
-    def get_code_lists(self):
-        return self.codeLists
+    def get_conceptList(self):
+        return self.conceptLists
 
     def save(self, param):
         getattr(self, param).save()

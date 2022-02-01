@@ -40,10 +40,20 @@ class ConceptSchema:
 
         descriptions = [x[0].replace("\"", "") for x in description]
         languages = list()
+
         try:
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
-            logger.warn(f'The ConceptSchema {concept_schema_id} has a skos:prefLabel without languages: {descriptions}')
+            logger.warning(f'The ConceptSchema {concept_schema_id} has a '
+                           f'skos:prefLabel without language tag: {description}')
+
+            aux = len(description)
+            if aux != 1:
+                logger.error(f"ConceptSchema: there is more than 1 description ({aux}), values: {description}")
+            else:
+                # There is no language tag, we use by default 'en'
+                languages = ['en']
+                logger.warning('ConceptSchema: selecting default language "en"')
 
         # Complete the skos:prefLabel
         ###############################################################################

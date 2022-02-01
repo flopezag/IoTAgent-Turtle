@@ -91,20 +91,19 @@ async def parse(request: Request, file: UploadFile, response: Response):
         response.status_code = status.HTTP_400_BAD_REQUEST
         request.app.logger.error(f'POST /parse 400 Bad Request, file: "{file.filename}"')
     else:
-        # Start parsing the file
-        myparser = Parser()
-
         try:
             content = await file.read()
         except Exception as e:
             request.app.logger.error(f'POST /parse 500 Problem reading file: "{file.filename}"')
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         else:
-            request.app.logger.info(f'File readed')
+            request.app.logger.info(f'File successfully read')
 
+        # Start parsing the file
+        myParser = Parser()
 
         try:
-            myparser.parsing(content=content.decode("utf-8"))
+            myParser.parsing(content=content.decode("utf-8"))
         except Exception as e:
             request.app.logger.error(f'POST /parse 500 Problem parsing file: "{file.filename}"')
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

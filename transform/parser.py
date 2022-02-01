@@ -25,26 +25,29 @@ class Parser:
                 print('Save the generated content into files')
                 transform.save()
             elif file is not None:
-                pprint(transform.get_context())
+                print()
                 pprint(transform.get_dataset())
                 [pprint(x.get()) for x in transform.get_dimensions()]
                 [pprint(x.get()) for x in transform.get_attributes()]
-                [pprint(x.get()) for x in transform.get_concept_schemas()]
-                [pprint(x.get()) for x in transform.get_code_lists()]
+                [pprint(x.get()) for x in transform.get_conceptSchemas()]
+                # TODO: The current version does not upload content related to Concepts
+                #       and Range of values of these Concepts
+                # [pprint(x.get()) for x in transform.get_conceptLists()]
         elif content is not None:
             # file is an UploadFile aka File
             tree = self.parser.parse(content)
             transform.transform(tree)
 
-            # Generate Batch payload with all entities
+            # Serializing json payload
             result = list()
             result.append(transform.get_dataset())
             [result.append(x.get()) for x in transform.get_dimensions()]
-            [result.append(x.get()) for x in transform.get_concept_schemas()]
-            [result.append(x.get()) for x in transform.get_code_lists()]
+            [result.append(x.get()) for x in transform.get_attributes()]
+            [result.append(x.get()) for x in transform.get_conceptSchemas()]
+            # TODO: The current version does not upload content related to Concepts
+            #       and Range of values of these Concepts
+            # [result.append(x.get()) for x in transform.get_conceptLists()]
 
-            # Writing to final.json
-            # Serializing json
             json_object = dumps(result, indent=4, ensure_ascii=False)
 
             with open("final.jsonld", "w") as outfile:

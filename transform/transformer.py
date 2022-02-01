@@ -104,11 +104,11 @@ class TreeToJson(Transformer):
     def get_attributes(self):
         return self.entity_type.get_attributes()
 
-    def get_concept_schemas(self):
-        return self.entity_type.get_concept_schemas()
+    def get_conceptSchemas(self):
+        return self.entity_type.get_conceptSchemas()
 
-    def get_code_lists(self):
-        return self.entity_type.get_code_lists()
+    def get_conceptLists(self):
+        return self.entity_type.get_conceptList()
 
     def save(self):
         self.entity_type.save('dataset')
@@ -116,9 +116,14 @@ class TreeToJson(Transformer):
         dimensions = self.entity_type.get_dimensions()
         [dimension.save() for dimension in dimensions]
 
-        concept_schemas = self.entity_type.get_concept_schemas()
+        attributes = self.entity_type.get_attributes()
+        [attribute.save() for attribute in attributes]
+
+        concept_schemas = self.entity_type.get_conceptSchemas()
         [x.save() for x in concept_schemas]
 
-        code_lists = self.entity_type.get_code_lists()
-        [x.save() for x in code_lists]
+        # TODO: The current version does not upload content related to Concepts
+        #       and Range of values of these Concepts
+        # conceptLists = self.entity_type.get_conceptList()
+        # [x.save() for x in conceptLists]
 

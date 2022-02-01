@@ -51,7 +51,7 @@ isc:dim-age
     a             qb:CodedProperty , qb:DimensionProperty ;
     rdfs:label    "Five-year age group"@en , "Âge quinquennal"@fr ;
     rdfs:range    isc:age-m ;
-    qb:codeList   isc:cl-age-m ;
+    qb:codeList   isc:cl-age ;
     qb:concept    sdmx-concept:age .
 
 # Sex dimension

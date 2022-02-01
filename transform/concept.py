@@ -4,7 +4,7 @@ from logging import getLogger
 logger = getLogger()
 
 
-class CodeList:
+class Concept:
     def __init__(self):
         self.data = {
             "id": str(),
@@ -36,18 +36,28 @@ class CodeList:
             "@context": dict()
         }
 
-    def add_data(self, code_list_id, data):
+    def add_data(self, conceptId, data):
         # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the ConceptSchema: skos:prefLabel
         position = data.index('skos:prefLabel') + 1
         description = data[position]
 
         descriptions = [x[0].replace("\"", "") for x in description]
+
         languages = list()
         try:
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
-            logger.warn(f'The CodeList {code_list_id} has a skos:prefLabel without languages: {descriptions}')
+            logger.warning(f'The Concept {conceptId} has a '
+                           f'skos:prefLabel without language tag: {description}')
+
+            aux = len(description)
+            if aux != 1:
+                logger.error(f"Concept: there is more than 1 description ({aux}), values: {description}")
+            else:
+                # There is no language tag, we use by default 'en'
+                languages = ['en']
+                logger.warning('Concept: selecting default language "en"')
 
         # Complete the skos:prefLabel
         ###############################################################################
@@ -61,11 +71,14 @@ class CodeList:
             self.data['skos:prefLabel']['value'][languages[i]] = descriptions[i]
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:CodeList:" + code_list_id
+        self.data['id'] = "urn:ngsi-ld:Concept:" + conceptId
 
         # rdfs:seeAlso
         position = data.index('rdfs:seeAlso') + 1
-        self.data['rdfs:seeAlso']['value'] = data[position][0]
+        concept_schema = data[position][0]
+        concept_schema = concept_schema.split(":")
+        concept_schema = "urn:ngsi-ld:ConceptSchema:" + concept_schema[len(concept_schema)-1]
+        self.data['rdfs:seeAlso']['value'] = concept_schema
 
         # rdfs:subClassOf
         position = data.index('rdfs:subClassOf') + 1

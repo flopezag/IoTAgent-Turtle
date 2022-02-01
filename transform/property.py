@@ -1,4 +1,7 @@
 from json import dumps
+from logging import getLogger
+
+logger = getLogger()
 
 
 class Property:
@@ -25,7 +28,7 @@ class Property:
 
             "qb:codeList": {
                 "type": "Relationship",
-                "value": str()
+                "object": str()
             },
             "qb:concept": {
                 "type": "Property",
@@ -41,7 +44,21 @@ class Property:
         description = data[position]
 
         descriptions = [x[0].replace("\"", "") for x in description]
-        languages = [x[1].replace("@", "").lower() for x in description]
+
+        languages = list()
+        try:
+            languages = [x[1].replace("@", "").lower() for x in description]
+        except IndexError:
+            logger.warning(f'The Property {id} has a '
+                           f'rdfs:label without language tag: {description}')
+
+            aux = len(description)
+            if aux != 1:
+                logger.error(f"Property: there is more than 1 description ({aux}), values: {description}")
+            else:
+                # There is no language tag, we use by default 'en'
+                languages = ['en']
+                logger.warning('Property: selecting default language "en"')
 
         ###############################################################################
         # TODO: New ETSI CIM NGSI-LD specification 1.4.2
@@ -53,13 +70,12 @@ class Property:
         for i in range(0, len(languages)):
             self.data['rdfs:label']['value'][languages[i]] = descriptions[i]
 
-        # Add the id
-        # self.data['id'] = "urn:ngsi-ld:DimensionProperty:" + dimension_id
-
         # qb:codeList
         position = data.index('qb:codeList') + 1
         code_list = data[position][0]
-        self.data['qb:codeList']['value'] = code_list
+        code_list = code_list.split(":")
+        code_list = "urn:ngsi-ld:ConceptSchema:" + code_list[len(code_list)-1]
+        self.data['qb:codeList']['object'] = code_list
 
         # qb:concept
         position = data.index('qb:concept') + 1

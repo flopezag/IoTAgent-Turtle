@@ -1,4 +1,7 @@
 from json import dumps
+from logging import getLogger
+
+logger = getLogger()
 
 
 class Dataset:
@@ -62,12 +65,14 @@ class Dataset:
         position = component.index(type_component) + 1
 
         if type_component == 'qb:attribute':
-            self.attributes['stat:attribute']['value'].append(component[position][0])
+            id = self.__generate_id__(entity="AttributeProperty", value=component[position][0])
+            self.attributes['stat:attribute']['value'].append(id)
         elif type_component == 'qb:dimension':
             id = self.__generate_id__(entity="DimensionProperty", value=component[position][0])
             self.dimensions['stat:dimension']['value'].append(id)
         elif type_component == 'qb:measure':
-            self.unitMeasures['stat:unitMeasure']['value'].append(component[position][0])
+            id = self.__generate_id__(entity="Measure", value=component[position][0])
+            self.unitMeasures['stat:unitMeasure']['value'].append(id)
         else:
             print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
@@ -87,7 +92,21 @@ class Dataset:
         description = data[position]
 
         descriptions = [x[0].replace("\"", "") for x in description]
-        languages = [x[1].replace("@", "").lower() for x in description]
+
+        languages = list()
+        try:
+            languages = [x[1].replace("@", "").lower() for x in description]
+        except IndexError:
+            logger.warning(f'The Dataset {title} has a '
+                           f'rdfs:label without language tag: {description}')
+
+            aux = len(description)
+            if aux != 1:
+                logger.error(f"Dataset: there is more than 1 description ({aux}), values: {description}")
+            else:
+                # There is no language tag, we use by default 'en'
+                languages = ['en']
+                logger.warning('Dataset: selecting default language "en"')
 
         ###############################################################################
         # TODO: New ETSI CIM NGSI-LD specification 1.4.2
