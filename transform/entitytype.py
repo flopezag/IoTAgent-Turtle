@@ -3,6 +3,7 @@ from transform.dimension import Dimension
 from transform.conceptschema import ConceptSchema
 from transform.codelist import CodeList
 from transform.datarange import DataRange
+from transform.attribute import Attribute
 
 
 class EntityType:
@@ -10,7 +11,7 @@ class EntityType:
         self.entities = {
             'qb:DataStructureDefinition': 'Dataset',
             'qb:ComponentSpecification': 'Component',
-            'qb:CodedProperty': 'Dimension',
+            'qb:AttributeProperty': 'Attribute',
             'qb:DimensionProperty': 'Dimension',
             'rdfs:Class': 'Class',
             'owl:Class': 'Class',
@@ -20,6 +21,7 @@ class EntityType:
 
         self.dataset = Dataset()
         self.dimensions = list()
+        self.attributes = list()
         self.concept_schemas = list()
         self.codeLists = list()
         self.codeListIds = dict()
@@ -34,7 +36,8 @@ class EntityType:
         string = string[index]
 
         position = string.index('a') + 1
-        data = string[position][0]
+        # data = string[position][0]
+        data = string[position][len(string[position]) - 1]
 
         # We have two options, a well know object list to be found in the self.entities or
         # the codelist defined in the turtle file
@@ -61,9 +64,15 @@ class EntityType:
         elif data_type == 'Dimension':
             dimension = Dimension()
             dimension_id = string[0].split(':')[1]
-            dimension.add_data(dimension_id=dimension_id, data=new_string)
+            dimension.add_data(id=dimension_id, data=new_string)
             dimension.add_context(context=context)
             self.dimensions.append(dimension)
+        elif data_type == 'Attribute':
+            attribute = Attribute()
+            attribute_id = string[0].split(':')[1]
+            attribute.add_data(id=attribute_id, data=new_string)
+            attribute.add_context(context=context)
+            self.attributes.append(attribute)
         elif data_type == 'ConceptScheme':
             concept_schema = ConceptSchema()
 
@@ -101,6 +110,9 @@ class EntityType:
 
     def get_dimensions(self):
         return self.dimensions
+
+    def get_attributes(self):
+        return self.attributes
 
     def get_concept_schemas(self):
         return self.concept_schemas

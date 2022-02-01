@@ -5,7 +5,7 @@ class Context:
         }
 
         # By default the context should include the smart data models context
-        self.context['@context'].update({'sdmp': 'https://...'})
+        self.context['@context'].update({'sdmp': 'https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld'})
 
     def add_context(self, context):
         self.context['@context'].update(context)

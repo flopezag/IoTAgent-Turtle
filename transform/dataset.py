@@ -25,7 +25,7 @@ class Dataset:
             #     "LanguageMap": dict()
             # },
             #################################################
-            "rdfs:label": {
+            "description": {
                 "type": "Property",
                 "value": dict()
             },
@@ -64,11 +64,17 @@ class Dataset:
         if type_component == 'qb:attribute':
             self.attributes['stat:attribute']['value'].append(component[position][0])
         elif type_component == 'qb:dimension':
-            self.dimensions['stat:dimension']['value'].append(component[position][0])
+            id = self.__generate_id__(entity="DimensionProperty", value=component[position][0])
+            self.dimensions['stat:dimension']['value'].append(id)
         elif type_component == 'qb:measure':
             self.unitMeasures['stat:unitMeasure']['value'].append(component[position][0])
         else:
             print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
+
+    def __generate_id__(self, entity, value):
+        aux = value.split(":")
+        aux = "urn:ngsi-ld:" + entity + ":" + aux[len(aux)-1]
+        return aux
 
     def get(self):
         self.data = self.data | self.dimensions | self.attributes | self.unitMeasures
@@ -91,7 +97,7 @@ class Dataset:
         #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
         ###############################################################################
         for i in range(0, len(languages)):
-            self.data['rdfs:label']['value'][languages[i]] = descriptions[i]
+            self.data['description']['value'][languages[i]] = descriptions[i]
 
         # Complete the information of the language with the previous information
         self.data['language']['value'] = languages

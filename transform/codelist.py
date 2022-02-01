@@ -1,11 +1,14 @@
 from json import dumps
+from logging import getLogger
+
+logger = getLogger()
 
 
 class CodeList:
     def __init__(self):
         self.data = {
             "id": str(),
-            "type": "rdfs:Class",
+            "type": "Class",
             "rdfs:seeAlso": {
                 "type": "Relationship",
                 "value": str()
@@ -44,7 +47,7 @@ class CodeList:
         try:
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
-            print(f"\nThe CodeList {code_list_id} has a skos:prefLabel without languages: {descriptions}\n\n")
+            logger.warn(f'The CodeList {code_list_id} has a skos:prefLabel without languages: {descriptions}')
 
         # Complete the skos:prefLabel
         ###############################################################################

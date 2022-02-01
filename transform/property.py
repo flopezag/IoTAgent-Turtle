@@ -1,74 +1,78 @@
 from json import dumps
-from logging import getLogger
 
-logger = getLogger()
 
-class ConceptSchema:
+class Property:
     def __init__(self):
         self.data = {
             "id": str(),
-            "type": "ConceptScheme",
-            "skos:hasTopConcept": {
-                "type": "Property",
-                "value": list()
-            },
+            "type": "",
 
 
             #################################################
             # TODO: New ETSI CIM NGSI-LD specification 1.4.2
             # Pending to implement in the Context Broker
             #################################################
-            # "skos:prefLabel": {
+            # "rdfs:label": {
             #     "type": "LanguageProperty",
             #     "LanguageMap": dict()
             # },
             #################################################
-            "skos:prefLabel": {
+            "rdfs:label": {
                 "type": "Property",
                 "value": dict()
             },
 
 
+            "qb:codeList": {
+                "type": "Relationship",
+                "value": str()
+            },
+            "qb:concept": {
+                "type": "Property",
+                "value": str()
+            },
             "@context": dict()
         }
 
-    def add_data(self, concept_schema_id, data):
+    def add_data(self, id, data):
         # TODO: We have to control that data include the indexes that we want to search
-        # We need to complete the data corresponding to the ConceptSchema: skos:prefLabel
-        position = data.index('skos:prefLabel') + 1
+        # We need to complete the data corresponding to the Dimension: rdfs:label
+        position = data.index('rdfs:label') + 1
         description = data[position]
 
         descriptions = [x[0].replace("\"", "") for x in description]
-        languages = list()
-        try:
-            languages = [x[1].replace("@", "").lower() for x in description]
-        except IndexError:
-            logger.warn(f'The ConceptSchema {concept_schema_id} has a skos:prefLabel without languages: {descriptions}')
+        languages = [x[1].replace("@", "").lower() for x in description]
 
-        # Complete the skos:prefLabel
         ###############################################################################
         # TODO: New ETSI CIM NGSI-LD specification 1.4.2
         # Pending to implement in the Context Broker
         ###############################################################################
         # for i in range(0, len(languages)):
-        #     self.data['skos:prefLabel']['LanguageMap'][languages[i]] = descriptions[i]
+        #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
         ###############################################################################
         for i in range(0, len(languages)):
-            self.data['skos:prefLabel']['value'][languages[i]] = descriptions[i]
+            self.data['rdfs:label']['value'][languages[i]] = descriptions[i]
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:ConceptSchema:" + concept_schema_id
+        # self.data['id'] = "urn:ngsi-ld:DimensionProperty:" + dimension_id
 
-        # skos:hasTopConcept, this is a list of ids
-        position = data.index('skos:hasTopConcept') + 1
-        self.data['skos:hasTopConcept']['value'] = data[position]
+        # qb:codeList
+        position = data.index('qb:codeList') + 1
+        code_list = data[position][0]
+        self.data['qb:codeList']['value'] = code_list
 
-    def get(self):
-        return self.data
+        # qb:concept
+        position = data.index('qb:concept') + 1
+        concept = data[position][0]
+        self.data['qb:concept']['value'] = concept
+
 
     def add_context(self, context):
         # TODO: We should assign only the needed context and not all the contexts
         self.data['@context'] = context['@context']
+
+    def get(self):
+        return self.data
 
     def save(self):
         data = self.get()

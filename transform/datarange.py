@@ -1,3 +1,8 @@
+from logging import getLogger
+
+logger = getLogger()
+
+
 class DataRange:
     def __init__(self):
         self.notation = str()
@@ -19,7 +24,7 @@ class DataRange:
             for i in range(0, len(languages)):
                 self.labels[languages[i]] = descriptions[i]
         except IndexError:
-            print(f"The Range {range_id} has a skos:prefLabel without languages: {descriptions}\n\n")
+            logger.warn(f'The Range {range_id} has a skos:prefLabel without languages: {descriptions}')
             self.labels = description[0][0].replace("\"", "")
 
         # skos:notation

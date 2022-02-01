@@ -1,15 +1,16 @@
 from transform.property import Property
 
-class Dimension(Property):
+
+class Attribute(Property):
     def __init__(self):
         super().__init__()
-        self.data['type'] = 'DimensionProperty'
+        self.data['type'] = 'AttributeProperty'
 
     def add_data(self, id, data):
         super().add_data(id=id, data=data)
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:DimensionProperty:" + id
+        self.data['id'] = "urn:ngsi-ld:AttributeProperty:" + id
 
     # def add_context(self, context):
     #     super().add_context(context=context)

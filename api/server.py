@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, Request, status
+from fastapi import FastAPI, UploadFile, Request, Response, status, HTTPException
 from uvicorn import run
 from os.path import splitext
 from transform.parser import Parser
@@ -69,7 +69,7 @@ async def set_secure_headers(request, call_next):
 
 @application.get("/version", status_code=status.HTTP_200_OK)
 def version(request: Request):
-    request.app.logger.info("Here Is Your Info Log")
+    request.app.logger.info("Request version information")
     data = {
         "doc": "...",
         "git_hash": "nogitversion",
@@ -82,19 +82,38 @@ def version(request: Request):
 
 
 @application.post("/parse", status_code=status.HTTP_201_CREATED)
-async def parse(request: Request, file: UploadFile):
-    request.app.logger.info(f'filename={file.filename}')
+async def parse(request: Request, file: UploadFile, response: Response):
+    request.app.logger.info(f'Request parse file "{file.filename}"')
 
     # check if the post request has the file part
     if splitext(file.filename)[1] != '.ttl':
         resp = {'message': 'Allowed file type is only ttl'}
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        request.app.logger.error(f'POST /parse 400 Bad Request, file: "{file.filename}"')
     else:
         # Start parsing the file
         myparser = Parser()
-        content = await file.read()
-        myparser.parsing(content=content.decode("utf-8"))
 
-        resp = {'message': 'File successfully uploaded'}
+        try:
+            content = await file.read()
+        except Exception as e:
+            request.app.logger.error(f'POST /parse 500 Problem reading file: "{file.filename}"')
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        else:
+            request.app.logger.info(f'File readed')
+
+
+        try:
+            myparser.parsing(content=content.decode("utf-8"))
+        except Exception as e:
+            request.app.logger.error(f'POST /parse 500 Problem parsing file: "{file.filename}"')
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        else:
+            request.app.logger.info(f'File successfully parsed')
+
+        # Send the data to a FIWARE Context Broker instance
+
+        resp = {'message': 'File successfully sent'}
 
     return resp
 
