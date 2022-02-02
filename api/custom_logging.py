@@ -44,12 +44,12 @@ class CustomizeLogger:
         logging_config = config.get('logger')
 
         logger = cls.customize_logging(
-            logging_config.get('path') ,
+            filepath=logging_config.get('path'),
             level=logging_config.get('level'),
             retention=logging_config.get('retention'),
             rotation=logging_config.get('rotation'),
-            format=logging_config.get('format')
-        )
+            format=logging_config.get('format'))
+
         return logger
 
     @classmethod
@@ -58,17 +58,17 @@ class CustomizeLogger:
             level: str,
             rotation: str,
             retention: str,
-            format: str
-    ):
+            format: str):
 
         logger.remove()
+
         logger.add(
             sys.stdout,
             enqueue=True,
             backtrace=True,
             level=level.upper(),
-            format=format
-        )
+            format=format)
+
         logger.add(
             str(filepath),
             rotation=rotation,
@@ -76,15 +76,12 @@ class CustomizeLogger:
             enqueue=True,
             backtrace=True,
             level=level.upper(),
-            format=format
-        )
+            format=format)
+
         logging.basicConfig(handlers=[InterceptHandler()], level=0)
         logging.getLogger("uvicorn.access").handlers = [InterceptHandler()]
-        for _log in ['uvicorn',
-                     'uvicorn.error',
-                     'uvicorn.access',
-                     'fastapi'
-                     ]:
+
+        for _log in ['uvicorn', 'uvicorn.error', 'uvicorn.access', 'fastapi']:
             _logger = logging.getLogger(_log)
             _logger.handlers = [InterceptHandler()]
 

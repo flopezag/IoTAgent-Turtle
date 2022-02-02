@@ -9,49 +9,18 @@ from secure import Server, ContentSecurityPolicy, StrictTransportSecurity, \
 from logging import getLogger
 from pathlib import Path
 from api.custom_logging import CustomizeLogger
-
-
-server = Server().set("Secure")
-
-csp = (
-    ContentSecurityPolicy()
-    .default_src("'none'")
-    .base_uri("'self'")
-    .connect_src("'self'" "api.spam.com")
-    .frame_src("'none'")
-    .img_src("'self'", "static.spam.com")
-)
-
-hsts = StrictTransportSecurity().include_subdomains().preload().max_age(2592000)
-
-referrer = ReferrerPolicy().no_referrer()
-
-permissions_value = (
-    PermissionsPolicy().geolocation("self", "'spam.com'").vibrate()
-)
-
-cache_value = CacheControl().must_revalidate()
-
-secure_headers = Secure(
-    server=server,
-    csp=csp,
-    hsts=hsts,
-    referrer=referrer,
-    permissions=permissions_value,
-    cache=cache_value,
-)
+from requests import post, exceptions
+from json import load, loads
 
 
 initial_uptime = datetime.min
-
-
 logger = getLogger(__name__)
 
 
 def create_app() -> FastAPI:
     app = FastAPI(title='IoTAgent-Turtle', debug=False)
-    config_path = Path(__file__).with_name("logging_config.json")
-    logger = CustomizeLogger.make_logger(config_path)
+    logging_config_path = Path.cwd().joinpath('common/logging_config.json')
+    logger = CustomizeLogger.make_logger(logging_config_path)
     app.logger = logger
 
     return app
@@ -63,7 +32,38 @@ application = create_app()
 @application.middleware("http")
 async def set_secure_headers(request, call_next):
     response = await call_next(request)
+    server = Server().set("Secure")
+
+    csp = (
+        ContentSecurityPolicy()
+            .default_src("'none'")
+            .base_uri("'self'")
+            .connect_src("'self'" "api.spam.com")
+            .frame_src("'none'")
+            .img_src("'self'", "static.spam.com")
+    )
+
+    hsts = StrictTransportSecurity().include_subdomains().preload().max_age(2592000)
+
+    referrer = ReferrerPolicy().no_referrer()
+
+    permissions_value = (
+        PermissionsPolicy().geolocation("self", "'spam.com'").vibrate()
+    )
+
+    cache_value = CacheControl().must_revalidate()
+
+    secure_headers = Secure(
+        server=server,
+        csp=csp,
+        hsts=hsts,
+        referrer=referrer,
+        permissions=permissions_value,
+        cache=cache_value,
+    )
+
     secure_headers.framework.fastapi(response)
+
     return response
 
 
@@ -103,7 +103,7 @@ async def parse(request: Request, file: UploadFile, response: Response):
         myParser = Parser()
 
         try:
-            myParser.parsing(content=content.decode("utf-8"))
+            json_object = myParser.parsing(content=content.decode("utf-8"))
         except Exception as e:
             request.app.logger.error(f'POST /parse 500 Problem parsing file: "{file.filename}"')
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -111,8 +111,34 @@ async def parse(request: Request, file: UploadFile, response: Response):
             request.app.logger.info(f'File successfully parsed')
 
         # Send the data to a FIWARE Context Broker instance
+        headers = {
+            'Content-Type': 'application/ld+json',
+            'Accept': 'application/ld+json'
+        }
 
-        resp = {'message': 'File successfully sent'}
+        url = get_url()
+
+        try:
+            r = post(url=url, headers=headers, data=json_object, timeout=5)
+
+            resp = loads(r.text)
+            response.status_code = r.status_code
+        except exceptions.Timeout:
+            request.app.logger.error('Timeout requesting FIWARE Context Broker')
+        except exceptions.ConnectionError as err:
+            message = f'There was a problem connecting to the FIWARE Context Broker. URL: {url}'
+            request.app.logger.error(message)
+        except exceptions.HTTPError as e:
+            request.app.logger.error(f'Call to FIWARE Context Broker failed: {e}')
+        except KeyboardInterrupt:
+            request.app.logger.warning('Server interrupted by user')
+            raise
+        except:
+            request.app.logger.error("Unknown error sending data to the Context Broker")
+
+        request.app.logger.info(f'Content sent to the Context Broker')
+        request.app.logger.info(f'Status Code: {response.status_code}, Response:\n{resp}')
+
 
     return resp
 
@@ -128,6 +154,17 @@ def get_uptime():
         fmt = '{d} days, {h} hours, {m} minutes, and {s} seconds'
 
         return fmt.format(d=days, h=hours, m=minutes, s=seconds)
+
+
+def get_url():
+    config_path = Path.cwd().joinpath('common/config.json')
+    config = dict()
+    with open(config_path) as config_file:
+        config = load(config_file)
+
+    url = f"{config['broker']}/ngsi-ld/v1/entityOperations/create"
+
+    return url
 
 
 def launch(app: str = "server:application", port: int = 5000, uptime: datetime = datetime.utcnow()):

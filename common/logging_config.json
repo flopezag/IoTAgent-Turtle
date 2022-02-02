@@ -1,7 +1,6 @@
 {
   "logger": {
     "path": "access.log",
-    "filename": "access.log",
     "level": "info",
     "rotation": "20 days",
     "retention": "1 months",

@@ -50,10 +50,10 @@ class Parser:
 
             json_object = dumps(result, indent=4, ensure_ascii=False)
 
-            with open("final.jsonld", "w") as outfile:
-                outfile.write(json_object)
+            # with open("final.jsonld", "w") as outfile:
+            #     outfile.write(json_object)
 
-
+            return json_object
 
 
 if __name__ == '__main__':
