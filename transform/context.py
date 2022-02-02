@@ -4,8 +4,17 @@ class Context:
             "@context": dict()
         }
 
-        # By default the context should include the smart data models context
-        self.context['@context'].update({'sdmp': 'https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld'})
+        # By default, the context should include the smart data models context
+        self.context['@context']\
+            .update({'sdmp': 'https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld'})
+
+        # statDCAT-AP contexts
+        self.context['@context']\
+            .update({'dcat': 'http://www.w3.org/ns/dcat'})
+
+        self.context['@context']\
+            .update({'dct': 'http://purl.org/dc/terms'})
+
 
     def add_context(self, context):
         self.context['@context'].update(context)

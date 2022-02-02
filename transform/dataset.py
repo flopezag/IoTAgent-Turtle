@@ -9,11 +9,11 @@ class Dataset:
         self.data = {
             "id": str(),
             "type": "Dataset",
-            "title": {
+            "dct:title": {
                 "type": "Property",
-                "value": str()
+                "value": list()
             },
-            "language": {
+            "dct:language": {
                 "type": "Property",
                 "value": list()
             },
@@ -28,7 +28,7 @@ class Dataset:
             #     "LanguageMap": dict()
             # },
             #################################################
-            "description": {
+            "dct:description": {
                 "type": "Property",
                 "value": dict()
             },
@@ -52,7 +52,7 @@ class Dataset:
         }
 
         self.unitMeasures = {
-            "stat:unitMeasure": {
+            "stat:statUnitMeasure": {
                 "type": "Property",
                 "value": list()
             }
@@ -72,7 +72,7 @@ class Dataset:
             self.dimensions['stat:dimension']['value'].append(id)
         elif type_component == 'qb:measure':
             id = self.__generate_id__(entity="Measure", value=component[position][0])
-            self.unitMeasures['stat:unitMeasure']['value'].append(id)
+            self.unitMeasures['stat:statUnitMeasure']['value'].append(id)
         else:
             print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
@@ -116,13 +116,13 @@ class Dataset:
         #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
         ###############################################################################
         for i in range(0, len(languages)):
-            self.data['description']['value'][languages[i]] = descriptions[i]
+            self.data['dct:description']['value'][languages[i]] = descriptions[i]
 
         # Complete the information of the language with the previous information
-        self.data['language']['value'] = languages
+        self.data['dct:language']['value'] = languages
 
         # Add the title
-        self.data['title']['value'] = title
+        self.data['dct:title']['value'].append(title)
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:Dataset:" + title
