@@ -1,13 +1,13 @@
 # Custom Logger Using Loguru
 
-import logging
+from logging import Handler, currentframe, __file__, basicConfig, getLogger
 import sys
 from pathlib import Path
 from loguru import logger
-import json
+from json import load
 
 
-class InterceptHandler(logging.Handler):
+class InterceptHandler(Handler):
     loglevel_mapping = {
         50: 'CRITICAL',
         40: 'ERROR',
@@ -23,8 +23,8 @@ class InterceptHandler(logging.Handler):
         except AttributeError:
             level = self.loglevel_mapping[record.levelno]
 
-        frame, depth = logging.currentframe(), 2
-        while frame.f_code.co_filename == logging.__file__:
+        frame, depth = currentframe(), 2
+        while frame.f_code.co_filename == __file__:
             frame = frame.f_back
             depth += 1
 
@@ -78,11 +78,11 @@ class CustomizeLogger:
             level=level.upper(),
             format=format)
 
-        logging.basicConfig(handlers=[InterceptHandler()], level=0)
-        logging.getLogger("uvicorn.access").handlers = [InterceptHandler()]
+        basicConfig(handlers=[InterceptHandler()], level=0)
+        getLogger("uvicorn.access").handlers = [InterceptHandler()]
 
         for _log in ['uvicorn', 'uvicorn.error', 'uvicorn.access', 'fastapi']:
-            _logger = logging.getLogger(_log)
+            _logger = getLogger(_log)
             _logger.handlers = [InterceptHandler()]
 
         return logger.bind(request_id=None, method=None)
@@ -92,5 +92,5 @@ class CustomizeLogger:
     def load_logging_config(cls, config_path):
         config = None
         with open(config_path) as config_file:
-            config = json.load(config_file)
+            config = load(config_file)
         return config
