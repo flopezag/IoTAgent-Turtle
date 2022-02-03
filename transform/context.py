@@ -32,11 +32,13 @@ class Context:
 
         # statDCAT-AP contexts
         self.context['@context']\
-            .update({'dcat': 'http://www.w3.org/ns/dcat'})
+            .update({'dcat': 'http://www.w3.org/ns/dcat#'})
 
         self.context['@context']\
-            .update({'dct': 'http://purl.org/dc/terms'})
+            .update({'dct': 'http://purl.org/dc/terms/'})
 
+        self.context['@context']\
+            .update({'stat': 'http://data.europa.eu/(xyz)/statdcat-ap/'})
 
     def add_context(self, context):
         self.context['@context'].update(context)

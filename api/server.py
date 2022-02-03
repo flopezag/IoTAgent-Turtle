@@ -141,6 +141,8 @@ async def parse(request: Request, file: UploadFile, response: Response):
         url = get_url()
 
         try:
+            request.app.logger.debug(f'Sending data:\n{json_object}')
+
             r = post(url=url, headers=headers, data=json_object, timeout=5)
 
             resp = loads(r.text)
@@ -159,7 +161,7 @@ async def parse(request: Request, file: UploadFile, response: Response):
             request.app.logger.error("Unknown error sending data to the Context Broker")
 
         request.app.logger.info(f'Content sent to the Context Broker')
-        request.app.logger.info(f'Status Code: {response.status_code}, Response:\n{resp}')
+        request.app.logger.debug(f'Status Code: {response.status_code}, Response:\n{resp}')
 
 
     return resp
