@@ -1,0 +1,13 @@
+.venv/
+doc/
+examples/
+test/
+*.jsonld
+TODO
+tox.ini
+test-requirements.txt
+README.md
+.stestr.conf
+.pre-commit-config.yaml
+.gitignore
+logs/access.log

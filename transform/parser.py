@@ -26,9 +26,11 @@ from pprint import pprint
 from io import TextIOWrapper
 from json import dumps
 from logging import getLogger
+from lark.exceptions import UnexpectedToken, UnexpectedEOF, UnexpectedInput
 
 
 logger = getLogger(__name__)
+
 
 class Parser:
     def __init__(self):
@@ -38,12 +40,21 @@ class Parser:
 
         self.parser = Lark(grammar, start='start', parser='lalr')
 
-    def parsing(self, file:TextIOWrapper=None, out:bool=False, content=None):
+    def parsing(self, file: TextIOWrapper = None, out: bool = False, content=None):
         transform = TreeToJson()
 
         if file is not None:
             content = file.read()
-            tree = self.parser.parse(content)
+
+            try:
+                tree = self.parser.parse(content)
+            except UnexpectedToken as err:
+                raise err
+            except UnexpectedInput as err:
+                raise err
+            except UnexpectedEOF as err:
+                raise err
+
             transform.transform(tree)
 
             if out:
@@ -81,8 +92,3 @@ class Parser:
             #     outfile.write(json_object)
 
             return json_object
-
-
-if __name__ == '__main__':
-    myparser = Parser()
-    myparser.parsing("a file")

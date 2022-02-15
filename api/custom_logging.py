@@ -87,7 +87,6 @@ class CustomizeLogger:
 
         return logger.bind(request_id=None, method=None)
 
-
     @classmethod
     def load_logging_config(cls, config_path):
         config = None

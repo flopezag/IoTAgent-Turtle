@@ -24,6 +24,7 @@ from cli.command import parseCLI
 from transform.parser import Parser
 from api.server import launch
 from datetime import datetime
+from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
 
 if __name__ == '__main__':
     now = datetime.now()
@@ -35,7 +36,16 @@ if __name__ == '__main__':
         file_out = args['--output']
 
         myparser = Parser()
-        myparser.parsing(file=file_in, out=file_out)
+
+        try:
+            myparser.parsing(file=file_in, out=file_out)
+        except UnexpectedToken as e:
+            print(e)
+        except UnexpectedInput as e:
+            print(e)
+        except UnexpectedEOF as e:
+            print(e)
+
     elif args['server'] is True:
         port = int(args['--port'])
 
