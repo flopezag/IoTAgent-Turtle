@@ -23,7 +23,7 @@
 
 Usage:
   agent.py run (--input FILE) [--output]
-  agent.py server [--port PORT]
+  agent.py server [--host HOST] [--port PORT]
   agent.py (-h | --help)
   agent.py --version
 
@@ -34,10 +34,12 @@ Arguments:
 Options:
   -i, --input FILEIN  specify the RDF turtle file to parser
   -o, --output        generate the corresponding files of the parser RDF turtle file
-  -p, --port PORT     launch the server in the corresponding Port
+  -h, --host HOST     launch the server in the corresponding port
+                      [default: 127.0.0.1]
+  -p, --port PORT     launch the server in the corresponding port
                       [default: 5000]
 
-  -h, --help          show this help message and exit
+  -H, --help          show this help message and exit
   -v, --version       show version and exit
 
 """
@@ -47,11 +49,12 @@ from os.path import basename
 from sys import argv
 from schema import Schema, And, Or, Use, SchemaError
 
+
 __version__ = "0.1.0"
 __author__ = "fla"
 
 
-def parseCLI() -> dict:
+def parse_cli() -> dict:
     if len(argv) == 1:
         argv.append('-h')
 
@@ -65,7 +68,8 @@ def parseCLI() -> dict:
             '--input': Or(None, Use(open, error='--input FILE, FILE should be readable')),
             '--output': bool,
             '--port': Or(None, And(Use(int), lambda n: 1 < n < 65535),
-                      error='--port N, N should be integer 1 < N < 65535'),
+                         error='--port N, N should be integer 1 < N < 65535'),
+            '--host': Or(None, str, error='--host HOST should be a string'),
             '--version': bool,
             'run': bool,
             'server': bool
@@ -81,4 +85,4 @@ def parseCLI() -> dict:
 
 
 if __name__ == '__main__':
-    print(parseCLI())
+    print(parse_cli())

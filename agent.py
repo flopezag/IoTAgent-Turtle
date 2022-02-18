@@ -20,16 +20,13 @@
 # under the License.
 ##
 
-from cli.command import parseCLI
+from cli.command import parse_cli
 from transform.parser import Parser
 from api.server import launch
-from datetime import datetime
 from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
 
 if __name__ == '__main__':
-    now = datetime.now()
-
-    args = parseCLI()
+    args = parse_cli()
 
     if args['run'] is True:
         file_in = args['--input']
@@ -48,5 +45,8 @@ if __name__ == '__main__':
 
     elif args['server'] is True:
         port = int(args['--port'])
+        host = args['--host']
 
-        launch(app="api.server:application", port=port, uptime=now)
+        launch(app="api.server:application",
+               host=host,
+               port=port)

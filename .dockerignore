@@ -11,3 +11,9 @@ README.md
 .pre-commit-config.yaml
 .gitignore
 logs/access.log
+.git/
+.idea/
+.DS_Store
+.dockerignore
+__pycache__
+docker/

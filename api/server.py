@@ -205,12 +205,8 @@ def get_url():
     return url
 
 
-def launch(app: str = "server:application", port: int = 5000, uptime: datetime = datetime.utcnow()):
-    global initial_uptime
-
-    initial_uptime = uptime
-
-    run(app=app, host="127.0.0.1", port=port, log_level="info", reload=True, server_header=False)
+def launch(app: str = "server:application", host: str = "127.0.0.1", port: int = 5000):
+    run(app=app, host=host, port=port, log_level="info", reload=True, server_header=False)
 
 
 if __name__ == "__main__":
