@@ -38,7 +38,7 @@ class InterceptHandler(Handler):
 class CustomizeLogger:
 
     @classmethod
-    def make_logger(cls,config_path: Path):
+    def make_logger(cls, config_path: Path):
 
         config = cls.load_logging_config(config_path)
         logging_config = config.get('logger')
