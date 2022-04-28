@@ -90,12 +90,12 @@ async def set_secure_headers(request, call_next):
 
 
 @application.get("/version", status_code=status.HTTP_200_OK)
-def version(request: Request):
+def getversion(request: Request):
     request.app.logger.info("Request version information")
     data = {
         "doc": "...",
         "git_hash": "nogitversion",
-        "iotagent-turtle version": __version__,
+        "version": __version__,
         "release_date": "no released",
         "uptime": get_uptime()
     }

@@ -1,5 +1,4 @@
 # IoTAgent-Turtle
-IoT Agent for the RDF Turtle 1.1 for statistical data representation
 
 <div id="top"></div>
 
@@ -17,13 +16,13 @@ IoT Agent for the RDF Turtle 1.1 for statistical data representation
 <br />
 <div align="center">
   <a href="https://github.com/flopezag/IoTAgent-Turtle">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width="280" height="160">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">SDMX (Turtle) to NGSI-LD (JSON-LD) converter</h3>
 
   <p align="center">
-    project_description
+    IoT Agent for the RDF Turtle 1.1 for statistical data representation
     <br />
     <a href="https://github.com/flopezag/IoTAgent-Turtle"><strong>Explore the docs »</strong></a>
     <br />
@@ -68,15 +67,36 @@ IoT Agent for the RDF Turtle 1.1 for statistical data representation
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-iaea iacta iae..
+An Internet of Things Agent for the IoT Agent for the RDF Turtle 1.1 (statistical data representation) with HTTP.
+This IoT Agent is designed to be a bridge between RDF Turtle and the NGSI interface of a context broker.
+
+It is based on a [EBNF LALR(1) grammar](./grammar/grammar.lark).
+
+This project is part of INTERSTAT. For more information about the INTERSTAT Project, please check the url 
+https://cef-interstat.eu.
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-
 ### Built With
 
-* ...
+This project has been built using the following python libraries:
+
+* Lark, a parsing library for python
+
+* docopt, command-line interface description language
+
+* FastAPI, is high-performance web framework for building APIs with Python 3.6+ based on standard Python type hints.
+* Secure, a lightweight package that adds optional security headers for Python web frameworks.
+* Schema, a python library for validating Python data structures.
+* Uvicorn, an Asynchronous Server Gateway Interface (ASGI) web server implementation for Python.
+* Requests, an HTTP library for Python.
+* Python-Multipart, a streaming multipart parser for Python.
+
+* loguru, a library which aims to bring detailed logging in Python.
+
+For more details about the versions of each library, please refer to [requirements.txt](requirements.txt).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -85,21 +105,25 @@ iaea iacta iae..
 <!-- GETTING STARTED -->
 ## Getting Started
 
-...
+This section explains the different steps that we need to do in order to start using this agent.
 
 ### Prerequisites
 
 The following software must be installed:
 
 - Python 3.9
-- pip
-- virtualenv
+- pip 22.0.3 (python 3.9)
+- virtualenv 20.13.1
 
 This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+
+* python, follow the recommendations for your own OS in [Python/Downloads](https://www.python.org/downloads)
+* pip, usually, it is automatically installed if you installed python in the previous steps. If you had already 
+  installed a python version, but you have no pip follow the instructions for your own OS in 
+  [installation pip](https://pip.pypa.io/en/stable/installation).
+* virtualenv, is a tool to create isolated Python environments, you can use other available options, but it is 
+  recommended to use one. You can follow the instructions to install it in your OS in 
+  [Installation virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
 
 ### Installation
 
@@ -134,7 +158,8 @@ Broker LD.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos 
+work well in this space. You may also link to more resources.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
@@ -145,12 +170,13 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] Increase Unit Tests of the code
+- [ ] Cover several examples of use of the component
+- [ ] Testing deployment in Kubernetes Clusters
+- [ ] Improve Error Messages
 
-See the [open issues](https://github.com/flopezag/IoTAgent-Turtle/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/flopezag/IoTAgent-Turtle/issues) for a full list of proposed features 
+(and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -159,9 +185,9 @@ See the [open issues](https://github.com/flopezag/IoTAgent-Turtle/issues) for a 
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. 
+Any contributions you make are **greatly appreciated**. If you have a suggestion that would make this better, 
+please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
@@ -176,7 +202,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- CONTACT -->
 ## Contact
 
-Fernando López - [@twitter_handle](https://twitter.com/twitter_handle) - fernando.lopez@fiware.org
+Fernando López - [@flopezaguilar](https://twitter.com/flopezaguilar) - fernando.lopez@fiware.org
 
 Project Link: [https://github.com/flopezag/IoTAgent-Turtle](https://github.com/flopezag/IoTAgent-Turtle)
 
