@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-05-25T19:51:31.962Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15" etag="Q2FetYnw4A_myUe-zWyI" version="18.1.1" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2022-05-25T19:51:58.486Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15" etag="2EN3jfwQIFBxxgEGp0Wa" version="18.1.1" type="github" pages="3">
   <diagram id="R6a50qLmQAAjvGmiSF7n" name="DCAT-AP">
     <mxGraphModel dx="2066" dy="1185" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -516,7 +516,7 @@
       </root>
     </mxGraphModel>
   </diagram>
-  <diagram id="ChM2KZReSrhay-U6CIiK" name="Page-3">
+  <diagram id="ChM2KZReSrhay-U6CIiK" name="SDMX mapping to StatDCAT-AP">
     <mxGraphModel dx="1604" dy="1394" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
