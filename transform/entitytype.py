@@ -26,6 +26,10 @@ from transform.conceptschema import ConceptSchema
 from transform.concept import Concept
 from transform.datarange import DataRange
 from transform.attribute import Attribute
+import re
+from logging import getLogger
+
+logger = getLogger()
 
 
 class EntityType:
@@ -49,78 +53,139 @@ class EntityType:
         self.conceptListsIds = dict()
         self.context = dict()
 
+        regex = "http[s]?:\/\/(.*)"
+
+        # Compile the Regex
+        self.re = re.compile(regex)
+
     def __find_entity_type__(self, string):
         """
         Find the index position of the 'a' SDMX key and return the following data with the corresponding EntityType
         """
+        is_new = bool()
+
         # Index maybe 0 in case of ComponentSpecification or 1 in case of DataStructureDefinition
         index = len(string) - 1
-        string = string[index]
+        string1 = string[index]
 
-        position = string.index('a') + 1
-        # data = string[position][0]
-        data = string[position][len(string[position]) - 1]
-
-        # We have two options, a well know object list to be found in the self.entities or
-        # the conceptList defined in the turtle file
+        # We can get a 'verb' 'objectlist' or an 'objectlist', where verb is 'a'
+        # in case that there is no verb, we are talking about a triples whose id was previously
+        # created.
         try:
-            data = self.entities[data]
-        except KeyError:
-            # We found a CodeList or any other thing, check the list of codeList found in the turtle file
-            if data not in self.conceptListsIds:
-                print(f"Received a unexpected entity type: {data}")
+            position = string1.index('a') + 1
+            # data = string[position][0]
+            data = string1[position][len(string1[position]) - 1]
+
+            # We have two options, a well-know object list to be found in the self.entities or
+            # the conceptList defined in the turtle file
+            try:
+                data = self.entities[data]
+            except KeyError:
+                # We found a CodeList or any other thing, check the list of codeList found in the turtle file
+                if data not in self.conceptListsIds:
+                    print(f"Received a unexpected entity type: {data}")
+                else:
+                    data = 'Range'
+
+            is_new = True
+        except ValueError:
+            logger.info(f'Not a definition triples {string}, need to find the proper structure')
+            is_new = False
+            data = self.__get_subject__(title=string[0])
+            string1 = string[1:]
+
+        return data, string1, is_new
+
+    def transform(self, string):
+        # TODO: In this point context should be defined
+        if len(self.context) == 0:
+            raise AssertionError("Context should be passed before to the EntityType Class, call EntityType.set_context() "
+                                 "before, {'__file__': this_file}))")
+
+        data_type, new_string, is_new = self.__find_entity_type__(string=string)
+
+        if is_new:
+            self.create_data(type=data_type, data=new_string, title=string[0])
+        else:
+            logger.info(f'Checking previous subjects to find if it was created previously')
+            self.patch_data(datatype=data_type, data=new_string)
+
+    def patch_data(self, datatype, data):
+        def flatten_value(y):
+            if isinstance(y, list):
+                return flatten_value(y[0])
             else:
-                data = 'Range'
+                return y.replace('"', '')
 
-        return data, string
+        flatten_data = [item for sublist in data for item in sublist]
+        dict_data = {flatten_data[i]: flatten_value(flatten_data[i + 1]) for i in range(0, len(flatten_data), 2)}
 
-    def transform(self, string, context):
-        data_type, new_string = self.__find_entity_type__(string=string)
+        if datatype == 'Dataset':
+            self.dataset.patch_data(dict_data)
 
-        if data_type == 'Component':
-            self.dataset.add_components(component=new_string)
-        elif data_type == 'Dataset':
-            title = string[0].split(':')[1]
-            self.dataset.add_data(title=title, data=new_string)
-            self.dataset.add_context(context=context)
-        elif data_type == 'Dimension':
+    def create_data(self, type, data, title):
+        if type == 'Component':
+            self.dataset.add_components(component=data)
+        elif type == 'Dataset':
+            identifier = str()
+
+            # Return if the string matched the ReGex
+            out = self.re.match(title)
+
+            if out == None:
+                # We have a prefixedname subject
+                result = title
+
+                # Check if the prefixedname include ':'
+                identifier = title.split(':')[1]
+            else:
+                # We have a URIREF
+                out = out.group(1)
+                out = out.split("/")
+
+                # we get the last value which corresponds to the id
+                identifier = out[(len(out) - 1):][0]
+
+            self.dataset.add_data(title=title, id=identifier, data=data)
+            self.dataset.add_context(context=self.context)
+        elif type == 'Dimension':
             dimension = Dimension()
-            dimension_id = string[0].split(':')[1]
-            dimension.add_data(id=dimension_id, data=new_string)
-            dimension.add_context(context=context)
+            dimension_id = title.split(':')[1]
+            dimension.add_data(id=dimension_id, data=data)
+            dimension.add_context(context=self.context)
             self.dimensions.append(dimension)
-        elif data_type == 'Attribute':
+        elif type == 'Attribute':
             attribute = Attribute()
-            attribute_id = string[0].split(':')[1]
-            attribute.add_data(id=attribute_id, data=new_string)
-            attribute.add_context(context=context)
+            attribute_id = title.split(':')[1]
+            attribute.add_data(id=attribute_id, data=data)
+            attribute.add_context(context=self.context)
             self.attributes.append(attribute)
-        elif data_type == 'ConceptScheme':
+        elif type == 'ConceptScheme':
             conceptSchema = ConceptSchema()
 
-            if ':' in string[0]:
-                aux = string[0].split(':')[1]
+            if ':' in title:
+                aux = title.split(':')[1]
                 aux = aux.split('/')
                 conceptSchemaId = '_'.join(aux[len(aux)-2:])
             else:
-                conceptSchemaId = string[0]
+                conceptSchemaId = title
 
-            conceptSchema.add_data(concept_schema_id=conceptSchemaId, data=new_string)
-            conceptSchema.add_context(context=context)
+            conceptSchema.add_data(concept_schema_id=conceptSchemaId, data=data)
+            conceptSchema.add_context(context=self.context)
             self.conceptSchemas.append(conceptSchema)
-        elif data_type == 'Class':
+        elif type == 'Class':
             # We need the Concept because each of the Range description is of the type Concept
             conceptList = Concept()
-            conceptlistId = string[0].split(':')[1]
-            conceptList.add_data(conceptId=conceptlistId, data=new_string)
-            conceptList.add_context(context=context)
+            conceptlistId = title.split(':')[1]
+            conceptList.add_data(conceptId=conceptlistId, data=data)
+            conceptList.add_context(context=self.context)
             self.conceptLists.append(conceptList)
-            self.conceptListsIds[string[0]] = conceptList.get_id()
-        elif data_type == 'Range':
+            self.conceptListsIds[title] = conceptList.get_id()
+        elif type == 'Range':
             data_range = DataRange()
-            data_range_id = string[0].split(':')[1].split('/')
+            data_range_id = title.split(':')[1].split('/')
             data_range_id = data_range_id[len(data_range_id)-1]
-            data_range.add_data(range_id=data_range_id, data=string)
+            data_range.add_data(range_id=data_range_id, data=data)  # ERROR should be all the data not only data, previously was string
 
             for i in range(0, len(self.conceptSchemas)):
                 concept_schema = self.conceptSchemas[i].data
@@ -129,6 +194,12 @@ class EntityType:
                 out = [data_range.notation if x == data_range.id else x for x in has_top_concept_values]
 
                 self.conceptSchemas[i].data['skos:hasTopConcept']['value'] = out
+
+    def __get_subject__(self, title):
+        if self.dataset.get()['dct:title'] == title:
+            return 'Dataset'
+        else:
+            AssertionError(f"Still not defined: {title}")
 
     def get_dataset(self):
         return self.dataset.get()
@@ -144,6 +215,9 @@ class EntityType:
 
     def get_conceptList(self):
         return self.conceptLists
+
+    def set_context(self, context):
+        self.context = context
 
     def save(self, param):
         getattr(self, param).save()

@@ -31,10 +31,8 @@ class Dataset:
         self.data = {
             "id": str(),
             "type": "Dataset",
-            "dct:title": {
-                "type": "Property",
-                "value": list()
-            },
+            "dct:title": str(),
+            "dct:identifier": str(),
             "dct:language": {
                 "type": "Property",
                 "value": list()
@@ -107,47 +105,19 @@ class Dataset:
         self.data = self.data | self.dimensions | self.attributes | self.unitMeasures
         return self.data
 
-    def add_data(self, title, data):
+    def add_data(self, title, id, data):
         # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the Dataset: rdfs:label
-        position = data.index('rdfs:label') + 1
-        description = data[position]
-
-        descriptions = [x[0].replace("\"", "") for x in description]
-
-        languages = list()
-        try:
-            languages = [x[1].replace("@", "").lower() for x in description]
-        except IndexError:
-            logger.warning(f'The Dataset {title} has a '
-                           f'rdfs:label without language tag: {description}')
-
-            aux = len(description)
-            if aux != 1:
-                logger.error(f"Dataset: there is more than 1 description ({aux}), values: {description}")
-            else:
-                # There is no language tag, we use by default 'en'
-                languages = ['en']
-                logger.warning('Dataset: selecting default language "en"')
-
-        ###############################################################################
-        # TODO: New ETSI CIM NGSI-LD specification 1.4.2
-        # Pending to implement in the Context Broker
-        ###############################################################################
-        # for i in range(0, len(languages)):
-        #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
-        ###############################################################################
-        for i in range(0, len(languages)):
-            self.data['dct:description']['value'][languages[i]] = descriptions[i]
-
-        # Complete the information of the language with the previous information
-        self.data['dct:language']['value'] = languages
+        self.__complete_label__(title=title, data=data)
 
         # Add the title
-        self.data['dct:title']['value'].append(title)
+        self.data['dct:title'] = title
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:Dataset:" + title
+        self.data['id'] = "urn:ngsi-ld:Dataset:" + id
+
+        # Add the id
+        # self.data['dct:identifier'] = identifier
 
     def add_context(self, context):
         # TODO: We should assign only the needed context and not all the contexts
@@ -166,3 +136,44 @@ class Dataset:
         # Writing to sample.json
         with open(filename, "w") as outfile:
             outfile.write(json_object)
+
+    def patch_data(self, data):
+        [self.data.update({k: v}) for k, v in data.items()]
+        print(self.data)
+        
+    def __complete_label__(self, title, data):
+        try:
+            position = data.index('rdfs:label') + 1
+            description = data[position]
+
+            descriptions = [x[0].replace("\"", "") for x in description]
+
+            languages = list()
+            try:
+                languages = [x[1].replace("@", "").lower() for x in description]
+            except IndexError:
+                logger.warning(f'The Dataset {title} has a '
+                               f'rdfs:label without language tag: {description}')
+
+                aux = len(description)
+                if aux != 1:
+                    logger.error(f"Dataset: there is more than 1 description ({aux}), values: {description}")
+                else:
+                    # There is no language tag, we use by default 'en'
+                    languages = ['en']
+                    logger.warning('Dataset: selecting default language "en"')
+
+            ###############################################################################
+            # TODO: New ETSI CIM NGSI-LD specification 1.4.2
+            # Pending to implement in the Context Broker
+            ###############################################################################
+            # for i in range(0, len(languages)):
+            #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
+            ###############################################################################
+            for i in range(0, len(languages)):
+                self.data['dct:description']['value'][languages[i]] = descriptions[i]
+
+            # Complete the information of the language with the previous information
+            self.data['dct:language']['value'] = languages
+        except ValueError:
+            logger.info(f'DataStructureDefinition without rdfs:label detail: {title}')

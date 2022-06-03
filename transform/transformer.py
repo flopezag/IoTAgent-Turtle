@@ -33,7 +33,8 @@ class TreeToJson(Transformer):
         self.entity_type = EntityType()
 
         # Regex to check valid URL
-        regex = "<http[s]?:\/\/(.*)>"
+        # regex = "<http[s]?:\/\/(.*)>"
+        regex = "http[s]?:\/\/(.*)"
 
         # Compile the Regex
         self.re = re.compile(regex)
@@ -44,7 +45,8 @@ class TreeToJson(Transformer):
         self.context.add_context(context)
 
     def triples(self, triple):
-        self.entity_type.transform(string=triple, context=self.get_context())
+        self.entity_type.set_context(context=self.get_context())
+        self.entity_type.transform(string=triple)
         return triple
 
     def predicate(self, pre):
@@ -58,24 +60,25 @@ class TreeToJson(Transformer):
 
     def subject(self, sub):
         # sub[0] can be an URIREF or a prefixedname
-        result = str()
-
-        # Return if the string matched the ReGex
-        out = self.re.match(sub[0])
-
-        if out == None:
-            # We have a prefixedname subject
-            result = sub[0]
-        else:
-            # We have a URIREF
-            out = out.group(1)
-            out = out.split("/")
-
-            # we get the last 2 values to compose the proper subject
-            out = out[(len(out) - 2):]
-            result = '_'.join(out)
-
-        return result
+        # result = str()
+        #
+        # # Return if the string matched the ReGex
+        # out = self.re.match(sub[0])
+        #
+        # if out == None:
+        #     # We have a prefixedname subject
+        #     result = sub[0]
+        # else:
+        #     # We have a URIREF
+        #     out = out.group(1)
+        #     out = out.split("/")
+        #
+        #     # we get the last 2 values to compose the proper subject
+        #     out = out[(len(out) - 2):]
+        #     result = '_'.join(out)
+        #
+        # return result
+        return sub[0]
 
     def predicateobjectlist(self, pol):
         return pol
@@ -97,6 +100,7 @@ class TreeToJson(Transformer):
 
     def iri(self, iri):
         return str(iri[0])
+        # return iri
 
     def verb(self, verb):
         return str(verb[0])
