@@ -28,6 +28,7 @@ from transform.datarange import DataRange
 from transform.attribute import Attribute
 import re
 from logging import getLogger
+from datetime import datetime
 
 logger = getLogger()
 
@@ -114,6 +115,8 @@ class EntityType:
         def flatten_value(y):
             if isinstance(y, list):
                 return flatten_value(y[0])
+            elif isinstance(y, datetime):
+                return y
             else:
                 return y.replace('"', '')
 

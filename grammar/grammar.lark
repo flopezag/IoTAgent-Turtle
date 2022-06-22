@@ -13,7 +13,9 @@ predicateobjectlist: verb objectlist (";" (verb objectlist)?)*
 objectlist: object ("," object)*
 object: iri | literal | blanknodepropertylist
 literal: rdfliteral
-rdfliteral: string (langtag | "^^" iri)?
+// rdfliteral: string (langtag | FORMATCONNECTOR iri)?
+rdfliteral: string | string langtag | rdfliteralformat
+rdfliteralformat: string FORMATCONNECTOR iri
 string: ESCAPED_STRING
 verb: predicate | VERB
 predicate: iri
@@ -35,6 +37,7 @@ LANGTAG: "@" [LCASE_LETTER | UCASE_LETTER]+ ("-" [LCASE_LETTER | UCASE_LETTER | 
 URIREF: /[^<>{}]+/
 COMMENT: /#[^\n]*/
 VERB: "a"
+FORMATCONNECTOR: "^^"
 
 
 

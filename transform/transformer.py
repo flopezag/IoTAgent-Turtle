@@ -23,6 +23,7 @@
 from lark import Transformer, Tree, Token
 from transform.context import Context
 from transform.entitytype import EntityType
+from common.datatypeconversion import DataTypeConversion
 import re
 
 
@@ -94,6 +95,14 @@ class TreeToJson(Transformer):
 
     def rdfliteral(self, a):
         return a
+
+    def rdfliteralformat(self, connector):
+        print(connector)
+        dataConversionType = DataTypeConversion()
+
+        data = dataConversionType.convert(connector[0], connector[2])
+
+        return data
 
     def langtag(self, tag):
         return str(tag[0])
