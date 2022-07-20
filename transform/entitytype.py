@@ -26,9 +26,9 @@ from transform.conceptschema import ConceptSchema
 from transform.concept import Concept
 from transform.datarange import DataRange
 from transform.attribute import Attribute
-import re
 from logging import getLogger
 from datetime import datetime
+from common.regparser import RegParser
 
 logger = getLogger()
 
@@ -40,6 +40,7 @@ class EntityType:
             'qb:ComponentSpecification': 'Component',
             'qb:AttributeProperty': 'Attribute',
             'qb:DimensionProperty': 'Dimension',
+            'qb:CodedProperty': 'Dimension',
             'rdfs:Class': 'Class',
             'owl:Class': 'Class',
             'skos:ConceptScheme': 'ConceptScheme',
@@ -53,11 +54,6 @@ class EntityType:
         self.conceptLists = list()
         self.conceptListsIds = dict()
         self.context = dict()
-
-        regex = "http[s]?:\/\/(.*)"
-
-        # Compile the Regex
-        self.re = re.compile(regex)
 
     def __find_entity_type__(self, string):
         """
@@ -121,39 +117,28 @@ class EntityType:
                 return y.replace('"', '')
 
         flatten_data = [item for sublist in data for item in sublist]
-        dict_data = {flatten_data[i]: flatten_value(flatten_data[i + 1]) for i in range(0, len(flatten_data), 2)}
+
+        if flatten_data[0] != 'rdfs:label':
+            flatten_data = {flatten_data[i]: flatten_value(flatten_data[i + 1]) for i in range(0, len(flatten_data), 2)}
+            languageMap = False
+        else:
+            languageMap = True
 
         if datatype == 'Dataset':
-            self.dataset.patch_data(dict_data)
+            self.dataset.patch_data(data=flatten_data, languageMap=languageMap)
 
     def create_data(self, type, data, title):
+        parser = RegParser()
+
         if type == 'Component':
             self.dataset.add_components(component=data)
         elif type == 'Dataset':
-            identifier = str()
-
-            # Return if the string matched the ReGex
-            out = self.re.match(title)
-
-            if out == None:
-                # We have a prefixedname subject
-                result = title
-
-                # Check if the prefixedname include ':'
-                identifier = title.split(':')[1]
-            else:
-                # We have a URIREF
-                out = out.group(1)
-                out = out.split("/")
-
-                # we get the last value which corresponds to the id
-                identifier = out[(len(out) - 1):][0]
-
+            identifier = parser.obtain_id(title)
             self.dataset.add_data(title=title, id=identifier, data=data)
             self.dataset.add_context(context=self.context)
         elif type == 'Dimension':
             dimension = Dimension()
-            dimension_id = title.split(':')[1]
+            dimension_id = parser.obtain_id(title)
             dimension.add_data(id=dimension_id, data=data)
             dimension.add_context(context=self.context)
             self.dimensions.append(dimension)

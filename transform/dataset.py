@@ -22,12 +22,32 @@
 
 from json import dumps
 from logging import getLogger
+from common.regparser import RegParser
 
 logger = getLogger()
 
 
 class Dataset:
     def __init__(self):
+        self.allowed_keys = [
+                'id',
+                'type',
+                'dct:title',
+                'dct:identifier',
+                'dct:language',
+                'dct:description',
+                'stat:dimension',
+                'stat:attribute',
+                'stat:statUnitMeasure',
+                'dc:contributor',
+                'dc:creator',
+                'dct:created',
+                'dct:modified',
+                'qb:component',
+                'qb:sliceKey',
+                'skos:notation'
+        ]
+
         self.data = {
             "id": str(),
             "type": "Dataset",
@@ -97,8 +117,11 @@ class Dataset:
             print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
     def __generate_id__(self, entity, value):
-        aux = value.split(":")
-        aux = "urn:ngsi-ld:" + entity + ":" + aux[len(aux)-1]
+        parse = RegParser()
+        aux = parse.obtain_id(value)
+        # aux = value.split(":")
+        # aux = "urn:ngsi-ld:" + entity + ":" + aux[len(aux)-1]
+        aux = "urn:ngsi-ld:" + entity + ":" + aux
         return aux
 
     def get(self):
@@ -137,8 +160,14 @@ class Dataset:
         with open(filename, "w") as outfile:
             outfile.write(json_object)
 
-    def patch_data(self, data):
-        [self.data.update({k: v}) for k, v in data.items()]
+    def patch_data(self, data, languageMap):
+        if languageMap:
+            self.__complete_label__(title="Not spscified", data=data)
+        else:
+            # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
+            #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
+            [self.data.update({k: v}) for k, v in data.items()]
+
         print(self.data)
         
     def __complete_label__(self, title, data):

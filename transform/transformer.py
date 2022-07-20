@@ -97,7 +97,7 @@ class TreeToJson(Transformer):
         return a
 
     def rdfliteralformat(self, connector):
-        print(connector)
+        # print(connector)
         dataConversionType = DataTypeConversion()
 
         data = dataConversionType.convert(connector[0], connector[2])

@@ -25,7 +25,7 @@ class DataTypeConversion:
 
     def convert(self, data, datatype):
         def stodt(value):
-            print(f'toDateTime function, arguments {value}')
+            # print(f'toDateTime function, arguments {value}')
             if isinstance(value, str):
                 result = infer([value])
             elif isinstance(value, list):
@@ -35,9 +35,9 @@ class DataTypeConversion:
 
             result = self.correct_datatype_format(result)
 
-            print(f'format {result}')
+            # print(f'format {result}')
             result = datetime.strptime(value, result).replace(tzinfo=timezone.utc).isoformat()
-            print(f'result {result}')
+            # print(f'result {result}')
             return result
 
         def stoi(value):
