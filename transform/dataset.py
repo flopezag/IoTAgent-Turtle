@@ -29,6 +29,8 @@ logger = getLogger()
 
 class Dataset:
     def __init__(self):
+        self.context_keys = dict()
+
         self.allowed_keys = [
                 'id',
                 'type',
@@ -125,7 +127,17 @@ class Dataset:
         return aux
 
     def get(self):
-        self.data = self.data | self.dimensions | self.attributes | self.unitMeasures
+        # TODO: We need to check if the list of dimensions, attibutes, and unitMeasures are empty, in that case
+        #  we do not add to the data
+        if len(self.dimensions['stat:dimension']['value']) != 0:
+            self.data = self.data | self.dimensions
+
+        if len(self.attributes['stat:attribute']['value']) != 0:
+            self.data = self.data | self.attributes
+
+        if len(self.unitMeasures['stat:statUnitMeasure']['value']) != 0:
+            self.data = self.data | self.unitMeasures
+
         return self.data
 
     def add_data(self, title, id, data):
@@ -142,9 +154,13 @@ class Dataset:
         # Add the id
         # self.data['dct:identifier'] = identifier
 
+        # TODO: in this point we should analise the rest of information that we get from data in order to see if we can
+        #  complete more information about the data
+
     def add_context(self, context):
         # TODO: We should assign only the needed context and not all the contexts
         self.data['@context'] = context['@context']
+        self.context_keys = self.data['@context'].keys()
 
     def save(self):
         data = self.get()

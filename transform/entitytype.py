@@ -71,6 +71,9 @@ class EntityType:
         try:
             position = string1.index('a') + 1
             # data = string[position][0]
+            # TODO: if the type is an array we get the last value of the list as the entity type, it should be better
+            #  the analyse all the element of the list to find which one should be taken,
+            #  e.g., ['DimensionProperty'. 'CodedProperty'] takes 'CodedProperty'
             data = string1[position][len(string1[position]) - 1]
 
             # We have two options, a well-know object list to be found in the self.entities or
@@ -134,22 +137,23 @@ class EntityType:
             self.dataset.add_components(component=data)
         elif type == 'Dataset':
             identifier = parser.obtain_id(title)
-            self.dataset.add_data(title=title, id=identifier, data=data)
             self.dataset.add_context(context=self.context)
+            self.dataset.add_data(title=title, id=identifier, data=data)
         elif type == 'Dimension':
             dimension = Dimension()
+            dimension.add_context(context=self.context)
             dimension_id = parser.obtain_id(title)
             dimension.add_data(id=dimension_id, data=data)
-            dimension.add_context(context=self.context)
             self.dimensions.append(dimension)
         elif type == 'Attribute':
             attribute = Attribute()
+            attribute.add_context(context=self.context)
             attribute_id = title.split(':')[1]
             attribute.add_data(id=attribute_id, data=data)
-            attribute.add_context(context=self.context)
             self.attributes.append(attribute)
         elif type == 'ConceptScheme':
             conceptSchema = ConceptSchema()
+            conceptSchema.add_context(context=self.context)
 
             if ':' in title:
                 aux = title.split(':')[1]
@@ -159,14 +163,13 @@ class EntityType:
                 conceptSchemaId = title
 
             conceptSchema.add_data(concept_schema_id=conceptSchemaId, data=data)
-            conceptSchema.add_context(context=self.context)
             self.conceptSchemas.append(conceptSchema)
         elif type == 'Class':
             # We need the Concept because each of the Range description is of the type Concept
             conceptList = Concept()
+            conceptList.add_context(context=self.context)
             conceptlistId = title.split(':')[1]
             conceptList.add_data(conceptId=conceptlistId, data=data)
-            conceptList.add_context(context=self.context)
             self.conceptLists.append(conceptList)
             self.conceptListsIds[title] = conceptList.get_id()
         elif type == 'Range':

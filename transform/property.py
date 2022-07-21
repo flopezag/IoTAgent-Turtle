@@ -104,7 +104,6 @@ class Property:
         concept = data[position][0]
         self.data['qb:concept']['value'] = concept
 
-
     def add_context(self, context):
         # TODO: We should assign only the needed context and not all the contexts
         self.data['@context'] = context['@context']

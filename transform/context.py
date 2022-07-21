@@ -27,6 +27,7 @@ class Context:
         }
 
         # By default, the context should include the smart data models context
+        # TODO: Maybe we can reduce the context management taking into account the details
         self.context['@context']\
             .update({'sdmp': 'https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld'})
 
