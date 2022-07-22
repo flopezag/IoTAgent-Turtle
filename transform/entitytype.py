@@ -141,7 +141,7 @@ class EntityType:
             self.dataset.add_data(title=title, dataset_id=identifier, data=data)
         elif type == 'Dimension':
             dimension = Dimension()
-            dimension.add_context(context=self.context)
+            dimension.add_context(context=self.context, context_mapping=self.context_mapping)
             dimension_id = parser.obtain_id(title)
             dimension.add_data(id=dimension_id, data=data)
             self.dimensions.append(dimension)

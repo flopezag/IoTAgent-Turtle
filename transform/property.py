@@ -20,18 +20,24 @@
 # under the License.
 ##
 
-from json import dumps
 from logging import getLogger
+from common.commonclass import CommonClass
+from common.listmanagement import get_rest_data
 
 logger = getLogger()
 
 
-class Property:
+class Property(CommonClass):
     def __init__(self):
+        super().__init__()
+
         self.data = {
             "id": str(),
             "type": "",
-
+            "dct:language": {
+                "type": "Property",
+                "value": list()
+            },
 
             #################################################
             # TODO: New ETSI CIM NGSI-LD specification 1.4.2
@@ -58,6 +64,8 @@ class Property:
             },
             "@context": dict()
         }
+
+        self.keys = {k: k for k in self.data.keys()}
 
     def add_data(self, id, data):
         # TODO: We have to control that data include the indexes that we want to search
@@ -92,6 +100,10 @@ class Property:
         for i in range(0, len(languages)):
             self.data['rdfs:label']['value'][languages[i]] = descriptions[i]
 
+        # Complete the information of the language with the previous information
+        key = self.keys['dct:language']
+        self.data[key]['value'] = languages
+
         # qb:codeList
         position = data.index('qb:codeList') + 1
         code_list = data[position][0]
@@ -104,23 +116,24 @@ class Property:
         concept = data[position][0]
         self.data['qb:concept']['value'] = concept
 
-    def add_context(self, context):
-        # TODO: We should assign only the needed context and not all the contexts
-        self.data['@context'] = context['@context']
+        # Get the rest of the data
+        data = get_rest_data(data=data,
+                             not_allowed_keys=[
+                                 'sliceKey',
+                                 'component',
+                                 'disseminationStatus',
+                                 'validationState',
+                                 'notation',
+                                 'label'
+                             ],
+                             further_process_keys=[
+                                 'component',
+                                 'label'
+                             ])
+
+        # add the new data to the dataset structure
+        [self.data.update({k: v}) for k, v in data.items()]
+
 
     def get(self):
         return self.data
-
-    def save(self):
-        data = self.get()
-
-        aux = data['id'].split(":")
-        length_aux = len(aux)
-        filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
-
-        # Serializing json
-        json_object = dumps(data, indent=4, ensure_ascii=False)
-
-        # Writing to sample.json
-        with open(filename, "w") as outfile:
-            outfile.write(json_object)

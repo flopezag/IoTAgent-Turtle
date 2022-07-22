@@ -20,15 +20,18 @@
 # under the License.
 ##
 
-from json import dumps
 from logging import getLogger
 from common.regparser import RegParser
+from common.commonclass import CommonClass
+from common.listmanagement import get_rest_data
 
 logger = getLogger()
 
 
-class Dataset:
+class Dataset(CommonClass):
     def __init__(self):
+        super().__init__()
+
         self.data = {
             "id": str(),
             "type": "Dataset",
@@ -138,48 +141,23 @@ class Dataset:
         # Add the id
         self.data['id'] = "urn:ngsi-ld:Dataset:" + dataset_id
 
-        data = self.get_rest_data(data=data)
+        # Get the rest of the data
+        data = get_rest_data(data=data,
+                             not_allowed_keys=[
+                                 'sliceKey',
+                                 'component',
+                                 'disseminationStatus',
+                                 'validationState',
+                                 'notation',
+                                 'label'
+                             ],
+                             further_process_keys=[
+                                 'component',
+                                 'label'
+                             ])
 
         # add the new data to the dataset structure
         self.patch_data(data, False)
-
-    def add_context(self, context, context_mapping):
-        # TODO: We should assign only the needed context and not all the contexts
-        # Set the context as it is received and mixed with the core context
-        self.data['@context'] = context['@context']
-
-        # Fix the prefix of the core properties of the Dataset entity
-        new_data = dict()
-
-        for k, v in self.data.items():
-            # Return if the string matched the ReGex
-            out = k.split(':')
-
-            if len(out) == 2 and out[0] in context_mapping.keys():
-                new_prefix = context_mapping[out[0]]
-                new_key = new_prefix + ':' + out[1]
-
-                new_data[new_key] = self.data[k]
-                self.keys[k] = new_key
-            else:
-                new_data[k] = v
-
-        self.data = new_data
-
-    def save(self):
-        data = self.get()
-
-        key = self.keys['id']
-        aux = data[key].split(":")
-        length_aux = len(aux)
-        filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
-
-        # Serializing json
-        json_object = dumps(data, indent=4, ensure_ascii=False)
-
-        # Writing to sample.json
-        with open(filename, "w") as outfile:
-            outfile.write(json_object)
 
     def patch_data(self, data, language_map):
         if language_map:
@@ -237,49 +215,3 @@ class Dataset:
             # The key did not exist therefore we add to the list with this value
             self.keys[requested_key] = requested_key
             return requested_key
-
-    @staticmethod
-    def get_rest_data(data):
-        def filter_key_with_prefix(prefix_key):
-            aux = prefix_key.split(":")
-
-            # We dismiss the following keys to be analysed due to they are not manage in the current version of
-            # statDCAT-AP (sliceKey, disseminationStatus, validationState, notation), they are manage in a separate
-            # process (label) or manage afterward analysing the turtle file (component)
-            # TODO: we should keep component in order to check that afterwards we get the definition of that component
-            not_allowed_keys = ['sliceKey',
-                                'component',
-                                'disseminationStatus',
-                                'validationState',
-                                'notation',
-                                'label']
-
-            if len(aux) == 2:
-                if aux[1] not in not_allowed_keys:
-                    # this is a key with prefix that we want to keep
-                    return True
-                else:
-                    if aux[1] not in ['component', 'label']:
-                        # These are the identified not allowed keys, we need to inform about them
-                        logger.warn(f'The property {aux[1]} is not supported in statDCAT-AP')
-                    else:
-                        # These are the identified keys managed in a different way
-                        logger.info(f'The property {aux[1]} is manage afterwards in Dataset Class or in Property Class')
-
-                    return False
-            else:
-                return False
-
-        def flatten_value(y):
-            if isinstance(y, list):
-                return flatten_value(y[0])
-            else:
-                return y.replace('"', '')
-
-        aux = {data[i]:  flatten_value(data[i + 1]) for i in range(0, len(data), 2)}
-
-        # We need to get the list of keys from the dict
-        new_keys = list(filter(lambda x: filter_key_with_prefix(x), list(aux.keys())))
-        new_data = {k: aux[k] for k in new_keys}
-
-        return new_data
