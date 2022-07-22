@@ -113,8 +113,6 @@ class Dataset:
         return aux
 
     def get(self):
-        # TODO: We need to check if the list of dimensions, attributes, and unitMeasures are empty, in that case
-        #  we do not add to the data
         key = self.keys['stat:dimension']
         if len(self.dimensions[key]['value']) != 0:
             self.data = self.data | self.dimensions
@@ -130,7 +128,6 @@ class Dataset:
         return self.data
 
     def add_data(self, title, dataset_id, data):
-        # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the Dataset: rdfs:label
         self.__complete_label__(title=title, data=data)
 
@@ -141,11 +138,10 @@ class Dataset:
         # Add the id
         self.data['id'] = "urn:ngsi-ld:Dataset:" + dataset_id
 
-        # Add the id
-        # self.data['dct:identifier'] = identifier
+        data = self.get_rest_data(data=data)
 
-        # TODO: in this point we should analise the rest of information that we get from data in order to see if we can
-        #  complete more information about the data
+        # add the new data to the dataset structure
+        self.patch_data(data, False)
 
     def add_context(self, context, context_mapping):
         # TODO: We should assign only the needed context and not all the contexts
@@ -193,8 +189,6 @@ class Dataset:
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
             [self.data.update({k: v}) for k, v in data.items()]
 
-        print(self.data)
-        
     def __complete_label__(self, title, data):
         try:
             key = self.get_key(requested_key='rdfs:label')
@@ -243,3 +237,49 @@ class Dataset:
             # The key did not exist therefore we add to the list with this value
             self.keys[requested_key] = requested_key
             return requested_key
+
+    @staticmethod
+    def get_rest_data(data):
+        def filter_key_with_prefix(prefix_key):
+            aux = prefix_key.split(":")
+
+            # We dismiss the following keys to be analysed due to they are not manage in the current version of
+            # statDCAT-AP (sliceKey, disseminationStatus, validationState, notation), they are manage in a separate
+            # process (label) or manage afterward analysing the turtle file (component)
+            # TODO: we should keep component in order to check that afterwards we get the definition of that component
+            not_allowed_keys = ['sliceKey',
+                                'component',
+                                'disseminationStatus',
+                                'validationState',
+                                'notation',
+                                'label']
+
+            if len(aux) == 2:
+                if aux[1] not in not_allowed_keys:
+                    # this is a key with prefix that we want to keep
+                    return True
+                else:
+                    if aux[1] not in ['component', 'label']:
+                        # These are the identified not allowed keys, we need to inform about them
+                        logger.warn(f'The property {aux[1]} is not supported in statDCAT-AP')
+                    else:
+                        # These are the identified keys managed in a different way
+                        logger.info(f'The property {aux[1]} is manage afterwards in Dataset Class or in Property Class')
+
+                    return False
+            else:
+                return False
+
+        def flatten_value(y):
+            if isinstance(y, list):
+                return flatten_value(y[0])
+            else:
+                return y.replace('"', '')
+
+        aux = {data[i]:  flatten_value(data[i + 1]) for i in range(0, len(data), 2)}
+
+        # We need to get the list of keys from the dict
+        new_keys = list(filter(lambda x: filter_key_with_prefix(x), list(aux.keys())))
+        new_data = {k: aux[k] for k in new_keys}
+
+        return new_data

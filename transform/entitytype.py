@@ -98,7 +98,6 @@ class EntityType:
         return data, string1, is_new
 
     def transform(self, string):
-        # TODO: In this point context should be defined
         if len(self.context) == 0:
             raise AssertionError("Context should be passed before to the EntityType Class, call EntityType.set_context() "
                                  "before, {'__file__': this_file}))")
