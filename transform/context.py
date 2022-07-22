@@ -26,6 +26,9 @@ class Context:
             "@context": dict()
         }
 
+        # Dictionary to keep those contexts that are update from the core contexts
+        self.context_mapping = dict()
+
         # By default, the context should include the smart data models context
         # TODO: Maybe we can reduce the context management taking into account the details
         self.context['@context']\
@@ -42,10 +45,32 @@ class Context:
             .update({'stat': 'http://data.europa.eu/(xyz)/statdcat-ap/'})
 
     def add_context(self, context):
-        self.context['@context'].update(context)
+        aux = list(context.items())
+        key = aux[0][0]
+        value = aux[0][1]
+
+        found = False
+
+        # check is the value of the new_context is in one of the values of the previous context
+        for k, v in self.context['@context'].items():
+            if v == value:
+                found = True
+                break
+
+        if not found:
+            # we did not find a key -> New context, we need to add
+            self.context['@context'].update(context)
+        else:
+            # We found then we need to change the key in the context or add new one and delete the old one
+            self.context['@context'].update(context)
+            self.context['@context'].pop(k)
+            self.context_mapping.update({k: key})
 
     def get_context(self):
         return self.context
+
+    def get_context_mapping(self):
+        return self.context_mapping
 
     def print_context(self):
         print(self.context)

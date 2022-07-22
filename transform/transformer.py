@@ -46,7 +46,7 @@ class TreeToJson(Transformer):
         self.context.add_context(context)
 
     def triples(self, triple):
-        self.entity_type.set_context(context=self.get_context())
+        self.entity_type.set_context(context=self.get_context(), mapping=self.get_context_mapping())
         self.entity_type.transform(string=triple)
         return triple
 
@@ -129,6 +129,9 @@ class TreeToJson(Transformer):
 
     def get_context(self):
         return self.context.get_context()
+
+    def get_context_mapping(self):
+        return self.context.get_context_mapping()
 
     def get_dataset(self):
         return self.entity_type.get_dataset()

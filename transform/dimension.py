@@ -22,6 +22,7 @@
 
 from transform.property import Property
 
+
 class Dimension(Property):
     def __init__(self):
         super().__init__()

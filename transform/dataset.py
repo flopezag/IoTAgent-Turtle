@@ -29,27 +29,6 @@ logger = getLogger()
 
 class Dataset:
     def __init__(self):
-        self.context_keys = dict()
-
-        self.allowed_keys = [
-                'id',
-                'type',
-                'dct:title',
-                'dct:identifier',
-                'dct:language',
-                'dct:description',
-                'stat:dimension',
-                'stat:attribute',
-                'stat:statUnitMeasure',
-                'dc:contributor',
-                'dc:creator',
-                'dct:created',
-                'dct:modified',
-                'qb:component',
-                'qb:sliceKey',
-                'skos:notation'
-        ]
-
         self.data = {
             "id": str(),
             "type": "Dataset",
@@ -100,6 +79,11 @@ class Dataset:
             }
         }
 
+        self.keys = {k: k for k in self.data.keys()} | \
+                    {k: k for k in self.dimensions.keys()} | \
+                    {k: k for k in self.attributes.keys()} | \
+                    {k: k for k in self.unitMeasures.keys()}
+
     def add_components(self, component):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
@@ -107,49 +91,55 @@ class Dataset:
         position = component.index(type_component) + 1
 
         if type_component == 'qb:attribute':
-            id = self.__generate_id__(entity="AttributeProperty", value=component[position][0])
-            self.attributes['stat:attribute']['value'].append(id)
+            new_id = self.__generate_id__(entity="AttributeProperty", value=component[position][0])
+            key = self.keys['stat:attribute']
+            self.attributes[key]['value'].append(new_id)
         elif type_component == 'qb:dimension':
-            id = self.__generate_id__(entity="DimensionProperty", value=component[position][0])
-            self.dimensions['stat:dimension']['value'].append(id)
+            new_id = self.__generate_id__(entity="DimensionProperty", value=component[position][0])
+            key = self.keys['stat:dimension']
+            self.dimensions[key]['value'].append(new_id)
         elif type_component == 'qb:measure':
-            id = self.__generate_id__(entity="Measure", value=component[position][0])
-            self.unitMeasures['stat:statUnitMeasure']['value'].append(id)
+            new_id = self.__generate_id__(entity="Measure", value=component[position][0])
+            key = self.keys['stat:statUnitMeasure']
+            self.unitMeasures[key]['value'].append(new_id)
         else:
             print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
-    def __generate_id__(self, entity, value):
+    @staticmethod
+    def __generate_id__(entity, value):
         parse = RegParser()
         aux = parse.obtain_id(value)
-        # aux = value.split(":")
-        # aux = "urn:ngsi-ld:" + entity + ":" + aux[len(aux)-1]
         aux = "urn:ngsi-ld:" + entity + ":" + aux
         return aux
 
     def get(self):
-        # TODO: We need to check if the list of dimensions, attibutes, and unitMeasures are empty, in that case
+        # TODO: We need to check if the list of dimensions, attributes, and unitMeasures are empty, in that case
         #  we do not add to the data
-        if len(self.dimensions['stat:dimension']['value']) != 0:
+        key = self.keys['stat:dimension']
+        if len(self.dimensions[key]['value']) != 0:
             self.data = self.data | self.dimensions
 
-        if len(self.attributes['stat:attribute']['value']) != 0:
+        key = self.keys['stat:attribute']
+        if len(self.attributes[key]['value']) != 0:
             self.data = self.data | self.attributes
 
-        if len(self.unitMeasures['stat:statUnitMeasure']['value']) != 0:
+        key = self.keys['stat:statUnitMeasure']
+        if len(self.unitMeasures[key]['value']) != 0:
             self.data = self.data | self.unitMeasures
 
         return self.data
 
-    def add_data(self, title, id, data):
+    def add_data(self, title, dataset_id, data):
         # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the Dataset: rdfs:label
         self.__complete_label__(title=title, data=data)
 
         # Add the title
-        self.data['dct:title'] = title
+        key = self.keys['dct:title']
+        self.data[key] = title
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:Dataset:" + id
+        self.data['id'] = "urn:ngsi-ld:Dataset:" + dataset_id
 
         # Add the id
         # self.data['dct:identifier'] = identifier
@@ -157,15 +147,34 @@ class Dataset:
         # TODO: in this point we should analise the rest of information that we get from data in order to see if we can
         #  complete more information about the data
 
-    def add_context(self, context):
+    def add_context(self, context, context_mapping):
         # TODO: We should assign only the needed context and not all the contexts
+        # Set the context as it is received and mixed with the core context
         self.data['@context'] = context['@context']
-        self.context_keys = self.data['@context'].keys()
+
+        # Fix the prefix of the core properties of the Dataset entity
+        new_data = dict()
+
+        for k, v in self.data.items():
+            # Return if the string matched the ReGex
+            out = k.split(':')
+
+            if len(out) == 2 and out[0] in context_mapping.keys():
+                new_prefix = context_mapping[out[0]]
+                new_key = new_prefix + ':' + out[1]
+
+                new_data[new_key] = self.data[k]
+                self.keys[k] = new_key
+            else:
+                new_data[k] = v
+
+        self.data = new_data
 
     def save(self):
         data = self.get()
 
-        aux = data['id'].split(":")
+        key = self.keys['id']
+        aux = data[key].split(":")
         length_aux = len(aux)
         filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
 
@@ -176,9 +185,9 @@ class Dataset:
         with open(filename, "w") as outfile:
             outfile.write(json_object)
 
-    def patch_data(self, data, languageMap):
-        if languageMap:
-            self.__complete_label__(title="Not spscified", data=data)
+    def patch_data(self, data, language_map):
+        if language_map:
+            self.__complete_label__(title="Not specified", data=data)
         else:
             # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
@@ -188,7 +197,8 @@ class Dataset:
         
     def __complete_label__(self, title, data):
         try:
-            position = data.index('rdfs:label') + 1
+            key = self.get_key(requested_key='rdfs:label')
+            position = data.index(key) + 1
             description = data[position]
 
             descriptions = [x[0].replace("\"", "") for x in description]
@@ -216,9 +226,20 @@ class Dataset:
             #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
             ###############################################################################
             for i in range(0, len(languages)):
-                self.data['dct:description']['value'][languages[i]] = descriptions[i]
+                key = self.keys['dct:description']
+                self.data[key]['value'][languages[i]] = descriptions[i]
 
             # Complete the information of the language with the previous information
-            self.data['dct:language']['value'] = languages
+            key = self.keys['dct:language']
+            self.data[key]['value'] = languages
         except ValueError:
             logger.info(f'DataStructureDefinition without rdfs:label detail: {title}')
+
+    def get_key(self, requested_key):
+        try:
+            key = self.keys[requested_key]
+            return key
+        except KeyError:
+            # The key did not exist therefore we add to the list with this value
+            self.keys[requested_key] = requested_key
+            return requested_key

@@ -25,6 +25,7 @@ from logging import getLogger
 
 logger = getLogger()
 
+
 class ConceptSchema:
     def __init__(self):
         self.data = {

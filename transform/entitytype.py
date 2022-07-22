@@ -54,6 +54,7 @@ class EntityType:
         self.conceptLists = list()
         self.conceptListsIds = dict()
         self.context = dict()
+        self.context_mapping = dict()
 
     def __find_entity_type__(self, string):
         """
@@ -137,8 +138,8 @@ class EntityType:
             self.dataset.add_components(component=data)
         elif type == 'Dataset':
             identifier = parser.obtain_id(title)
-            self.dataset.add_context(context=self.context)
-            self.dataset.add_data(title=title, id=identifier, data=data)
+            self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)
+            self.dataset.add_data(title=title, dataset_id=identifier, data=data)
         elif type == 'Dimension':
             dimension = Dimension()
             dimension.add_context(context=self.context)
@@ -207,8 +208,9 @@ class EntityType:
     def get_conceptList(self):
         return self.conceptLists
 
-    def set_context(self, context):
+    def set_context(self, context, mapping):
         self.context = context
+        self.context_mapping = mapping
 
     def save(self, param):
         getattr(self, param).save()
