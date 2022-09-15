@@ -3,7 +3,7 @@ lark==1.1.2
 secure==0.3.0
 docopt==0.6.2
 schema==0.7.5
-fastapi==0.80.0
+fastapi==0.85.0
 uvicorn==0.18.3
 python-multipart==0.0.5
 loguru==0.6.0
