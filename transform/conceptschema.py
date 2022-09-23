@@ -20,14 +20,17 @@
 # under the License.
 ##
 
-from json import dumps
 from logging import getLogger
+from common.commonclass import CommonClass
+from common.regparser import RegParser
 
 logger = getLogger()
 
 
-class ConceptSchema:
+class ConceptSchema(CommonClass):
     def __init__(self):
+        super().__init__()
+
         self.data = {
             "id": str(),
             "type": "ConceptScheme",
@@ -92,27 +95,19 @@ class ConceptSchema:
         # Add the id
         self.data['id'] = "urn:ngsi-ld:ConceptSchema:" + concept_schema_id
 
+        # TODO: We need to control that the concept id extracted here are the same that we analyse afterwards.
         # skos:hasTopConcept, this is a list of ids
         position = data.index('skos:hasTopConcept') + 1
-        self.data['skos:hasTopConcept']['value'] = data[position]
+        result = list(map(lambda x: self.__generate_id__(entity="Concept", value=x), data[position]))
+        self.data['skos:hasTopConcept']['value'] = result
 
     def get(self):
         return self.data
 
-    def add_context(self, context):
-        # TODO: We should assign only the needed context and not all the contexts
-        self.data['@context'] = context['@context']
-
-    def save(self):
-        data = self.get()
-
-        aux = data['id'].split(":")
-        length_aux = len(aux)
-        filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
-
-        # Serializing json
-        json_object = dumps(data, indent=4, ensure_ascii=False)
-
-        # Writing to sample.json
-        with open(filename, "w") as outfile:
-            outfile.write(json_object)
+    # TODO: It should be a function of the RegParser class
+    @staticmethod
+    def __generate_id__(entity, value):
+        parse = RegParser()
+        aux = parse.obtain_id(value)
+        aux = "urn:ngsi-ld:" + entity + ":" + aux
+        return aux

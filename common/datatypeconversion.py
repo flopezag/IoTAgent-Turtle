@@ -1,5 +1,6 @@
 from hidateinfer import infer
 from datetime import datetime, timezone
+from re import compile, sub
 
 
 class DataTypeConversion:
@@ -9,19 +10,20 @@ class DataTypeConversion:
             'xsd:int': 'stoi',
             'xsd:boolean': 'stob'
         }
+        self.regex_12hour = compile(r"(^.*T%)(I)(.*)$")
+        self.regex_microseconds = compile(r"^(.*T%.*:%S\.)(%H)$")
+        self.regex_false_date = compile(r"^%Y-%d-%y(.*)%m")
 
-    @staticmethod
-    def correct_datatype_format(format: str, hour24: bool = True):
-        import re
+    def correct_datatype_format(self, format_dt: str, hour24: bool = True):
 
         if hour24:
-            regex = re.compile(r"(^.*T%)(I)(.*)$")
-            format = re.sub(regex, r"\1H\3", format)
+            format_dt = sub(self.regex_12hour, r"\1H\3", format_dt)
 
-        regex = re.compile(r"^(.*T%.*:%S\.)(%H)$")
-        format = re.sub(regex, r"\1%f", format)
+        format_dt = sub(self.regex_microseconds, r"\1%f", format_dt)
 
-        return format
+        format_dt = sub(self.regex_false_date, r"%Y-%m-%d\1%f", format_dt)
+
+        return format_dt
 
     def convert(self, data, datatype):
         def stodt(value):
@@ -92,6 +94,7 @@ if __name__ == '__main__':
     data23 = ['asdfs', Token('FORMATCONNECTOR', '^^'), 'xsd:int']
     data3 = ['"true"', Token('FORMATCONNECTOR', '^^'), 'xsd:boolean']
     data4 = ['"fake"', Token('FORMATCONNECTOR', '^^'), 'otraCosa']
+    data5 = ['"2022-01-10T09:00:00.000"', Token('FORMATCONNECTOR', '^^'), 'xsd:dateTime']
 
     print(infer(['Mon Jan 13 09:52:52 MST 2014']))
     print(infer([data1[0]]))
@@ -101,10 +104,11 @@ if __name__ == '__main__':
     print(infer([data1[0]]))
     print()
 
-    format = "%Y-%m-%dT%I:%M:%S.%H"
     # Resolve problem in the library
     # if we are working with 24h, infer should return %Y-%m-%dT%H:%M:%S.%f but return %Y-%m-%dT%I:%M:%S.%f
     # if we have seconds with milliseconds, infer should return %Y-%m-%dT%I:%M:%S.%f but return %Y-%m-%dT%I:%M:%S.%H
+    # There is some problem with the library and the date is not inferred properly, specially in the case
+    # '2022-01-10T09:00:00.000' which is inferred as %Y-%d-%yT%I:%M:%S.%m, should be %Y-%m-%dT%H:%M:%S.%f
 
     dataConversionType = DataTypeConversion()
     print(dataConversionType.convert(data1[0], data1[2]))
@@ -115,6 +119,11 @@ if __name__ == '__main__':
 
     print(dataConversionType.convert(data3[0], data3[2]))
 
-    print(dataConversionType.convert(data4[0], data4[2]))
+    try:
+        print(dataConversionType.convert(data4[0], data4[2]))
+    except Exception:
+        print('Exception')
 
     # Convert datetime generated into UTC format: 2021-12-21T16:18:55Z or 2021-12-21T16:18:55+00:00, ISO8601
+
+    print(dataConversionType.convert(data5[0], data5[2]))

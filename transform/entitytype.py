@@ -152,18 +152,11 @@ class EntityType:
             attribute.add_data(id=attribute_id, data=data)
             self.attributes.append(attribute)
         elif type == 'ConceptScheme':
-            conceptSchema = ConceptSchema()
-            conceptSchema.add_context(context=self.context)
-
-            if ':' in title:
-                aux = title.split(':')[1]
-                aux = aux.split('/')
-                conceptSchemaId = '_'.join(aux[len(aux)-2:])
-            else:
-                conceptSchemaId = title
-
-            conceptSchema.add_data(concept_schema_id=conceptSchemaId, data=data)
-            self.conceptSchemas.append(conceptSchema)
+            concept_schema = ConceptSchema()
+            concept_schema.add_context(context=self.context, context_mapping=self.context_mapping)
+            concept_schema_id = parser.obtain_id(title)
+            concept_schema.add_data(concept_schema_id=concept_schema_id, data=data)
+            self.conceptSchemas.append(concept_schema)
         elif type == 'Class':
             # We need the Concept because each of the Range description is of the type Concept
             conceptList = Concept()

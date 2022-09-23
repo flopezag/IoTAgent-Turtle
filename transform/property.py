@@ -23,6 +23,7 @@
 from logging import getLogger
 from common.commonclass import CommonClass
 from common.listmanagement import get_rest_data
+from common.regparser import RegParser
 
 logger = getLogger()
 
@@ -104,16 +105,19 @@ class Property(CommonClass):
         key = self.keys['dct:language']
         self.data[key]['value'] = languages
 
-        # qb:codeList
-        position = data.index('qb:codeList') + 1
-        code_list = data[position][0]
-        code_list = code_list.split(":")
-        code_list = "urn:ngsi-ld:ConceptSchema:" + code_list[len(code_list)-1]
-        self.data['qb:codeList']['object'] = code_list
+        # qb:codeList, this attribute might not be presented, so we need to check it.
+        # TODO: We need to control that the codeList id extracted here are the same that we analyse afterwards.
+        try:
+            position = data.index('qb:codeList') + 1
+            code_list = self.__generate_id__(entity="ConceptSchema", value=data[position][0])
+            self.data['qb:codeList']['object'] = code_list
+        except ValueError:
+            logger.warning(f'Property: {id} has not qb:codeList')
 
         # qb:concept
+        # TODO: the concept id need to check if it is a normal id or an url
         position = data.index('qb:concept') + 1
-        concept = data[position][0]
+        concept = self.__generate_id__(entity="Concept", value=data[position][0])
         self.data['qb:concept']['value'] = concept
 
         # Get the rest of the data
@@ -124,7 +128,9 @@ class Property(CommonClass):
                                  'disseminationStatus',
                                  'validationState',
                                  'notation',
-                                 'label'
+                                 'label',
+                                 'codeList',
+                                 'concept'
                              ],
                              further_process_keys=[
                                  'component',
@@ -134,6 +140,13 @@ class Property(CommonClass):
         # add the new data to the dataset structure
         [self.data.update({k: v}) for k, v in data.items()]
 
+    # TODO: It should be a function of the RegParser class
+    @staticmethod
+    def __generate_id__(entity, value):
+        parse = RegParser()
+        aux = parse.obtain_id(value)
+        aux = "urn:ngsi-ld:" + entity + ":" + aux
+        return aux
 
     def get(self):
         return self.data

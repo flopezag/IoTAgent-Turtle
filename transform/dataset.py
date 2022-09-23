@@ -108,6 +108,7 @@ class Dataset(CommonClass):
         else:
             print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
+    # TODO: It should be a function of the RegParser class
     @staticmethod
     def __generate_id__(entity, value):
         parse = RegParser()
