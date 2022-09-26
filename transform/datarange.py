@@ -34,9 +34,15 @@ class DataRange:
     def add_data(self, range_id, data):
         # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the Range: skos:prefLabel
-        position = data[1].index('skos:prefLabel') + 1
-        description = data[1][position]
+        try:
+            position = data.index('skos:prefLabel') + 1
+        except ValueError:
+            # We could not find skos:prefLabel, try to find rdfs:label
+            position = data.index('rdfs:label') + 1
+            logger.warning(f'The Range {range_id} does not contain skos:prefLabel but rdfs:label. We use its '
+                           f'content to fill in the skos:prefLabel property')
 
+        description = data[position]
         descriptions = [x[0].replace("\"", "") for x in description]
 
         languages = list()
@@ -58,10 +64,9 @@ class DataRange:
         for i in range(0, len(languages)):
             self.labels[languages[i]] = descriptions[i]
 
-
         # skos:notation
-        position = data[1].index('skos:notation') + 1
-        self.notation = data[1][position][0][0].replace("\"", "")
+        position = data.index('skos:notation') + 1
+        self.notation = data[position][0][0].replace("\"", "")
 
         # Complete the id
         self.id = data[0]

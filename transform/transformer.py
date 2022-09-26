@@ -162,6 +162,6 @@ class TreeToJson(Transformer):
 
         # TODO: The current version does not upload content related to Concepts
         #       and Range of values of these Concepts
-        # conceptLists = self.entity_type.get_conceptList()
-        # [x.save() for x in conceptLists]
+        concept_lists = self.entity_type.get_conceptList()
+        [x.save() for x in concept_lists]
 

@@ -70,7 +70,7 @@ class Parser:
                 [pprint(x.get()) for x in transform.get_conceptSchemas()]
                 # TODO: The current version does not upload content related to Concepts
                 #       and Range of values of these Concepts
-                # [pprint(x.get()) for x in transform.get_conceptLists()]
+                [pprint(x.get()) for x in transform.get_conceptLists()]
         elif content is not None:
             # file is an UploadFile aka File
             tree = self.parser.parse(content)

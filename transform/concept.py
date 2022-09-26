@@ -20,18 +20,21 @@
 # under the License.
 ##
 
-from json import dumps
 from logging import getLogger
+from common.commonclass import CommonClass
+from common.regparser import RegParser
 
 logger = getLogger()
 
 
-class Concept:
+class Concept(CommonClass):
     def __init__(self):
+        super().__init__()
+
         self.data = {
             "id": str(),
-            "type": "Class",
-            "rdfs:seeAlso": {
+            "type": "Concept",
+            "skos:inScheme": {
                 "type": "Relationship",
                 "value": str()
             },
@@ -58,19 +61,31 @@ class Concept:
             "@context": dict()
         }
 
-    def add_data(self, conceptId, data):
+        self.concept_id = str()
+
+    def add_data(self, concept_id, data):
         # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the ConceptSchema: skos:prefLabel
-        position = data.index('skos:prefLabel') + 1
-        description = data[position]
+        # TODO: we need to extract the attribute from the context or we will have problems (e.g. skos:prefLabel should
+        #       be equal to rdfs:label
+        self.concept_id = concept_id
 
+        try:
+            position = data.index('skos:prefLabel') + 1
+        except ValueError:
+            # We could not find skos:prefLabel, try to find rdfs:label
+            position = data.index('rdfs:label') + 1
+            logger.warning(f'The Concept {concept_id} does not contain skos:prefLabel but rdfs:label. We use its '
+                           f'content to fill in the skos:prefLabel property')
+
+        description = data[position]
         descriptions = [x[0].replace("\"", "") for x in description]
 
         languages = list()
         try:
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
-            logger.warning(f'The Concept {conceptId} has a '
+            logger.warning(f'The Concept {concept_id} has a '
                            f'skos:prefLabel without language tag: {description}')
 
             aux = len(description)
@@ -93,18 +108,16 @@ class Concept:
             self.data['skos:prefLabel']['value'][languages[i]] = descriptions[i]
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:Concept:" + conceptId
+        self.data['id'] = "urn:ngsi-ld:Concept:" + concept_id
 
         # rdfs:seeAlso
-        position = data.index('rdfs:seeAlso') + 1
-        concept_schema = data[position][0]
-        concept_schema = concept_schema.split(":")
-        concept_schema = "urn:ngsi-ld:ConceptSchema:" + concept_schema[len(concept_schema)-1]
-        self.data['rdfs:seeAlso']['value'] = concept_schema
+        self.need_add_in_scheme(data=data)
 
         # rdfs:subClassOf
-        position = data.index('rdfs:subClassOf') + 1
-        self.data['rdfs:subClassOf']['value'] = data[position][0]
+        self.need_add_subclass(data=data)
+
+        # skos:notation
+        self.need_add_notation(data=data)
 
     def get(self):
         return self.data
@@ -112,20 +125,43 @@ class Concept:
     def get_id(self):
         return self.data['id']
 
-    def add_context(self, context):
-        # TODO: We should assign only the needed context and not all the contexts
-        self.data['@context'] = context['@context']
+    def need_add_subclass(self, data):
+        try:
+            position = data.index('rdfs:subClassOf') + 1
+            self.data['rdfs:subClassOf']['value'] = data[position][0]
+        except ValueError:
+            logger.info(f'The Concept {self.concept_id} has no rdfs:subClassOf property')
 
-    def save(self):
-        data = self.get()
+            # We delete the "rdfs:subClassOf" property from the final structure
+            self.data.pop('rdfs:subClassOf')
 
-        aux = data['id'].split(":")
-        length_aux = len(aux)
-        filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
+    def need_add_in_scheme(self, data):
+        position = 0
 
-        # Serializing json
-        json_object = dumps(data, indent=4, ensure_ascii=False)
+        try:
+            position = data.index('rdfs:seeAlso') + 1
+        except ValueError:
+            # We will try to find the skos:inScheme
+            try:
+                position = data.index('skos:inScheme') + 1
+            except ValueError:
+                logger.info(f'The Concept {self.concept_id} has neither rdfs:seeAlso or skos:inScheme properties')
 
-        # Writing to sample.json
-        with open(filename, "w") as outfile:
-            outfile.write(json_object)
+                # We delete the "rdfs:subClassOf" property from the final structure
+                self.data.pop('rdfs:seeAlso')
+
+        parser = RegParser()
+        concept_schema = data[position][0]
+        concept_schema = "urn:ngsi-ld:ConceptSchema:" + parser.obtain_id(concept_schema)
+        self.data['skos:inScheme']['value'] = concept_schema
+
+    def need_add_notation(self, data):
+        try:
+            position = data.index('skos:notation') + 1
+
+            self.data['skos:notation'] = {
+                    'type': 'Property',
+                    'value': data[position][0][0].replace("\"", "")
+            }
+        except ValueError:
+            logger.info(f'The Concept {self.concept_id} has no skos:notation property')

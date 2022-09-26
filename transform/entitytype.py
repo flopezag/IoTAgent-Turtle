@@ -24,7 +24,6 @@ from transform.dataset import Dataset
 from transform.dimension import Dimension
 from transform.conceptschema import ConceptSchema
 from transform.concept import Concept
-from transform.datarange import DataRange
 from transform.attribute import Attribute
 from logging import getLogger
 from datetime import datetime
@@ -84,7 +83,7 @@ class EntityType:
             except KeyError:
                 # We found a CodeList or any other thing, check the list of codeList found in the turtle file
                 if data not in self.conceptListsIds:
-                    print(f"Received a unexpected entity type: {data}")
+                    logger.warning(f"Received a unexpected entity type: {data}")
                 else:
                     data = 'Range'
 
@@ -159,23 +158,32 @@ class EntityType:
             self.conceptSchemas.append(concept_schema)
         elif type == 'Class':
             # We need the Concept because each of the Range description is of the type Concept
-            conceptList = Concept()
-            conceptList.add_context(context=self.context)
-            conceptlistId = title.split(':')[1]
-            conceptList.add_data(conceptId=conceptlistId, data=data)
-            self.conceptLists.append(conceptList)
-            self.conceptListsIds[title] = conceptList.get_id()
+            concept_list = Concept()
+            concept_list.add_context(context=self.context, context_mapping=self.context_mapping)
+            concept_list_id = parser.obtain_id(title)
+            concept_list.add_data(concept_id=concept_list_id, data=data)
+            self.conceptLists.append(concept_list)
+            self.conceptListsIds[title] = concept_list.get_id()
         elif type == 'Range':
-            data_range = DataRange()
-            data_range_id = title.split(':')[1].split('/')
-            data_range_id = data_range_id[len(data_range_id)-1]
-            data_range.add_data(range_id=data_range_id, data=data)  # ERROR should be all the data not only data, previously was string
+            # TODO: At the moment we do not keep a Range structure in DCAT-AP, we only define the information in the
+            #       ConceptSchema
+            # data_range = DataRange()
+            # data_range_id = parser.obtain_id(title)
+            # # ERROR should be all the data not only data, previously was string
+            # data_range.add_data(range_id=data_range_id, data=data)
+            data_range = Concept()
+            data_range.add_context(context=self.context, context_mapping=self.context_mapping)
+            data_range_id = parser.obtain_id(title)
+            data_range.add_data(concept_id=data_range_id, data=data)
+            self.conceptLists.append(data_range)
+            self.conceptListsIds[title] = data_range.get_id()
 
             for i in range(0, len(self.conceptSchemas)):
                 concept_schema = self.conceptSchemas[i].data
                 has_top_concept_values = concept_schema['skos:hasTopConcept']['value']
 
-                out = [data_range.notation if x == data_range.id else x for x in has_top_concept_values]
+                out = [data_range.data['skos:notation']
+                       if x == data_range.data['id'] else x for x in has_top_concept_values]
 
                 self.conceptSchemas[i].data['skos:hasTopConcept']['value'] = out
 
