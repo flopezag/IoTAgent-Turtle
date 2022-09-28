@@ -68,8 +68,6 @@ class Parser:
                 [pprint(x.get()) for x in transform.get_dimensions()]
                 [pprint(x.get()) for x in transform.get_attributes()]
                 [pprint(x.get()) for x in transform.get_conceptSchemas()]
-                # TODO: The current version does not upload content related to Concepts
-                #       and Range of values of these Concepts
                 [pprint(x.get()) for x in transform.get_conceptLists()]
         elif content is not None:
             # file is an UploadFile aka File
@@ -82,9 +80,7 @@ class Parser:
             [result.append(x.get()) for x in transform.get_dimensions()]
             [result.append(x.get()) for x in transform.get_attributes()]
             [result.append(x.get()) for x in transform.get_conceptSchemas()]
-            # TODO: The current version does not upload content related to Concepts
-            #       and Range of values of these Concepts
-            # [result.append(x.get()) for x in transform.get_conceptLists()]
+            [result.append(x.get()) for x in transform.get_conceptLists()]
 
             json_object = dumps(result, indent=4, ensure_ascii=False)
 

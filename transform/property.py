@@ -112,7 +112,10 @@ class Property(CommonClass):
             code_list = self.__generate_id__(entity="ConceptSchema", value=data[position][0])
             self.data['qb:codeList']['object'] = code_list
         except ValueError:
-            logger.warning(f'Property: {id} has not qb:codeList')
+            logger.warning(f'Property: {id} has not qb:codeList, deleting the key in the data')
+
+            # If we have not the property, we delete it from data
+            self.data.pop('qb:codeList')
 
         # qb:concept
         # TODO: the concept id need to check if it is a normal id or an url

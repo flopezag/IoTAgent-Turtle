@@ -60,25 +60,6 @@ class TreeToJson(Transformer):
         return result
 
     def subject(self, sub):
-        # sub[0] can be an URIREF or a prefixedname
-        # result = str()
-        #
-        # # Return if the string matched the ReGex
-        # out = self.re.match(sub[0])
-        #
-        # if out == None:
-        #     # We have a prefixedname subject
-        #     result = sub[0]
-        # else:
-        #     # We have a URIREF
-        #     out = out.group(1)
-        #     out = out.split("/")
-        #
-        #     # we get the last 2 values to compose the proper subject
-        #     out = out[(len(out) - 2):]
-        #     result = '_'.join(out)
-        #
-        # return result
         return sub[0]
 
     def predicateobjectlist(self, pol):
@@ -97,10 +78,8 @@ class TreeToJson(Transformer):
         return a
 
     def rdfliteralformat(self, connector):
-        # print(connector)
-        dataConversionType = DataTypeConversion()
-
-        data = dataConversionType.convert(connector[0], connector[2])
+        data_conversion_type = DataTypeConversion()
+        data = data_conversion_type.convert(connector[0], connector[2])
 
         return data
 
@@ -124,7 +103,7 @@ class TreeToJson(Transformer):
         return str(uriref[0])
 
     def blanknodepropertylist(self, property_list):
-        self.entity_type.transform(string=property_list, context=self.get_context())
+        self.entity_type.transform(string=property_list)
         return property_list
 
     def get_context(self):
@@ -160,8 +139,6 @@ class TreeToJson(Transformer):
         concept_schemas = self.entity_type.get_conceptSchemas()
         [x.save() for x in concept_schemas]
 
-        # TODO: The current version does not upload content related to Concepts
-        #       and Range of values of these Concepts
         concept_lists = self.entity_type.get_conceptList()
         [x.save() for x in concept_lists]
 

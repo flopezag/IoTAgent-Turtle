@@ -130,7 +130,7 @@ class Concept(CommonClass):
             position = data.index('rdfs:subClassOf') + 1
             self.data['rdfs:subClassOf']['value'] = data[position][0]
         except ValueError:
-            logger.info(f'The Concept {self.concept_id} has no rdfs:subClassOf property')
+            logger.info(f'The Concept {self.concept_id} has no rdfs:subClassOf property, deleting the key in the data')
 
             # We delete the "rdfs:subClassOf" property from the final structure
             self.data.pop('rdfs:subClassOf')
@@ -145,10 +145,11 @@ class Concept(CommonClass):
             try:
                 position = data.index('skos:inScheme') + 1
             except ValueError:
-                logger.info(f'The Concept {self.concept_id} has neither rdfs:seeAlso or skos:inScheme properties')
+                logger.info(f'The Concept {self.concept_id} has neither rdfs:seeAlso or skos:inScheme properties, '
+                            f'deleting the key in the data')
 
-                # We delete the "rdfs:subClassOf" property from the final structure
-                self.data.pop('rdfs:seeAlso')
+                # We delete the "skos:inScheme" property from the final structure
+                self.data.pop('skos:inScheme')
 
         parser = RegParser()
         concept_schema = data[position][0]

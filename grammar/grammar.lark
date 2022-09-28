@@ -1,39 +1,62 @@
 // Following https://www.w3.org/TR/turtle/#sec-grammar-grammar
 
 start: statement*
-statement: directive | triples "."
+statement: directive
+         | triples "."
+
 directive: prefixid
 prefixid: "@prefix" prefixname_ns iri "."
 prefixname_ns: PREFIXNAME_PREFIX? ":"
 triples: subject predicateobjectlist
 subject: iri
-iri: "<" uriref ">" | prefixedname
+iri: "<" uriref ">"
+   | prefixedname
+
 uriref: URIREF
 predicateobjectlist: verb objectlist (";" (verb objectlist)?)*
 objectlist: object ("," object)*
-object: iri | literal | blanknodepropertylist
+object: iri
+      | literal
+      | blanknodepropertylist
+
 literal: rdfliteral
-// rdfliteral: string (langtag | FORMATCONNECTOR iri)?
-rdfliteral: string | string langtag | rdfliteralformat
+rdfliteral: string
+          | string langtag
+          | rdfliteralformat
+
 rdfliteralformat: string FORMATCONNECTOR iri
 string: ESCAPED_STRING
-verb: predicate | VERB
+      | "true" -> true
+      | "false" -> false
+
+verb: predicate
+    | VERB
+
 predicate: iri
-prefixedname: PNAME_LN | PNAME_NS
+prefixedname: PNAME_LN
+            | PNAME_NS
+
 blanknodepropertylist: "[" predicateobjectlist "]"
 langtag: LANGTAG
 
 // Tokens
 PREFIXNAME_PREFIX: PREFIXNAME_CHARS_BASE ((PREFIXNAME_CHARS | ".")* PREFIXNAME_CHARS)?
 PREFIXNAME_CHARS_BASE: LETTER
-PREFIXNAME_CHARS: PREFIXNAME_CHARS_U | "-" | DIGIT
-PREFIXNAME_CHARS_U: PREFIXNAME_CHARS_BASE | "_"
+PREFIXNAME_CHARS: PREFIXNAME_CHARS_U
+                | "-"
+                | DIGIT
+
+PREFIXNAME_CHARS_U: PREFIXNAME_CHARS_BASE
+                  | "_"
+
 PNAME_LN: PNAME_NS PN_LOCAL
 PNAME_NS: PREFIXNAME_PREFIX? ":"
 PN_LOCAL: (PREFIXNAME_CHARS_U | ":" | DIGIT | PLX) ((PREFIXNAME_CHARS | "." | ":" | PLX)* (PREFIXNAME_CHARS | ":" | PLX))?
 PLX: PERCENT
 PERCENT: "%" HEXDIGIT HEXDIGIT
-LANGTAG: "@" [LCASE_LETTER | UCASE_LETTER]+ ("-" [LCASE_LETTER | UCASE_LETTER | DIGIT]+)*
+LANGTAG: "@" [LCASE_LETTER
+       | UCASE_LETTER]+ ("-" [LCASE_LETTER | UCASE_LETTER | DIGIT]+)*
+
 URIREF: /[^<>{}]+/
 COMMENT: /#[^\n]*/
 VERB: "a"

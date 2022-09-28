@@ -98,8 +98,8 @@ class EntityType:
 
     def transform(self, string):
         if len(self.context) == 0:
-            raise AssertionError("Context should be passed before to the EntityType Class, call EntityType.set_context() "
-                                 "before, {'__file__': this_file}))")
+            raise AssertionError("Context should be passed before to the EntityType Class, "
+                                 "call EntityType.set_context() before, {'__file__': this_file}))")
 
         data_type, new_string, is_new = self.__find_entity_type__(string=string)
 
@@ -122,12 +122,12 @@ class EntityType:
 
         if flatten_data[0] != 'rdfs:label':
             flatten_data = {flatten_data[i]: flatten_value(flatten_data[i + 1]) for i in range(0, len(flatten_data), 2)}
-            languageMap = False
+            language_map = False
         else:
-            languageMap = True
+            language_map = True
 
         if datatype == 'Dataset':
-            self.dataset.patch_data(data=flatten_data, languageMap=languageMap)
+            self.dataset.patch_data(data=flatten_data, language_map=language_map)
 
     def create_data(self, type, data, title):
         parser = RegParser()
@@ -146,9 +146,9 @@ class EntityType:
             self.dimensions.append(dimension)
         elif type == 'Attribute':
             attribute = Attribute()
-            attribute.add_context(context=self.context)
-            attribute_id = title.split(':')[1]
-            attribute.add_data(id=attribute_id, data=data)
+            attribute.add_context(context=self.context, context_mapping=self.context_mapping)
+            attribute_id = parser.obtain_id(title)
+            attribute.add_data(attribute_id=attribute_id, data=data)
             self.attributes.append(attribute)
         elif type == 'ConceptScheme':
             concept_schema = ConceptSchema()
@@ -165,12 +165,7 @@ class EntityType:
             self.conceptLists.append(concept_list)
             self.conceptListsIds[title] = concept_list.get_id()
         elif type == 'Range':
-            # TODO: At the moment we do not keep a Range structure in DCAT-AP, we only define the information in the
-            #       ConceptSchema
-            # data_range = DataRange()
-            # data_range_id = parser.obtain_id(title)
-            # # ERROR should be all the data not only data, previously was string
-            # data_range.add_data(range_id=data_range_id, data=data)
+            # TODO: Range is associated to a Concept and identified properly in the ConceptSchema
             data_range = Concept()
             data_range.add_context(context=self.context, context_mapping=self.context_mapping)
             data_range_id = parser.obtain_id(title)
