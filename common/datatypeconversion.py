@@ -11,17 +11,21 @@ class DataTypeConversion:
             'xsd:boolean': 'stob'
         }
         self.regex_12hour = compile(r"(^.*T%)(I)(.*)$")
-        self.regex_microseconds = compile(r"^(.*T%.*:%S\.)(%H)$")
+        self.regex_microseconds = compile(r"^(.*T%.*:%S\.)(%H)*$")
+        self.regex_microseconds2 = compile(r"^(.*T%.*:%S\.)(%y)*$")
         self.regex_false_date = compile(r"^%Y-%d-%y(.*)%m")
+        self.regex_false_date2 = compile(r"^%Y-%d-%m(.*)%f")
 
     def correct_datatype_format(self, format_dt: str, hour24: bool = True):
 
         if hour24:
             format_dt = sub(self.regex_12hour, r"\1H\3", format_dt)
 
-        format_dt = sub(self.regex_microseconds, r"\1%f", format_dt)
+        format_dt = sub(self.regex_microseconds,  r"\1%f", format_dt)
+        format_dt = sub(self.regex_microseconds2, r"\1%f", format_dt)
 
-        format_dt = sub(self.regex_false_date, r"%Y-%m-%d\1%f", format_dt)
+        format_dt = sub(self.regex_false_date,  r"%Y-%m-%d\1%f", format_dt)
+        format_dt = sub(self.regex_false_date2, r"%Y-%m-%d\1%f", format_dt)
 
         return format_dt
 
@@ -95,6 +99,8 @@ if __name__ == '__main__':
     data3 = ['"true"', Token('FORMATCONNECTOR', '^^'), 'xsd:boolean']
     data4 = ['"fake"', Token('FORMATCONNECTOR', '^^'), 'otraCosa']
     data5 = ['"2022-01-10T09:00:00.000"', Token('FORMATCONNECTOR', '^^'), 'xsd:dateTime']
+    data6 = ['"2021-07-01T11:50:37.3"', Token('FORMATCONNECTOR', '^^'), 'xsd:dateTime']
+    data7 = ['"2021-09-28T15:31:24.05"', Token('FORMATCONNECTOR', '^^'), 'xsd:dateTime']
 
     print(infer(['Mon Jan 13 09:52:52 MST 2014']))
     print(infer([data1[0]]))
@@ -127,3 +133,7 @@ if __name__ == '__main__':
     # Convert datetime generated into UTC format: 2021-12-21T16:18:55Z or 2021-12-21T16:18:55+00:00, ISO8601
 
     print(dataConversionType.convert(data5[0], data5[2]))
+
+    print(dataConversionType.convert(data6[0], data6[2]))
+
+    print(dataConversionType.convert(data7[0], data7[2]))

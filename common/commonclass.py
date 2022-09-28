@@ -21,7 +21,8 @@
 ##
 from json import dumps
 from common.regparser import RegParser
-
+from os.path import exists
+from os import mkdir
 
 class CommonClass:
     def __init__(self, entity):
@@ -56,7 +57,13 @@ class CommonClass:
 
         aux = data['id'].split(":")
         length_aux = len(aux)
-        filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
+
+        # We need to check that the output folder exist
+        if exists('./output') is False:
+            # We need to create the folder because it does not exits
+            mkdir('./output')
+
+        filename = './output/' + '_'.join(aux[length_aux - 2:]) + '.jsonld'
 
         # Serializing json
         json_object = dumps(data, indent=4, ensure_ascii=False)
