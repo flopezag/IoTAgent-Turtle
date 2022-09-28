@@ -24,13 +24,14 @@ from logging import getLogger
 from common.regparser import RegParser
 from common.commonclass import CommonClass
 from common.listmanagement import get_rest_data
+from transform.context import Context
 
 logger = getLogger()
 
 
 class Dataset(CommonClass):
     def __init__(self):
-        super().__init__()
+        super().__init__(entity='Dataset')
 
         self.data = {
             "id": str(),
@@ -94,29 +95,20 @@ class Dataset(CommonClass):
         position = component.index(type_component) + 1
 
         if type_component == 'qb:attribute':
-            new_id = self.__generate_id__(entity="AttributeProperty", value=component[position][0])
+            new_id = self.generate_id(entity="AttributeProperty", value=component[position][0])
             key = self.keys['stat:attribute']
             self.attributes[key]['value'].append(new_id)
         elif type_component == 'qb:dimension':
-            new_id = self.__generate_id__(entity="DimensionProperty", value=component[position][0])
+            new_id = self.generate_id(entity="DimensionProperty", value=component[position][0])
             key = self.keys['stat:dimension']
             self.dimensions[key]['value'].append(new_id)
         elif type_component == 'qb:measure':
-            new_id = self.__generate_id__(entity="Measure", value=component[position][0])
+            new_id = self.generate_id(entity="Measure", value=component[position][0])
             key = self.keys['stat:statUnitMeasure']
             self.unitMeasures[key]['value'].append(new_id)
         else:
             print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
-    # TODO: It should be a function of the RegParser class
-    @staticmethod
-    def __generate_id__(entity, value):
-        parse = RegParser()
-        aux = parse.obtain_id(value)
-        aux = "urn:ngsi-ld:" + entity + ":" + aux
-        return aux
-
-    def get(self):
         key = self.keys['stat:dimension']
         if len(self.dimensions[key]['value']) != 0:
             self.data = self.data | self.dimensions
@@ -129,6 +121,14 @@ class Dataset(CommonClass):
         if len(self.unitMeasures[key]['value']) != 0:
             self.data = self.data | self.unitMeasures
 
+        # Simplify Context amd order keys
+        a = Context()
+        a.set_data(data=self.data)
+        a.new_analysis()
+        a.order_context()
+        self.data = a.get_data()
+
+    def get(self):
         return self.data
 
     def add_data(self, title, dataset_id, data):

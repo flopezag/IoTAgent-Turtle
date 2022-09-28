@@ -23,13 +23,14 @@
 from logging import getLogger
 from common.commonclass import CommonClass
 from common.regparser import RegParser
+from transform.context import Context
 
 logger = getLogger()
 
 
 class Concept(CommonClass):
     def __init__(self):
-        super().__init__()
+        super().__init__(entity='Concept')
 
         self.data = {
             "id": str(),
@@ -118,6 +119,13 @@ class Concept(CommonClass):
 
         # skos:notation
         self.need_add_notation(data=data)
+
+        # Simplify Context amd order keys
+        a = Context()
+        a.set_data(data=self.data)
+        a.new_analysis()
+        a.order_context()
+        self.data = a.get_data()
 
     def get(self):
         return self.data

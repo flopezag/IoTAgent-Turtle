@@ -34,8 +34,8 @@ class RegParser:
         # Return if the string matched the ReGex
         out = self.re.match(string_to_parse)
 
-        if out == None:
-            # Check if the prefixedname include ':'
+        if out is None:
+            # Check if the prefixed name include ':'
             obtained_id = string_to_parse.split(':')[1]
         else:
             # We have a URIREF
@@ -46,4 +46,3 @@ class RegParser:
             obtained_id = out[(len(out) - 1):][0]
 
         return obtained_id
-

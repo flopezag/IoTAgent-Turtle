@@ -24,13 +24,14 @@ from logging import getLogger
 from common.commonclass import CommonClass
 from common.listmanagement import get_rest_data
 from common.regparser import RegParser
+from transform.context import Context
 
 logger = getLogger()
 
 
 class Property(CommonClass):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, entity):
+        super().__init__(entity=entity)
 
         self.data = {
             "id": str(),
@@ -109,7 +110,7 @@ class Property(CommonClass):
         # TODO: We need to control that the codeList id extracted here are the same that we analyse afterwards.
         try:
             position = data.index('qb:codeList') + 1
-            code_list = self.__generate_id__(entity="ConceptSchema", value=data[position][0])
+            code_list = self.generate_id(entity="ConceptSchema", value=data[position][0])
             self.data['qb:codeList']['object'] = code_list
         except ValueError:
             logger.warning(f'Property: {id} has not qb:codeList, deleting the key in the data')
@@ -120,7 +121,7 @@ class Property(CommonClass):
         # qb:concept
         # TODO: the concept id need to check if it is a normal id or an url
         position = data.index('qb:concept') + 1
-        concept = self.__generate_id__(entity="Concept", value=data[position][0])
+        concept = self.generate_id(entity="Concept", value=data[position][0])
         self.data['qb:concept']['value'] = concept
 
         # Get the rest of the data
@@ -143,13 +144,12 @@ class Property(CommonClass):
         # add the new data to the dataset structure
         [self.data.update({k: v}) for k, v in data.items()]
 
-    # TODO: It should be a function of the RegParser class
-    @staticmethod
-    def __generate_id__(entity, value):
-        parse = RegParser()
-        aux = parse.obtain_id(value)
-        aux = "urn:ngsi-ld:" + entity + ":" + aux
-        return aux
+        # Simplify Context amd order keys
+        a = Context()
+        a.set_data(data=self.data)
+        a.new_analysis()
+        a.order_context()
+        self.data = a.get_data()
 
     def get(self):
         return self.data

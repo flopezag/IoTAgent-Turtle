@@ -25,7 +25,7 @@ from transform.property import Property
 
 class Dimension(Property):
     def __init__(self):
-        super().__init__()
+        super().__init__(entity='DimensionProperty')
         self.data['type'] = 'DimensionProperty'
 
     def add_data(self, id, data):

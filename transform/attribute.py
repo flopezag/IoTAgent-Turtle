@@ -25,7 +25,7 @@ from transform.property import Property
 
 class Attribute(Property):
     def __init__(self):
-        super().__init__()
+        super().__init__(entity='AttributeProperty')
         self.data['type'] = 'AttributeProperty'
 
     def add_data(self, attribute_id, data):

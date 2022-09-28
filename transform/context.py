@@ -38,7 +38,6 @@ class Context:
         self.data = dict()
 
         # By default, the context should include the smart data models context
-        # TODO: Maybe we can reduce the context management taking into account the details
         self.context['@context']\
             .update({'sdmp': 'https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld'})
 
@@ -113,9 +112,10 @@ class Context:
         aux = aux + used_keys
 
         # 3rd: Get the new context
-        new_context = list(map(lambda x: {x: data['@context'][x]}, aux))
+        new_context = list(map(lambda x: {x: self.data['@context'][x]}, aux))
         new_context = dict((key, val) for k in new_context for key, val in k.items())
 
+        # TODO: we should fix if the rest of context lines are needed or they are duplicated some properties
         return new_context
 
     def new_analysis(self):
@@ -126,6 +126,7 @@ class Context:
         # 'sdmp': 'https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld'
         # 'dcat': 'http://www.w3.org/ns/dcat#'
         # 'stat': 'http://data.europa.eu/(xyz)/statdcat-ap/'
+        # 'dct': 'http://purl.org/dc/terms/
         used_keys = self.key_used()
 
         new_context = self.reduce_context(used_keys=used_keys)

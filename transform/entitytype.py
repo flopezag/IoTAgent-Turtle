@@ -173,14 +173,14 @@ class EntityType:
             self.conceptLists.append(data_range)
             self.conceptListsIds[title] = data_range.get_id()
 
-            for i in range(0, len(self.conceptSchemas)):
-                concept_schema = self.conceptSchemas[i].data
-                has_top_concept_values = concept_schema['skos:hasTopConcept']['value']
-
-                out = [data_range.data['skos:notation']
-                       if x == data_range.data['id'] else x for x in has_top_concept_values]
-
-                self.conceptSchemas[i].data['skos:hasTopConcept']['value'] = out
+            #for i in range(0, len(self.conceptSchemas)):
+            #    concept_schema = self.conceptSchemas[i].data
+            #    has_top_concept_values = concept_schema['skos:hasTopConcept']['value']
+            #
+            #    out = [data_range.data['skos:notation']
+            #           if x == data_range.data['id'] else x for x in has_top_concept_values]
+            #
+            #    self.conceptSchemas[i].data['skos:hasTopConcept']['value'] = out
 
     def __get_subject__(self, title):
         if self.dataset.get()['dct:title'] == title:

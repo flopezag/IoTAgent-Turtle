@@ -22,14 +22,14 @@
 
 from logging import getLogger
 from common.commonclass import CommonClass
-from common.regparser import RegParser
+from transform.context import Context
 
 logger = getLogger()
 
 
 class ConceptSchema(CommonClass):
     def __init__(self):
-        super().__init__()
+        super().__init__(entity='ConceptScheme')
 
         self.data = {
             "id": str(),
@@ -98,16 +98,23 @@ class ConceptSchema(CommonClass):
         # TODO: We need to control that the concept id extracted here are the same that we analyse afterwards.
         # skos:hasTopConcept, this is a list of ids
         position = data.index('skos:hasTopConcept') + 1
-        result = list(map(lambda x: self.__generate_id__(entity="Concept", value=x), data[position]))
+        result = list(map(lambda x: self.generate_id(value=x, entity='Concept'), data[position]))
         self.data['skos:hasTopConcept']['value'] = result
+
+        # Simplify Context amd order keys
+        a = Context()
+        a.set_data(data=self.data)
+        a.new_analysis()
+        a.order_context()
+        self.data = a.get_data()
 
     def get(self):
         return self.data
 
     # TODO: It should be a function of the RegParser class
-    @staticmethod
-    def __generate_id__(entity, value):
-        parse = RegParser()
-        aux = parse.obtain_id(value)
-        aux = "urn:ngsi-ld:" + entity + ":" + aux
-        return aux
+    # @staticmethod
+    # def __generate_id__(entity, value):
+    #     parse = RegParser()
+    #     aux = parse.obtain_id(value)
+    #     aux = "urn:ngsi-ld:" + entity + ":" + aux
+    #     return aux

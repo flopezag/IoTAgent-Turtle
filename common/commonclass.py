@@ -20,15 +20,16 @@
 # under the License.
 ##
 from json import dumps
+from common.regparser import RegParser
 
 
 class CommonClass:
-    def __init__(self):
+    def __init__(self, entity):
         self.data = dict()
         self.keys = dict()
+        self.entity = entity
 
     def add_context(self, context, context_mapping):
-        # TODO: We should assign only the needed context and not all the contexts
         # Set the context as it is received and mixed with the core context
         self.data['@context'] = context['@context']
 
@@ -63,3 +64,14 @@ class CommonClass:
         # Writing to sample.json
         with open(filename, "w") as outfile:
             outfile.write(json_object)
+
+    def generate_id(self, value, entity=None):
+        parse = RegParser()
+        aux = parse.obtain_id(value)
+
+        if entity is None:
+            aux = "urn:ngsi-ld:" + self.entity + ":" + aux
+        else:
+            aux = "urn:ngsi-ld:" + entity + ":" + aux
+
+        return aux
