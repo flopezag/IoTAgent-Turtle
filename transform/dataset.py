@@ -21,7 +21,6 @@
 ##
 
 from logging import getLogger
-from common.regparser import RegParser
 from common.commonclass import CommonClass
 from common.listmanagement import get_rest_data
 from transform.context import Context
@@ -62,64 +61,65 @@ class Dataset(CommonClass):
             "@context": dict()
         }
 
-        self.dimensions = {
-            "stat:dimension": {
-                "type": "Property",
-                "value": list()
-            }
-        }
-
-        self.attributes = {
-            "stat:attribute": {
-                "type": "Property",
-                "value": list()
-            }
-        }
-
-        self.unitMeasures = {
-            "stat:statUnitMeasure": {
-                "type": "Property",
-                "value": list()
+        self.components = {
+            'qb:attribute': {
+                'entity': 'AttributeProperty',
+                'key': 'stat:attribute',
+                'value': {
+                    "stat:attribute": {
+                        "type": "Property",
+                        "value": list()
+                    }
+                }
+            },
+            'qb:dimension': {
+                'entity': 'DimensionProperty',
+                'key': 'stat:dimension',
+                'value': {
+                    "stat:dimension": {
+                        "type": "Property",
+                        "value": list()
+                    }
+                }
+            },
+            'qb:measure': {
+                'entity': 'Measure',
+                'key': 'stat:statUnitMeasure',
+                'value': {
+                    "stat:statUnitMeasure": {
+                        "type": "Property",
+                        "value": list()
+                    }
+                }
             }
         }
 
         self.keys = {k: k for k in self.data.keys()} | \
-                    {k: k for k in self.dimensions.keys()} | \
-                    {k: k for k in self.attributes.keys()} | \
-                    {k: k for k in self.unitMeasures.keys()}
+                    {self.components['qb:attribute']['key']: self.components['qb:attribute']['key']} | \
+                    {self.components['qb:dimension']['key']: self.components['qb:dimension']['key']} | \
+                    {self.components['qb:measure']['key']: self.components['qb:measure']['key']}
 
     def add_components(self, component):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
-        type_component = [x for x in ['qb:attribute', 'qb:dimension', 'qb:measure'] if x in component][0]
+        list_components = ['qb:attribute', 'qb:dimension', 'qb:measure']
+        type_component = [x for x in list_components if x in component][0]
         position = component.index(type_component) + 1
 
-        if type_component == 'qb:attribute':
-            new_id = self.generate_id(entity="AttributeProperty", value=component[position][0])
-            key = self.keys['stat:attribute']
-            self.attributes[key]['value'].append(new_id)
-        elif type_component == 'qb:dimension':
-            new_id = self.generate_id(entity="DimensionProperty", value=component[position][0])
-            key = self.keys['stat:dimension']
-            self.dimensions[key]['value'].append(new_id)
-        elif type_component == 'qb:measure':
-            new_id = self.generate_id(entity="Measure", value=component[position][0])
-            key = self.keys['stat:statUnitMeasure']
-            self.unitMeasures[key]['value'].append(new_id)
-        else:
-            print(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
+        try:
+            entity = self.components[type_component]['entity']
+            new_id = self.generate_id(entity=entity, value=component[position][0])
+            key = self.components[type_component]['key']
 
-        key = self.keys['stat:dimension']
-        if len(self.dimensions[key]['value']) != 0:
-            self.data = self.data | self.dimensions
-
-        key = self.keys['stat:attribute']
-        if len(self.attributes[key]['value']) != 0:
-            self.data = self.data | self.attributes
-
-        key = self.keys['stat:statUnitMeasure']
-        if len(self.unitMeasures[key]['value']) != 0:
-            self.data = self.data | self.unitMeasures
+            # It is possible that the original fila contain already the description
+            if new_id in self.components[type_component]['value'][key]['value']:
+                logger.warning(
+                    f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
+            else:
+                self.components[type_component]['value'][key]['value'].append(new_id)
+                self.data = self.data | self.components[type_component]['value']
+        except ValueError:
+            logger.error(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
         # Simplify Context amd order keys
         a = Context()
