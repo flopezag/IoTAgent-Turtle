@@ -33,27 +33,6 @@ entities = {
     'skos:Concept': 'Range'
 }
 
-# We have to define multitype precedence of the classes and then get the proper NGSI-LD type. Examples of possible
-# values:
-#   a rdfs:Class, owl:Class -> Class
-#   a qb:DataStructureDefinition -> DataStructureDefinition
-#   a skos:Concept -> Concept
-#   a qb:AttributeProperty, qb:CodedProperty -> AttributeProperty
-#   a qb:CodedProperty, qb:DimensionProperty -> DimensionProperty
-#   a qb:SliceKey -> NA, SliceKey
-#   a qb:DimensionProperty, qb:CodedProperty -> DimensionProperty
-#   a qb:DimensionProperty -> DimensionProperty
-#   a qb:AttributeProperty -> AttributeProperty
-#   a skos:Concept, <http://bauhaus/codes/concept/AjustementSaisonnier> -> Concept
-#   a skos:ConceptScheme -> ConceptScheme
-#   a owl:Class -> Class
-#   a qb:ComponentSpecification -> NA, ComponentSpecification
-#   a qb:DimensionProperty, qb:CodedProperty -> DimensionProperty
-#   a qb:MeasureProperty -> MeasureProperty
-#   a skos:ConceptScheme -> ConceptScheme
-#   a owl:Class -> Class
-#   a <http://bauhaus/codes/concept/HebergementNombresEtoiles>, skos:Concept -> Concept
-
 
 class Precedence:
     def __init__(self):

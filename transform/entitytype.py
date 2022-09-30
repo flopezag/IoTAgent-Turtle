@@ -28,6 +28,7 @@ from transform.attribute import Attribute
 from logging import getLogger
 from datetime import datetime
 from common.regparser import RegParser
+from common.classprecedence import Precedence, ClassesPrecedencePropertyError, ClassesPrecedenceClassError
 
 logger = getLogger()
 
@@ -55,6 +56,8 @@ class EntityType:
         self.context = dict()
         self.context_mapping = dict()
 
+        self.pre = Precedence()
+
     def __find_entity_type__(self, string):
         """
         Find the index position of the 'a' SDMX key and return the following data with the corresponding EntityType
@@ -70,16 +73,19 @@ class EntityType:
         # created.
         try:
             position = string1.index('a') + 1
-            # data = string[position][0]
-            # TODO: if the type is an array we get the last value of the list as the entity type, it should be better
-            #  the analyse all the element of the list to find which one should be taken,
-            #  e.g., ['DimensionProperty'. 'CodedProperty'] takes 'CodedProperty'
-            data = string1[position][len(string1[position]) - 1]
 
-            # We have two options, a well-know object list to be found in the self.entities or
-            # the conceptList defined in the turtle file
             try:
+                data = self.pre.precedence(string1[position])
+
+                # We have two options, a well-know object list to be found in the self.entities or
+                # the conceptList defined in the turtle file
                 data = self.entities[data]
+            except ClassesPrecedencePropertyError as error:
+                logger.error(str(error))
+                data = self.entities[data[0]]
+            except ClassesPrecedenceClassError as error:
+                logger.warning(str(error))
+                data = self.entities['rdfs:Class']
             except KeyError:
                 # We found a CodeList or any other thing, check the list of codeList found in the turtle file
                 if data not in self.conceptListsIds:
