@@ -133,7 +133,7 @@ class EntityType:
         parser = RegParser()
 
         if type == 'Component':
-            self.dataset.add_components(component=data)
+            self.dataset.add_components(context=self.context, component=data)
         elif type == 'Dataset':
             identifier = parser.obtain_id(title)
             self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)

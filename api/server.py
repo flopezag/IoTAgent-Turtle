@@ -34,6 +34,7 @@ from api.custom_logging import CustomizeLogger
 from requests import post, exceptions
 from json import load, loads
 from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
+from common.rdf import turtle_terse
 
 initial_uptime = datetime.now()
 logger = getLogger(__name__)
@@ -119,13 +120,17 @@ async def parse(request: Request, file: UploadFile, response: Response):
             request.app.logger.error(f'POST /parse 500 Problem reading file: "{file.filename}"')
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         else:
-            request.app.logger.info(f'File successfully read')
+            request.app.logger.info('File successfully read')
+
+        # Prepare the content
+        content = content.decode("utf-8")
+        content = turtle_terse(rdf_content=content)
 
         # Start parsing the file
         my_parser = Parser()
 
         try:
-            json_object = my_parser.parsing(content=content.decode("utf-8"))
+            json_object = my_parser.parsing(content=content)
         except UnexpectedToken as e:
             request.app.logger.error(e)
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -170,7 +175,7 @@ async def parse(request: Request, file: UploadFile, response: Response):
         except KeyboardInterrupt:
             request.app.logger.warning('Server interrupted by user')
             raise
-        except:
+        except Exception:
             message = "Unknown error sending data to the Context Broker"
             request.app.logger.error(message)
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(message))

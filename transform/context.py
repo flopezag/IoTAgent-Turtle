@@ -58,7 +58,7 @@ class Context:
 
         found = False
 
-        # check is the value of the new_context is in one of the values of the previous context
+        # check if the value of the new_context is in one of the values of the previous context
         for k, v in self.context['@context'].items():
             if v == value:
                 found = True
@@ -69,8 +69,8 @@ class Context:
             self.context['@context'].update(context)
         else:
             # We found then we need to change the key in the context or add new one and delete the old one
-            self.context['@context'].update(context)
             self.context['@context'].pop(k)
+            self.context['@context'].update(context)
             self.context_mapping.update({k: key})
 
     def get_context(self):

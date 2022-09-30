@@ -34,7 +34,7 @@ Arguments:
 Options:
   -i, --input FILEIN  specify the RDF turtle file to parser
   -o, --output        generate the corresponding files of the parser RDF turtle file
-  -h, --host HOST     launch the server in the corresponding port
+  -h, --host HOST     launch the server in the corresponding host
                       [default: 127.0.0.1]
   -p, --port PORT     launch the server in the corresponding port
                       [default: 5000]

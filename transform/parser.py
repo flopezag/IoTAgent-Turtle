@@ -27,6 +27,7 @@ from io import TextIOWrapper
 from json import dumps
 from logging import getLogger
 from lark.exceptions import UnexpectedToken, UnexpectedEOF, UnexpectedInput
+from common.rdf import turtle_terse
 
 
 logger = getLogger(__name__)
@@ -45,6 +46,7 @@ class Parser:
 
         if file is not None:
             content = file.read()
+            content = turtle_terse(rdf_content=content)
 
             try:
                 tree = self.parser.parse(content)
@@ -59,7 +61,6 @@ class Parser:
 
             if out:
                 # Save the generated content into files
-                print()
                 logger.info('Save the generated content into files')
                 transform.save()
             elif file is not None:
@@ -71,6 +72,8 @@ class Parser:
                 [pprint(x.get()) for x in transform.get_conceptLists()]
         elif content is not None:
             # file is an UploadFile aka File
+            content = turtle_terse(rdf_content=content)
+
             tree = self.parser.parse(content)
             transform.transform(tree)
 

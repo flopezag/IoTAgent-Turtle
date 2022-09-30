@@ -99,7 +99,7 @@ class Dataset(CommonClass):
                     {self.components['qb:dimension']['key']: self.components['qb:dimension']['key']} | \
                     {self.components['qb:measure']['key']: self.components['qb:measure']['key']}
 
-    def add_components(self, component):
+    def add_components(self, context, component):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
         list_components = ['qb:attribute', 'qb:dimension', 'qb:measure']
@@ -111,7 +111,7 @@ class Dataset(CommonClass):
             new_id = self.generate_id(entity=entity, value=component[position][0])
             key = self.components[type_component]['key']
 
-            # It is possible that the original fila contain already the description
+            # It is possible that the original file contains already the description
             if new_id in self.components[type_component]['value'][key]['value']:
                 logger.warning(
                     f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
@@ -121,7 +121,11 @@ class Dataset(CommonClass):
         except ValueError:
             logger.error(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
-        # Simplify Context amd order keys
+        # Simplify Context amd order keys. It is possible that we call add_component before the dataset has been created
+        # therefore we need to add the corresponding context to the dataset
+        if len(self.data['@context']) == 0:
+            self.data['@context'] = context['@context']
+
         a = Context()
         a.set_data(data=self.data)
         a.new_analysis()
