@@ -71,8 +71,14 @@ class Precedence:
             "qb:SliceKey": 10
         }
 
+    def get_value(self, aclass: str) -> int:
+        try:
+            return self.classes[aclass]
+        except KeyError:
+            return 0
+
     def precedence(self, data: list) -> str:
-        classes_values = list(map(lambda x: self.classes[x], data))
+        classes_values = list(map(lambda x: self.get_value(x), data))
 
         # We need to check if all element of the list are the value 250 because could not be possible to have at
         # the same time a DimensionProperty and AttributeProperty, this is an ERROR and we need to report.
@@ -87,7 +93,10 @@ class Precedence:
             raise ClassesPrecedenceClassError(data)
 
         # In other chase, we return the max value of the list
-        return str(max(data))
+        aux = max(classes_values)
+        aux = data[classes_values.index(aux)]
+
+        return aux
 
 
 class ClassesPrecedenceError(Exception):
@@ -127,5 +136,6 @@ class ClassesPrecedenceClassError(ClassesPrecedenceError):
         super().__init__(data=data, message=message)
 
 
-pre = Precedence()
-obtained = pre.precedence(['qb:DataStructureDefinition'])
+if __name__ == '__main__':
+    pre = Precedence()
+    obtained = pre.precedence(['qb:DataStructureDefinition'])
