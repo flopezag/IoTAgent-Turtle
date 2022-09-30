@@ -24,6 +24,7 @@ from common.regparser import RegParser
 from os.path import exists
 from os import mkdir
 
+
 class CommonClass:
     def __init__(self, entity):
         self.data = dict()
