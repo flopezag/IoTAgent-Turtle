@@ -34,6 +34,10 @@ class ConceptSchema(CommonClass):
         self.data = {
             "id": str(),
             "type": "ConceptScheme",
+            "dct:language": {
+                "type": "Property",
+                "value": list()
+            },
             "skos:hasTopConcept": {
                 "type": "Property",
                 "value": list()
@@ -91,6 +95,10 @@ class ConceptSchema(CommonClass):
         ###############################################################################
         for i in range(0, len(languages)):
             self.data['skos:prefLabel']['value'][languages[i]] = descriptions[i]
+
+        # Complete the information of the language with the previous information
+        key = self.keys['dct:language']
+        self.data[key]['value'] = languages
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:ConceptSchema:" + concept_schema_id
