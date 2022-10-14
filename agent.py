@@ -35,7 +35,7 @@ if __name__ == '__main__':
         myparser = Parser()
 
         try:
-            myparser.parsing(file=file_in, out=file_out)
+            myparser.parsing(content=file_in, out=file_out)
         except UnexpectedToken as e:
             print(e)
         except UnexpectedInput as e:

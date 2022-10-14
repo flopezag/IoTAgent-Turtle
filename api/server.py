@@ -35,6 +35,7 @@ from requests import post, exceptions
 from json import load, loads
 from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
 from common.rdf import turtle_terse
+from io import StringIO
 
 initial_uptime = datetime.now()
 logger = getLogger(__name__)
@@ -124,13 +125,13 @@ async def parse(request: Request, file: UploadFile, response: Response):
 
         # Prepare the content
         content = content.decode("utf-8")
-        content = turtle_terse(rdf_content=content)
+        #content = turtle_terse(rdf_content=content)
 
         # Start parsing the file
         my_parser = Parser()
 
         try:
-            json_object = my_parser.parsing(content=content)
+            json_object = my_parser.parsing(content=StringIO(content))
         except UnexpectedToken as e:
             request.app.logger.error(e)
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

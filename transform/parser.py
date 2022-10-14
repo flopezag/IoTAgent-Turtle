@@ -23,7 +23,7 @@
 from transform.transformer import TreeToJson
 from lark import Lark
 from pprint import pprint
-from io import TextIOWrapper
+from io import TextIOWrapper, TextIOBase, StringIO
 from json import dumps
 from logging import getLogger
 from lark.exceptions import UnexpectedToken, UnexpectedEOF, UnexpectedInput
@@ -41,53 +41,64 @@ class Parser:
 
         self.parser = Lark(grammar, start='start', parser='lalr')
 
-    def parsing(self, file: TextIOWrapper = None, out: bool = False, content=None):
+    def parsing(self, content: TextIOBase, out: bool = False):
+
+        match content:
+            case StringIO():
+                result = self.parsing_string(content=content)
+                return result
+            case TextIOWrapper():
+                self.parsing_file(content=content, out=out)
+
+    def parsing_file(self, content: TextIOWrapper, out: bool):
         transform = TreeToJson()
 
-        if file is not None:
-            content = file.read()
-            content = turtle_terse(rdf_content=content)
+        content = content.read()
+        content = turtle_terse(rdf_content=content)
 
-            try:
-                tree = self.parser.parse(content)
-            except UnexpectedToken as err:
-                raise err
-            except UnexpectedInput as err:
-                raise err
-            except UnexpectedEOF as err:
-                raise err
-
-            transform.transform(tree)
-
-            if out:
-                # Save the generated content into files
-                logger.info('Save the generated content into files')
-                transform.save()
-            elif file is not None:
-                print()
-                pprint(transform.get_dataset())
-                [pprint(x.get()) for x in transform.get_dimensions()]
-                [pprint(x.get()) for x in transform.get_attributes()]
-                [pprint(x.get()) for x in transform.get_conceptSchemas()]
-                [pprint(x.get()) for x in transform.get_conceptLists()]
-        elif content is not None:
-            # file is an UploadFile aka File
-            content = turtle_terse(rdf_content=content)
-
+        try:
             tree = self.parser.parse(content)
-            transform.transform(tree)
+        except UnexpectedToken as err:
+            raise err
+        except UnexpectedInput as err:
+            raise err
+        except UnexpectedEOF as err:
+            raise err
 
-            # Serializing json payload
-            result = list()
-            result.append(transform.get_dataset())
-            [result.append(x.get()) for x in transform.get_dimensions()]
-            [result.append(x.get()) for x in transform.get_attributes()]
-            [result.append(x.get()) for x in transform.get_conceptSchemas()]
-            [result.append(x.get()) for x in transform.get_conceptLists()]
+        transform.transform(tree)
 
-            json_object = dumps(result, indent=4, ensure_ascii=False)
+        if out:
+            # Save the generated content into files
+            logger.info('Save the generated content into files')
+            transform.save()
+        elif content is not None:
+            print()
+            pprint(transform.get_dataset())
+            [pprint(x.get()) for x in transform.get_dimensions()]
+            [pprint(x.get()) for x in transform.get_attributes()]
+            [pprint(x.get()) for x in transform.get_conceptSchemas()]
+            [pprint(x.get()) for x in transform.get_conceptLists()]
 
-            # with open("final.jsonld", "w") as outfile:
-            #     outfile.write(json_object)
+    def parsing_string(self, content: StringIO):
+        transform = TreeToJson()
 
-            return json_object
+        # file is an UploadFile aka File
+        content = turtle_terse(rdf_content=content.read())
+
+        tree = self.parser.parse(content)
+        transform.transform(tree)
+
+        # Serializing json payload
+        result = list()
+        result.append(transform.get_dataset())
+        [result.append(x.get()) for x in transform.get_dimensions()]
+        [result.append(x.get()) for x in transform.get_attributes()]
+        [result.append(x.get()) for x in transform.get_conceptSchemas()]
+        [result.append(x.get()) for x in transform.get_conceptLists()]
+
+        json_object = dumps(result, indent=4, ensure_ascii=False)
+
+        with open("final.jsonld", "w") as outfile:
+            outfile.write(json_object)
+
+        return json_object
