@@ -128,7 +128,7 @@ class Concept(CommonClass):
         # skos:notation
         self.need_add_notation(data=data)
 
-        # Simplify Context amd order keys
+        # Simplify Context and order keys
         a = Context()
         a.set_data(data=self.data)
         a.new_analysis()

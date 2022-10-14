@@ -144,7 +144,7 @@ class Property(CommonClass):
         # add the new data to the dataset structure
         [self.data.update({k: v}) for k, v in data.items()]
 
-        # Simplify Context amd order keys
+        # Simplify Context and order keys
         a = Context()
         a.set_data(data=self.data)
         a.new_analysis()

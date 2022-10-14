@@ -73,6 +73,7 @@ class Parser:
             transform.save()
         elif content is not None:
             print()
+            pprint(transform.get_catalogue())
             pprint(transform.get_dataset())
             [pprint(x.get()) for x in transform.get_dimensions()]
             [pprint(x.get()) for x in transform.get_attributes()]
@@ -90,6 +91,7 @@ class Parser:
 
         # Serializing json payload
         result = list()
+        result.append(transform.get_catalogue())
         result.append(transform.get_dataset())
         [result.append(x.get()) for x in transform.get_dimensions()]
         [result.append(x.get()) for x in transform.get_attributes()]

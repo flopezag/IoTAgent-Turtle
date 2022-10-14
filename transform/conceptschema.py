@@ -109,7 +109,7 @@ class ConceptSchema(CommonClass):
         result = list(map(lambda x: self.generate_id(value=x, entity='Concept'), data[position]))
         self.data['skos:hasTopConcept']['value'] = result
 
-        # Simplify Context amd order keys
+        # Simplify Context and order keys
         a = Context()
         a.set_data(data=self.data)
         a.new_analysis()

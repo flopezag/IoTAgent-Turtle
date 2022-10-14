@@ -25,6 +25,7 @@ from transform.dimension import Dimension
 from transform.conceptschema import ConceptSchema
 from transform.concept import Concept
 from transform.attribute import Attribute
+from transform.catalogue import CatalogueDCATAP
 from logging import getLogger
 from datetime import datetime
 from common.regparser import RegParser
@@ -55,6 +56,7 @@ class EntityType:
         self.conceptListsIds = dict()
         self.context = dict()
         self.context_mapping = dict()
+        self.catalogue = CatalogueDCATAP()
 
         self.pre = Precedence()
 
@@ -144,6 +146,9 @@ class EntityType:
             identifier = parser.obtain_id(title)
             self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)
             self.dataset.add_data(title=title, dataset_id=identifier, data=data)
+
+            # Create the CatalogueDCAT-AP and assign the dataset id
+            self.catalogue.add_dataset(dataset_id=self.dataset.data['id'])
         elif type == 'Dimension':
             dimension = Dimension()
             dimension.add_context(context=self.context, context_mapping=self.context_mapping)
@@ -179,7 +184,7 @@ class EntityType:
             self.conceptLists.append(data_range)
             self.conceptListsIds[title] = data_range.get_id()
 
-            #for i in range(0, len(self.conceptSchemas)):
+            # for i in range(0, len(self.conceptSchemas)):
             #    concept_schema = self.conceptSchemas[i].data
             #    has_top_concept_values = concept_schema['skos:hasTopConcept']['value']
             #
@@ -193,6 +198,9 @@ class EntityType:
             return 'Dataset'
         else:
             AssertionError(f"Still not defined: {title}")
+
+    def get_catalogue(self):
+        return self.catalogue.get()
 
     def get_dataset(self):
         return self.dataset.get()

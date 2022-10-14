@@ -112,6 +112,9 @@ class TreeToJson(Transformer):
     def get_context_mapping(self):
         return self.context.get_context_mapping()
 
+    def get_catalogue(self):
+        return self.entity_type.get_catalogue()
+
     def get_dataset(self):
         return self.entity_type.get_dataset()
 
@@ -128,6 +131,8 @@ class TreeToJson(Transformer):
         return self.entity_type.get_conceptList()
 
     def save(self):
+        self.entity_type.save('catalogue')
+
         self.entity_type.save('dataset')
 
         dimensions = self.entity_type.get_dimensions()

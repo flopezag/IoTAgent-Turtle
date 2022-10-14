@@ -125,7 +125,6 @@ async def parse(request: Request, file: UploadFile, response: Response):
 
         # Prepare the content
         content = content.decode("utf-8")
-        #content = turtle_terse(rdf_content=content)
 
         # Start parsing the file
         my_parser = Parser()
