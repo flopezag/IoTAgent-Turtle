@@ -21,7 +21,7 @@
 ##
 
 from cli.command import parse_cli
-from transform.parser import Parser
+from sdmx2jsonld.transform.parser import Parser
 from api.server import launch
 from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
 

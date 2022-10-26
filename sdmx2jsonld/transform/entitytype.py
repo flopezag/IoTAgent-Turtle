@@ -20,16 +20,16 @@
 # under the License.
 ##
 
-from transform.dataset import Dataset
-from transform.dimension import Dimension
-from transform.conceptschema import ConceptSchema
-from transform.concept import Concept
-from transform.attribute import Attribute
-from transform.catalogue import CatalogueDCATAP
+from sdmx2jsonld.transform.dataset import Dataset
+from sdmx2jsonld.transform.dimension import Dimension
+from sdmx2jsonld.transform.conceptschema import ConceptSchema
+from sdmx2jsonld.transform.concept import Concept
+from sdmx2jsonld.transform.attribute import Attribute
+from sdmx2jsonld.transform.catalogue import CatalogueDCATAP
 from logging import getLogger
 from datetime import datetime
-from common.regparser import RegParser
-from common.classprecedence import Precedence, ClassesPrecedencePropertyError, ClassesPrecedenceClassError
+from sdmx2jsonld.common.regparser import RegParser
+from sdmx2jsonld.common.classprecedence import Precedence, ClassesPrecedencePropertyError, ClassesPrecedenceClassError
 
 logger = getLogger()
 

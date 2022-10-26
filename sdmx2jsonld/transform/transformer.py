@@ -21,9 +21,9 @@
 ##
 
 from lark import Transformer, Tree, Token
-from transform.context import Context
-from transform.entitytype import EntityType
-from common.datatypeconversion import DataTypeConversion
+from sdmx2jsonld.transform.context import Context
+from sdmx2jsonld.transform.entitytype import EntityType
+from sdmx2jsonld.common.datatypeconversion import DataTypeConversion
 import re
 
 

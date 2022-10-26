@@ -21,7 +21,7 @@
 ##
 
 from logging import getLogger
-from common.commonclass import CommonClass
+from sdmx2jsonld.common.commonclass import CommonClass
 import random
 
 logger = getLogger()

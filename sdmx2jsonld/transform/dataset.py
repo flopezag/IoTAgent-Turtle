@@ -21,9 +21,9 @@
 ##
 
 from logging import getLogger
-from common.commonclass import CommonClass
-from common.listmanagement import get_rest_data
-from transform.context import Context
+from sdmx2jsonld.common.commonclass import CommonClass
+from sdmx2jsonld.common.listmanagement import get_rest_data
+from sdmx2jsonld.transform.context import Context
 
 logger = getLogger()
 

@@ -20,7 +20,7 @@
 # under the License.
 ##
 from json import dumps
-from common.regparser import RegParser
+from sdmx2jsonld.common.regparser import RegParser
 from os.path import exists
 from os import mkdir
 

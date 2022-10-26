@@ -20,7 +20,7 @@
 # under the License.
 ##
 
-from transform.property import Property
+from sdmx2jsonld.transform.property import Property
 
 
 class Attribute(Property):

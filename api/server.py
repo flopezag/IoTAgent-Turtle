@@ -23,7 +23,7 @@
 from fastapi import FastAPI, UploadFile, Request, Response, status, HTTPException
 from uvicorn import run
 from os.path import splitext
-from transform.parser import Parser
+from sdmx2jsonld.transform.parser import Parser
 from datetime import datetime
 from cli.command import __version__
 from secure import Server, ContentSecurityPolicy, StrictTransportSecurity, \
@@ -34,7 +34,6 @@ from api.custom_logging import CustomizeLogger
 from requests import post, exceptions
 from json import load, loads
 from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
-from common.rdf import turtle_terse
 from io import StringIO
 
 initial_uptime = datetime.now()

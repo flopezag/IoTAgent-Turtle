@@ -20,14 +20,14 @@
 # under the License.
 ##
 
-from transform.transformer import TreeToJson
+from sdmx2jsonld.transform.transformer import TreeToJson
 from lark import Lark
 from pprint import pprint
 from io import TextIOWrapper, TextIOBase, StringIO
 from json import dumps
 from logging import getLogger
 from lark.exceptions import UnexpectedToken, UnexpectedEOF, UnexpectedInput
-from common.rdf import turtle_terse
+from sdmx2jsonld.common.rdf import turtle_terse
 
 
 logger = getLogger(__name__)
@@ -36,7 +36,7 @@ logger = getLogger(__name__)
 class Parser:
     def __init__(self):
         # Open the grammar file
-        with open("./grammar/grammar.lark") as f:
+        with open("./sdmx2jsonld/grammar/grammar.lark") as f:
             grammar = f.read()
 
         self.parser = Lark(grammar, start='start', parser='lalr')
