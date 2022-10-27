@@ -23,7 +23,7 @@
 from fastapi import FastAPI, UploadFile, Request, Response, status, HTTPException
 from uvicorn import run
 from os.path import splitext
-from transform.parser import Parser
+from sdmx2jsonld.transform.parser import Parser
 from datetime import datetime
 from cli.command import __version__
 from secure import Server, ContentSecurityPolicy, StrictTransportSecurity, \
@@ -33,15 +33,16 @@ from pathlib import Path
 from api.custom_logging import CustomizeLogger
 from requests import post, exceptions
 from json import load, loads
+from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
+from io import StringIO
 
-
-initial_uptime = datetime.min
+initial_uptime = datetime.now()
 logger = getLogger(__name__)
 
 
 def create_app() -> FastAPI:
     app = FastAPI(title='IoTAgent-Turtle', debug=False)
-    logging_config_path = Path.cwd().joinpath('common/logging_config.json')
+    logging_config_path = Path.cwd().joinpath('common/config.json')
     logger = CustomizeLogger.make_logger(logging_config_path)
     app.logger = logger
 
@@ -90,12 +91,12 @@ async def set_secure_headers(request, call_next):
 
 
 @application.get("/version", status_code=status.HTTP_200_OK)
-def version(request: Request):
+def getversion(request: Request):
     request.app.logger.info("Request version information")
     data = {
         "doc": "...",
         "git_hash": "nogitversion",
-        "iotagent-turtle version": __version__,
+        "version": __version__,
         "release_date": "no released",
         "uptime": get_uptime()
     }
@@ -119,13 +120,25 @@ async def parse(request: Request, file: UploadFile, response: Response):
             request.app.logger.error(f'POST /parse 500 Problem reading file: "{file.filename}"')
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         else:
-            request.app.logger.info(f'File successfully read')
+            request.app.logger.info('File successfully read')
+
+        # Prepare the content
+        content = content.decode("utf-8")
 
         # Start parsing the file
-        myParser = Parser()
+        my_parser = Parser()
 
         try:
-            json_object = myParser.parsing(content=content.decode("utf-8"))
+            json_object = my_parser.parsing(content=StringIO(content))
+        except UnexpectedToken as e:
+            request.app.logger.error(e)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        except UnexpectedInput as e:
+            request.app.logger.error(e)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        except UnexpectedEOF as e:
+            request.app.logger.error(e)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         except Exception as e:
             request.app.logger.error(f'POST /parse 500 Problem parsing file: "{file.filename}"')
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -139,6 +152,7 @@ async def parse(request: Request, file: UploadFile, response: Response):
         }
 
         url = get_url()
+        resp = "..."
 
         try:
             request.app.logger.debug(f'Sending data:\n{json_object}')
@@ -147,37 +161,41 @@ async def parse(request: Request, file: UploadFile, response: Response):
 
             resp = loads(r.text)
             response.status_code = r.status_code
-        except exceptions.Timeout:
+        except exceptions.Timeout as err:
             request.app.logger.error('Timeout requesting FIWARE Context Broker')
+            raise HTTPException(status_code=status.HTTP_408_REQUEST_TIMEOUT, detail=str(err))
         except exceptions.ConnectionError as err:
             message = f'There was a problem connecting to the FIWARE Context Broker. URL: {url}'
             request.app.logger.error(message)
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(err))
         except exceptions.HTTPError as e:
             request.app.logger.error(f'Call to FIWARE Context Broker failed: {e}')
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
         except KeyboardInterrupt:
             request.app.logger.warning('Server interrupted by user')
             raise
-        except:
-            request.app.logger.error("Unknown error sending data to the Context Broker")
-
-        request.app.logger.info(f'Content sent to the Context Broker')
-        request.app.logger.debug(f'Status Code: {response.status_code}, Response:\n{resp}')
-
+        except Exception:
+            message = "Unknown error sending data to the Context Broker"
+            request.app.logger.error(message)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(message))
+        else:
+            request.app.logger.info(f'Content sent to the Context Broker')
+            request.app.logger.debug(f'Status Code: {response.status_code}, Response:\n{resp}')
 
     return resp
 
 
 def get_uptime():
-        now = datetime.now()
-        delta = now - initial_uptime
+    now = datetime.now()
+    delta = now - initial_uptime
 
-        hours, remainder = divmod(int(delta.total_seconds()), 3600)
-        minutes, seconds = divmod(remainder, 60)
-        days, hours = divmod(hours, 24)
+    hours, remainder = divmod(int(delta.total_seconds()), 3600)
+    minutes, seconds = divmod(remainder, 60)
+    days, hours = divmod(hours, 24)
 
-        fmt = '{d} days, {h} hours, {m} minutes, and {s} seconds'
+    fmt = '{d} days, {h} hours, {m} minutes, and {s} seconds'
 
-        return fmt.format(d=days, h=hours, m=minutes, s=seconds)
+    return fmt.format(d=days, h=hours, m=minutes, s=seconds)
 
 
 def get_url():
@@ -191,12 +209,8 @@ def get_url():
     return url
 
 
-def launch(app: str = "server:application", port: int = 5000, uptime: datetime = datetime.utcnow()):
-    global initial_uptime
-
-    initial_uptime = uptime
-
-    run(app=app, host="127.0.0.1", port=port, log_level="info", reload=True, server_header=False)
+def launch(app: str = "server:application", host: str = "127.0.0.1", port: int = 5000):
+    run(app=app, host=host, port=port, log_level="info", reload=True, server_header=False)
 
 
 if __name__ == "__main__":

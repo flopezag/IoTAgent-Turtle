@@ -21,8 +21,9 @@
 ##
 
 from lark import Transformer, Tree, Token
-from transform.context import Context
-from transform.entitytype import EntityType
+from sdmx2jsonld.transform.context import Context
+from sdmx2jsonld.transform.entitytype import EntityType
+from sdmx2jsonld.common.datatypeconversion import DataTypeConversion
 import re
 
 
@@ -33,7 +34,8 @@ class TreeToJson(Transformer):
         self.entity_type = EntityType()
 
         # Regex to check valid URL
-        regex = "<http[s]?:\/\/(.*)>"
+        # regex = "<http[s]?:\/\/(.*)>"
+        regex = "http[s]?:\/\/(.*)"
 
         # Compile the Regex
         self.re = re.compile(regex)
@@ -44,7 +46,8 @@ class TreeToJson(Transformer):
         self.context.add_context(context)
 
     def triples(self, triple):
-        self.entity_type.transform(string=triple, context=self.get_context())
+        self.entity_type.set_context(context=self.get_context(), mapping=self.get_context_mapping())
+        self.entity_type.transform(string=triple)
         return triple
 
     def predicate(self, pre):
@@ -57,25 +60,7 @@ class TreeToJson(Transformer):
         return result
 
     def subject(self, sub):
-        # sub[0] can be an URIREF or a prefixedname
-        result = str()
-
-        # Return if the string matched the ReGex
-        out = self.re.match(sub[0])
-
-        if out == None:
-            # We have a prefixedname subject
-            result = sub[0]
-        else:
-            # We have a URIREF
-            out = out.group(1)
-            out = out.split("/")
-
-            # we get the last 2 values to compose the proper subject
-            out = out[(len(out) - 2):]
-            result = '_'.join(out)
-
-        return result
+        return sub[0]
 
     def predicateobjectlist(self, pol):
         return pol
@@ -92,11 +77,18 @@ class TreeToJson(Transformer):
     def rdfliteral(self, a):
         return a
 
+    def rdfliteralformat(self, connector):
+        data_conversion_type = DataTypeConversion()
+        data = data_conversion_type.convert(connector[0], connector[2])
+
+        return data
+
     def langtag(self, tag):
         return str(tag[0])
 
     def iri(self, iri):
         return str(iri[0])
+        # return iri
 
     def verb(self, verb):
         return str(verb[0])
@@ -111,11 +103,17 @@ class TreeToJson(Transformer):
         return str(uriref[0])
 
     def blanknodepropertylist(self, property_list):
-        self.entity_type.transform(string=property_list, context=self.get_context())
+        self.entity_type.transform(string=property_list)
         return property_list
 
     def get_context(self):
         return self.context.get_context()
+
+    def get_context_mapping(self):
+        return self.context.get_context_mapping()
+
+    def get_catalogue(self):
+        return self.entity_type.get_catalogue()
 
     def get_dataset(self):
         return self.entity_type.get_dataset()
@@ -133,6 +131,8 @@ class TreeToJson(Transformer):
         return self.entity_type.get_conceptList()
 
     def save(self):
+        self.entity_type.save('catalogue')
+
         self.entity_type.save('dataset')
 
         dimensions = self.entity_type.get_dimensions()
@@ -144,8 +144,6 @@ class TreeToJson(Transformer):
         concept_schemas = self.entity_type.get_conceptSchemas()
         [x.save() for x in concept_schemas]
 
-        # TODO: The current version does not upload content related to Concepts
-        #       and Range of values of these Concepts
-        # conceptLists = self.entity_type.get_conceptList()
-        # [x.save() for x in conceptLists]
+        concept_lists = self.entity_type.get_conceptList()
+        [x.save() for x in concept_lists]
 

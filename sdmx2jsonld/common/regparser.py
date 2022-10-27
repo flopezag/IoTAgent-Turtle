@@ -20,15 +20,29 @@
 # under the License.
 ##
 
-from transform.property import Property
+import re
 
-class Dimension(Property):
+
+class RegParser:
     def __init__(self):
-        super().__init__()
-        self.data['type'] = 'DimensionProperty'
+        regex = "http[s]?:\/\/(.*)"
 
-    def add_data(self, id, data):
-        super().add_data(id=id, data=data)
+        # Compile the Regex
+        self.re = re.compile(regex)
 
-        # Add the id
-        self.data['id'] = "urn:ngsi-ld:DimensionProperty:" + id
+    def obtain_id(self, string_to_parse):
+        # Return if the string matched the ReGex
+        out = self.re.match(string_to_parse)
+
+        if out is None:
+            # Check if the prefixed name include ':'
+            obtained_id = string_to_parse.split(':')[1]
+        else:
+            # We have a URIREF
+            out = out.group(1)
+            out = out.split("/")
+
+            # we get the last value which corresponds to the id
+            obtained_id = out[(len(out) - 1):][0]
+
+        return obtained_id

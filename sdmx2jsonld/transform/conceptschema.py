@@ -20,25 +20,29 @@
 # under the License.
 ##
 
-from json import dumps
 from logging import getLogger
+from sdmx2jsonld.common.commonclass import CommonClass
+from sdmx2jsonld.transform.context import Context
 
 logger = getLogger()
 
 
-class Concept:
+class ConceptSchema(CommonClass):
     def __init__(self):
+        super().__init__(entity='ConceptScheme')
+
         self.data = {
             "id": str(),
-            "type": "Class",
-            "rdfs:seeAlso": {
-                "type": "Relationship",
-                "value": str()
-            },
-            "rdfs:subClassOf": {
+            "type": "ConceptScheme",
+            "dct:language": {
                 "type": "Property",
-                "value": str()
+                "value": list()
             },
+            "skos:hasTopConcept": {
+                "type": "Property",
+                "value": list()
+            },
+
 
             #################################################
             # TODO: New ETSI CIM NGSI-LD specification 1.4.2
@@ -58,28 +62,28 @@ class Concept:
             "@context": dict()
         }
 
-    def add_data(self, conceptId, data):
+    def add_data(self, concept_schema_id, data):
         # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the ConceptSchema: skos:prefLabel
         position = data.index('skos:prefLabel') + 1
         description = data[position]
 
         descriptions = [x[0].replace("\"", "") for x in description]
-
         languages = list()
+
         try:
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
-            logger.warning(f'The Concept {conceptId} has a '
+            logger.warning(f'The ConceptSchema {concept_schema_id} has a '
                            f'skos:prefLabel without language tag: {description}')
 
             aux = len(description)
             if aux != 1:
-                logger.error(f"Concept: there is more than 1 description ({aux}), values: {description}")
+                logger.error(f"ConceptSchema: there is more than 1 description ({aux}), values: {description}")
             else:
                 # There is no language tag, we use by default 'en'
                 languages = ['en']
-                logger.warning('Concept: selecting default language "en"')
+                logger.warning('ConceptSchema: selecting default language "en"')
 
         # Complete the skos:prefLabel
         ###############################################################################
@@ -92,40 +96,33 @@ class Concept:
         for i in range(0, len(languages)):
             self.data['skos:prefLabel']['value'][languages[i]] = descriptions[i]
 
+        # Complete the information of the language with the previous information
+        key = self.keys['dct:language']
+        self.data[key]['value'] = languages
+
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:Concept:" + conceptId
+        self.data['id'] = "urn:ngsi-ld:ConceptSchema:" + concept_schema_id
 
-        # rdfs:seeAlso
-        position = data.index('rdfs:seeAlso') + 1
-        concept_schema = data[position][0]
-        concept_schema = concept_schema.split(":")
-        concept_schema = "urn:ngsi-ld:ConceptSchema:" + concept_schema[len(concept_schema)-1]
-        self.data['rdfs:seeAlso']['value'] = concept_schema
+        # TODO: We need to control that the concept id extracted here are the same that we analyse afterwards.
+        # skos:hasTopConcept, this is a list of ids
+        position = data.index('skos:hasTopConcept') + 1
+        result = list(map(lambda x: self.generate_id(value=x, entity='Concept'), data[position]))
+        self.data['skos:hasTopConcept']['value'] = result
 
-        # rdfs:subClassOf
-        position = data.index('rdfs:subClassOf') + 1
-        self.data['rdfs:subClassOf']['value'] = data[position][0]
+        # Simplify Context and order keys
+        a = Context()
+        a.set_data(data=self.data)
+        a.new_analysis()
+        a.order_context()
+        self.data = a.get_data()
 
     def get(self):
         return self.data
 
-    def get_id(self):
-        return self.data['id']
-
-    def add_context(self, context):
-        # TODO: We should assign only the needed context and not all the contexts
-        self.data['@context'] = context['@context']
-
-    def save(self):
-        data = self.get()
-
-        aux = data['id'].split(":")
-        length_aux = len(aux)
-        filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
-
-        # Serializing json
-        json_object = dumps(data, indent=4, ensure_ascii=False)
-
-        # Writing to sample.json
-        with open(filename, "w") as outfile:
-            outfile.write(json_object)
+    # TODO: It should be a function of the RegParser class
+    # @staticmethod
+    # def __generate_id__(entity, value):
+    #     parse = RegParser()
+    #     aux = parse.obtain_id(value)
+    #     aux = "urn:ngsi-ld:" + entity + ":" + aux
+    #     return aux

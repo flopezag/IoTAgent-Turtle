@@ -1,10 +1,12 @@
-# python3.9, virtualenv -ppython3.9 .venv
-lark==1.0.0
+# python3.10, virtualenv -ppython3.10 .venv
+lark==1.1.2
 secure==0.3.0
 docopt==0.6.2
 schema==0.7.5
-fastapi==0.73.0
-uvicorn==0.17.1
+hi-dateinfer==0.4.6
+fastapi==0.85.0
+uvicorn==0.18.3
 python-multipart==0.0.5
 loguru==0.6.0
-requests==2.27.1
+requests==2.28.1
+rdflib~=6.2.0

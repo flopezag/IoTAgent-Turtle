@@ -19,17 +19,15 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 ##
+from rdflib import Graph
 
-from transform.property import Property
 
+def turtle_terse(rdf_content):
+    # Create a Graph
+    g2 = Graph()
 
-class Attribute(Property):
-    def __init__(self):
-        super().__init__()
-        self.data['type'] = 'AttributeProperty'
+    g2 = g2.parse(data=rdf_content, format="turtle")
 
-    def add_data(self, id, data):
-        super().add_data(id=id, data=data)
+    new_rdf_content = g2.serialize(format="turtle")
 
-        # Add the id
-        self.data['id'] = "urn:ngsi-ld:AttributeProperty:" + id
+    return new_rdf_content

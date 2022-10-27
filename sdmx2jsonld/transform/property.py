@@ -20,18 +20,25 @@
 # under the License.
 ##
 
-from json import dumps
 from logging import getLogger
+from sdmx2jsonld.common.commonclass import CommonClass
+from sdmx2jsonld.common.listmanagement import get_rest_data
+from sdmx2jsonld.transform.context import Context
 
 logger = getLogger()
 
 
-class Property:
-    def __init__(self):
+class Property(CommonClass):
+    def __init__(self, entity):
+        super().__init__(entity=entity)
+
         self.data = {
             "id": str(),
             "type": "",
-
+            "dct:language": {
+                "type": "Property",
+                "value": list()
+            },
 
             #################################################
             # TODO: New ETSI CIM NGSI-LD specification 1.4.2
@@ -58,6 +65,8 @@ class Property:
             },
             "@context": dict()
         }
+
+        self.keys = {k: k for k in self.data.keys()}
 
     def add_data(self, id, data):
         # TODO: We have to control that data include the indexes that we want to search
@@ -92,36 +101,54 @@ class Property:
         for i in range(0, len(languages)):
             self.data['rdfs:label']['value'][languages[i]] = descriptions[i]
 
-        # qb:codeList
-        position = data.index('qb:codeList') + 1
-        code_list = data[position][0]
-        code_list = code_list.split(":")
-        code_list = "urn:ngsi-ld:ConceptSchema:" + code_list[len(code_list)-1]
-        self.data['qb:codeList']['object'] = code_list
+        # Complete the information of the language with the previous information
+        key = self.keys['dct:language']
+        self.data[key]['value'] = languages
+
+        # qb:codeList, this attribute might not be presented, so we need to check it.
+        # TODO: We need to control that the codeList id extracted here are the same that we analyse afterwards.
+        try:
+            position = data.index('qb:codeList') + 1
+            code_list = self.generate_id(entity="ConceptSchema", value=data[position][0])
+            self.data['qb:codeList']['object'] = code_list
+        except ValueError:
+            logger.warning(f'Property: {id} has not qb:codeList, deleting the key in the data')
+
+            # If we have not the property, we delete it from data
+            self.data.pop('qb:codeList')
 
         # qb:concept
+        # TODO: the concept id need to check if it is a normal id or an url
         position = data.index('qb:concept') + 1
-        concept = data[position][0]
+        concept = self.generate_id(entity="Concept", value=data[position][0])
         self.data['qb:concept']['value'] = concept
 
+        # Get the rest of the data
+        data = get_rest_data(data=data,
+                             not_allowed_keys=[
+                                 'sliceKey',
+                                 'component',
+                                 'disseminationStatus',
+                                 'validationState',
+                                 'notation',
+                                 'label',
+                                 'codeList',
+                                 'concept'
+                             ],
+                             further_process_keys=[
+                                 'component',
+                                 'label'
+                             ])
 
-    def add_context(self, context):
-        # TODO: We should assign only the needed context and not all the contexts
-        self.data['@context'] = context['@context']
+        # add the new data to the dataset structure
+        [self.data.update({k: v}) for k, v in data.items()]
+
+        # Simplify Context and order keys
+        a = Context()
+        a.set_data(data=self.data)
+        a.new_analysis()
+        a.order_context()
+        self.data = a.get_data()
 
     def get(self):
         return self.data
-
-    def save(self):
-        data = self.get()
-
-        aux = data['id'].split(":")
-        length_aux = len(aux)
-        filename = '_'.join(aux[length_aux - 2:]) + '.jsonld'
-
-        # Serializing json
-        json_object = dumps(data, indent=4, ensure_ascii=False)
-
-        # Writing to sample.json
-        with open(filename, "w") as outfile:
-            outfile.write(json_object)

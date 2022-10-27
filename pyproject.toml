@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "SDMX2JSON-LD"
+version = "0.5.0"
+description = "A SDMX in RDF Turtle 1.1 format parser to generate valid JSON-LD and send to FIWARE Context Brokers using ETSI NGSI-LD."
+authors = ["Fernando López <fernando.lopez@fiware.org>"]
+readme = "./sdmx2jsonld/README.md"
+packages = [{include = "sdmx2jsonld"}]
+
+keywords = ["parsing", "ETSI NGSI-LD", "SDMX"]
+
+classifiers = [
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+repository = "https://github.com/flopezag/IoTAgent-Turtle"
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+lark = "1.1.2"
+secure = "0.3.0"
+docopt = "0.6.2"
+schema = "0.7.5"
+hi-dateinfer = "0.4.6"
+fastapi = "0.85.0"
+uvicorn = "0.18.3"
+python-multipart = "0.0.5"
+loguru = "0.6.0"
+requests = "2.28.1"
+rdflib = "~6.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

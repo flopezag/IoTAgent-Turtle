@@ -20,23 +20,33 @@
 # under the License.
 ##
 
-from cli.command import parseCLI
-from transform.parser import Parser
+from cli.command import parse_cli
+from sdmx2jsonld.transform.parser import Parser
 from api.server import launch
-from datetime import datetime
+from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 
 if __name__ == '__main__':
-    now = datetime.now()
-
-    args = parseCLI()
+    args = parse_cli()
 
     if args['run'] is True:
         file_in = args['--input']
         file_out = args['--output']
 
         myparser = Parser()
-        myparser.parsing(file=file_in, out=file_out)
+
+        try:
+            myparser.parsing(content=file_in, out=file_out)
+        except UnexpectedToken as e:
+            print(e)
+        except UnexpectedInput as e:
+            print(e)
+        except UnexpectedEOF as e:
+            print(e)
+
     elif args['server'] is True:
         port = int(args['--port'])
+        host = args['--host']
 
-        launch(app="api.server:application", port=port, uptime=now)
+        launch(app="api.server:application",
+               host=host,
+               port=port)

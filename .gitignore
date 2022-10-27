@@ -133,3 +133,5 @@ dmypy.json
 
 # Temporal generated JSON-LD documents
 *.jsonld
+output
+output/*.jsonld
