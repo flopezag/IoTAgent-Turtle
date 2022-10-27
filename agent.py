@@ -30,12 +30,12 @@ if __name__ == '__main__':
 
     if args['run'] is True:
         file_in = args['--input']
-        file_out = args['--output']
+        generate_files = args['--output']
 
-        myparser = Parser()
+        my_parser = Parser()
 
         try:
-            myparser.parsing(content=file_in, out=file_out)
+            my_parser.parsing(content=file_in, out=generate_files)
         except UnexpectedToken as e:
             print(e)
         except UnexpectedInput as e:

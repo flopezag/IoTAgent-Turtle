@@ -28,16 +28,17 @@ from json import dumps
 from logging import getLogger
 from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 from sdmx2jsonld.common.rdf import turtle_terse
+from sdmx2jsonld.common.config import GRAMMARFILE
 
 
 logger = getLogger(__name__)
-__version__ = "0.5.0"
+__version__ = "0.5.2"
 
 
 class Parser:
     def __init__(self):
         # Open the grammar file
-        with open("./sdmx2jsonld/grammar/grammar.lark") as f:
+        with open(GRAMMARFILE) as f:
             grammar = f.read()
 
         self.parser = Lark(grammar, start='start', parser='lalr')

@@ -41,7 +41,8 @@ alt="Logo" width="280" height="160">
 
 A SDMX in RDF Turtle 1.1 format parser to generate valid JSON-LD and send to FIWARE Context Brokers using ETSI NGSI-LD.
 
-It is based on a [EBNF LALR(1) grammar](https://github.com/flopezag/IoTAgent-Turtle/blob/master/grammar/grammar.lark).
+It is based on a 
+[EBNF LALR(1) grammar](https://github.com/flopezag/IoTAgent-Turtle/blob/master/sdmx2jsonld/grammar/grammar.lark).
 
 This project is part of INTERSTAT. For more information about the INTERSTAT Project, please check the url 
 https://cef-interstat.eu.
@@ -91,11 +92,14 @@ content to be sent to the FIWARE Context Broker:
 from sdmx2jsonld.transform.parser import Parser
 from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 
+file_in = open("structures-accounts.ttl")
+generate_files = True
+
 # Start parsing the file
 my_parser = Parser()
 
 try:
-    my_parser.parsing(content=file_in, out=file_out)
+    my_parser.parsing(content=file_in, out=generate_files)
 except UnexpectedToken as e:
     print(e)
 except UnexpectedInput as e:
