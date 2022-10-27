@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SDMX2JSON-LD"
-version = "0.1.1"
+version = "0.5.0"
 description = "A SDMX in RDF Turtle 1.1 format parser to generate valid JSON-LD and send to FIWARE Context Brokers using ETSI NGSI-LD."
 authors = ["Fernando López <fernando.lopez@fiware.org>"]
 readme = "./sdmx2jsonld/README.md"

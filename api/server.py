@@ -33,7 +33,7 @@ from pathlib import Path
 from api.custom_logging import CustomizeLogger
 from requests import post, exceptions
 from json import load, loads
-from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
+from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 from io import StringIO
 
 initial_uptime = datetime.now()

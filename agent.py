@@ -23,7 +23,7 @@
 from cli.command import parse_cli
 from sdmx2jsonld.transform.parser import Parser
 from api.server import launch
-from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
+from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 
 if __name__ == '__main__':
     args = parse_cli()

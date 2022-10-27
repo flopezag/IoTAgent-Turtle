@@ -26,11 +26,12 @@ from pprint import pprint
 from io import TextIOWrapper, TextIOBase, StringIO
 from json import dumps
 from logging import getLogger
-from lark.exceptions import UnexpectedToken, UnexpectedEOF, UnexpectedInput
+from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 from sdmx2jsonld.common.rdf import turtle_terse
 
 
 logger = getLogger(__name__)
+__version__ = "0.5.0"
 
 
 class Parser:
@@ -42,6 +43,13 @@ class Parser:
         self.parser = Lark(grammar, start='start', parser='lalr')
 
     def parsing(self, content: TextIOBase, out: bool = False):
+        """
+        Function that parses the RDF Turtle file to generate the JSON-LD content to be sent to the FIWARE Context Broker
+        :param content: RDF Context in TextIOBase superclass. It could be a StringIO content or a TextIOWrapper
+        :param out: Boolean to indicate if we want to generate the proper JSON-LD files or just show the parser results
+                    on the screen
+        :return: Nothing
+        """
 
         match content:
             case StringIO():

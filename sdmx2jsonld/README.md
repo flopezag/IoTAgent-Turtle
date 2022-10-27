@@ -15,7 +15,8 @@
 <br />
 <div align="center">
   <a href="https://github.com/flopezag/IoTAgent-Turtle">
-    <img src="../images/logo.png" alt="Logo" width="280" height="160">
+    <img src="https://raw.githubusercontent.com/flopezag/IoTAgent-Turtle/master/images/logo.png" 
+alt="Logo" width="280" height="160">
   </a>
 
 <h3 align="center">SDMX (Turtle) to NGSI-LD (JSON-LD) converter</h3>
@@ -40,7 +41,7 @@
 
 A SDMX in RDF Turtle 1.1 format parser to generate valid JSON-LD and send to FIWARE Context Brokers using ETSI NGSI-LD.
 
-It is based on a [EBNF LALR(1) grammar](./grammar/grammar.lark).
+It is based on a [EBNF LALR(1) grammar](https://github.com/flopezag/IoTAgent-Turtle/blob/master/grammar/grammar.lark).
 
 This project is part of INTERSTAT. For more information about the INTERSTAT Project, please check the url 
 https://cef-interstat.eu.
@@ -59,7 +60,8 @@ The dependencies of the sdmx2jsonld python package are the following:
 * [Requests - an elegant and simple HTTP library for Python, built for human beings](https://requests.readthedocs.io).
 * [RDFLib - a pure Python package for working with RDF](https://rdflib.readthedocs.io).
 
-For more details about the versions of each library, please refer to [requirements.txt](requirements.txt).
+For more details about the versions of each library, please refer to 
+[requirements.txt](https://github.com/flopezag/IoTAgent-Turtle/blob/master/requirements.txt).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -82,14 +84,12 @@ SDMX2JSON-LD officially supports Python 3.10+.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos 
-work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+To execute the python module you can follow the following code to parse the RDF Turtle file to generate the JSON-LD 
+content to be sent to the FIWARE Context Broker:
 
 ```python
 from sdmx2jsonld.transform.parser import Parser
-from lark.exceptions import UnexpectedToken, UnexpectedInput, UnexpectedEOF
+from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 
 # Start parsing the file
 my_parser = Parser()
@@ -104,6 +104,10 @@ except UnexpectedEOF as e:
     print(e)
 ```
 
+Where:
+* `file_in` is the RDF Turtle content that can be a string in StringIO class or a read file in TextIOWrapper class.
+* `file_out` is a boolean variable to indicate if we want to save the JSON-LD parser content into files (True) or we 
+want to show the content in the screen (False).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -138,7 +142,8 @@ Project Link: [https://github.com/flopezag/IoTAgent-Turtle](https://github.com/f
 <!-- LICENSE -->
 ## License
 
-Distributed under the Apache2.0 License. See `LICENSE` for more information.
+Distributed under the Apache2.0 License. See [LICENSE](https://github.com/flopezag/IoTAgent-Turtle/blob/master/LICENSE) 
+for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
