@@ -20,7 +20,7 @@
 # under the License.
 ##
 from unittest import TestCase
-from common.classprecedence import Precedence, ClassesPrecedencePropertyError, ClassesPrecedenceClassError
+from sdmx2jsonld.common.classprecedence import Precedence, ClassesPrecedencePropertyError, ClassesPrecedenceClassError
 
 
 class Test(TestCase):
