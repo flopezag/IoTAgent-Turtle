@@ -62,11 +62,13 @@ class Parser:
     def parsing_file(self, content: TextIOWrapper, out: bool):
         transform = TreeToJson()
 
-        content = content.read()
-        content = turtle_terse(rdf_content=content)
+        with content as f:
+            data = f.read()
+
+        data = turtle_terse(rdf_content=data)
 
         try:
-            tree = self.parser.parse(content)
+            tree = self.parser.parse(data)
         except UnexpectedToken as err:
             raise err
         except UnexpectedInput as err:
