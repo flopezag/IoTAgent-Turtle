@@ -145,7 +145,13 @@ class EntityType:
         if type == 'Component':
             self.dataset.add_components(context=self.context, component=data)
         elif type == 'Catalogue':
-            print(title)
+            identifier = parser.obtain_id(title)
+            self.catalogue.add_data(title=title, dataset_id=identifier, data=data)
+
+            print(identifier)
+        elif type == 'Observation':
+            identifier = parser.obtain_id(title)
+            print(identifier)
         elif type == 'Dataset':
             identifier = parser.obtain_id(title)
             self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)

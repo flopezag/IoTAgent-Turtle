@@ -133,7 +133,8 @@ class TreeToJson(Transformer):
     def save(self):
         self.entity_type.save('catalogue')
 
-        self.entity_type.save('dataset')
+        if self.entity_type.dataset.data['id'] != '':
+            self.entity_type.save('dataset')
 
         dimensions = self.entity_type.get_dimensions()
         [dimension.save() for dimension in dimensions]
