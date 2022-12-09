@@ -22,12 +22,14 @@
 from hidateinfer import infer
 from datetime import datetime, timezone
 from re import compile, sub
-
+from dateutil import parser
+import pytz
+from sdmx2jsonld.common.tzinfos import whois_timezone_info
 
 class DataTypeConversion:
     def __init__(self):
         self.types = {
-            'xsd:dateTime': 'stodt',
+            'xsd:dateTime': 'stoutc',
             'xsd:int': 'stoi',
             'xsd:boolean': 'stob'
         }
@@ -42,15 +44,20 @@ class DataTypeConversion:
         if hour24:
             format_dt = sub(self.regex_12hour, r"\1H\3", format_dt)
 
-        format_dt = sub(self.regex_microseconds,  r"\1%f", format_dt)
+        format_dt = sub(self.regex_microseconds, r"\1%f", format_dt)
         format_dt = sub(self.regex_microseconds2, r"\1%f", format_dt)
 
-        format_dt = sub(self.regex_false_date,  r"%Y-%m-%d\1%f", format_dt)
+        format_dt = sub(self.regex_false_date, r"%Y-%m-%d\1%f", format_dt)
         format_dt = sub(self.regex_false_date2, r"%Y-%m-%d\1%f", format_dt)
 
         return format_dt
 
     def convert(self, data, datatype):
+        def stoutc(value):
+            dt = parser.parse(value, tzinfos=whois_timezone_info)
+            dt = dt.astimezone(pytz.UTC)
+            return dt.replace(tzinfo=timezone.utc).isoformat()
+
         def stodt(value):
             # print(f'toDateTime function, arguments {value}')
             if isinstance(value, str):
@@ -60,7 +67,7 @@ class DataTypeConversion:
             else:
                 raise Exception(f'Invalid format received: {type(value)}')
 
-            result = self.correct_datatype_format(result)
+            # result = self.correct_datatype_format(result)
 
             # print(f'format {result}')
             result = datetime.strptime(value, result).replace(tzinfo=timezone.utc).isoformat()
@@ -98,7 +105,7 @@ class DataTypeConversion:
             raise Exception(f'Invalid value for boolean conversion: {str(value)}')
 
         try:
-            function = self.types[datatype] + '(value=' + data + ')'
+            function = self.types[datatype] + f'(value="{data}")'
             return eval(function)
         except KeyError:
             # logger.error(f'Datatype not defined: {datatype}')
