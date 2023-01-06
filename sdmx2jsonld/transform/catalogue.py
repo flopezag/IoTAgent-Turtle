@@ -91,7 +91,7 @@ class CatalogueDCATAP(CommonClass):
         self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + hash1
 
         # Add dataset id
-        self.data['dataset']['value'] = dataset_id
+        self.data['qb:dataset']['value'] = dataset_id
 
     def add_data(self, title, dataset_id, data):
         # We need to complete the data corresponding to the Catalogue: rdfs:label
