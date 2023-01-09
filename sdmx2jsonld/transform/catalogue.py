@@ -36,7 +36,7 @@ class CatalogueDCATAP(CommonClass):
             "id": str(),
             "type": "CatalogueDCAT-AP",
             "qb:dataset": {
-                "type": "object",
+                "type": "Relationship",
                 "value": str()
             },
 
@@ -66,7 +66,7 @@ class CatalogueDCATAP(CommonClass):
             },
 
             "dct:title": {
-                "type": "Array",
+                "type": "Property",
                 "value": list()
             },
 
@@ -99,13 +99,23 @@ class CatalogueDCATAP(CommonClass):
 
         # Add the title
         key = self.keys['dct:title']
-        self.data[key] = title
+        self.data[key]['value'] = title
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + dataset_id
 
+        # Add the publisher
+        key = self.get_key(requested_key='dcterms:publisher')
+        position = data.index(key) + 1
+        self.data['dct:publisher']['value'] = data[position][0]
+
+        # Add structure
+        key = self.get_key(requested_key='qb:structure')
+        position = data.index(key) + 1
+        self.data['qb:dataset']['value'] = data[position][0]
+
         # Get the rest of the data
-        data = get_rest_data(data=data)
+        data = get_rest_data(data=data, not_allowed_keys=['rdfs:label'])
 
         # add the new data to the dataset structure
         self.patch_data(data, False)

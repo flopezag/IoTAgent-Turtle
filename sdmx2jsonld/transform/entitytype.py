@@ -26,10 +26,11 @@ from sdmx2jsonld.transform.conceptschema import ConceptSchema
 from sdmx2jsonld.transform.concept import Concept
 from sdmx2jsonld.transform.attribute import Attribute
 from sdmx2jsonld.transform.catalogue import CatalogueDCATAP
+from sdmx2jsonld.transform.observation import Observation
 from logging import getLogger
 from datetime import datetime
 from sdmx2jsonld.common.regparser import RegParser
-from sdmx2jsonld.common.classprecedence import Precedence, ClassesPrecedencePropertyError, ClassesPrecedenceClassError
+from sdmx2jsonld.common.classprecedence import Precedence, ClassPrecedencePropertyError, ClassPrecedenceClassError
 
 logger = getLogger()
 
@@ -59,6 +60,7 @@ class EntityType:
         self.context = dict()
         self.context_mapping = dict()
         self.catalogue = CatalogueDCATAP()
+        self.observation = Observation()
 
         self.pre = Precedence()
 
@@ -84,10 +86,10 @@ class EntityType:
                 # We have two options, a well-know object list to be found in the self.entities or
                 # the conceptList defined in the turtle file
                 data = self.entities[data]
-            except ClassesPrecedencePropertyError as error:
+            except ClassPrecedencePropertyError as error:
                 logger.error(str(error))
                 data = self.entities[data[0]]
-            except ClassesPrecedenceClassError as error:
+            except ClassPrecedenceClassError as error:
                 logger.warning(str(error))
                 data = self.entities['rdfs:Class']
             except KeyError:
@@ -151,6 +153,8 @@ class EntityType:
             print(identifier)
         elif type == 'Observation':
             identifier = parser.obtain_id(title)
+            self.observation.add_data(title=title, observation_id=identifier, data=data)
+
             print(identifier)
         elif type == 'Dataset':
             identifier = parser.obtain_id(title)
