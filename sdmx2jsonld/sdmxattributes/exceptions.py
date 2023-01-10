@@ -20,3 +20,16 @@ class ClassConfStatusError(ClassSDMXAttributeError):
 
     def __init__(self, data, message="ConfStatus value is not the expected"):
         super().__init__(data=data, message=message)
+
+
+class ClassObsStatusError(ClassSDMXAttributeError):
+    """Raised when the input value is not included in the list of available values for obsStatus"""
+    """Exception raised for errors in the input data.
+
+    Attributes:
+        data -- input data which caused the error
+        message -- explanation of the error
+    """
+
+    def __init__(self, data, message="ObsStatus value is not the expected"):
+        super().__init__(data=data, message=message)

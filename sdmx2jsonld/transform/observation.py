@@ -23,6 +23,7 @@
 from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.sdmxattributes.confirmationStatus import ConfStatus
+from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
 from re import search
 
 logger = getLogger()
@@ -106,7 +107,8 @@ class Observation(CommonClass):
         self.__assign_property__(requested_key='sdmx-attribute:decimals', data=data)
 
         # Add obsStatus
-        self.__assign_property__(requested_key='sdmx-attribute:obsStatus', data=data)
+        key = self.__assign_property__(requested_key='sdmx-attribute:obsStatus', data=data)
+        self.data[key]['value'] = ObsStatus().fix_value(value=self.data[key]['value'])
 
         # Add unitMult
         self.__assign_property__(requested_key='sdmx-attribute:unitMult', data=data)
@@ -143,3 +145,6 @@ class Observation(CommonClass):
                 self.keys[requested_key] = requested_key
 
                 return requested_key
+
+    def get(self):
+        return self.data

@@ -216,6 +216,9 @@ class EntityType:
     def get_catalogue(self):
         return self.catalogue.get()
 
+    def get_observation(self):
+        return self.observation.get()
+
     def get_dataset(self):
         return self.dataset.get()
 
