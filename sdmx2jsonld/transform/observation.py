@@ -24,6 +24,7 @@ from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.sdmxattributes.confirmationStatus import ConfStatus
 from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
+from sdmx2jsonld.sdmxattributes.code import Code
 from re import search
 
 logger = getLogger()
@@ -104,14 +105,16 @@ class Observation(CommonClass):
         self.data['id'] = "urn:ngsi-ld:Observation:" + observation_id
 
         # Add the decimals
-        self.__assign_property__(requested_key='sdmx-attribute:decimals', data=data)
+        key = self.__assign_property__(requested_key='sdmx-attribute:decimals', data=data)
+        self.data[key]['value'] = Code(typecode=key).fix_value(value=self.data[key]['value'])
 
         # Add obsStatus
         key = self.__assign_property__(requested_key='sdmx-attribute:obsStatus', data=data)
         self.data[key]['value'] = ObsStatus().fix_value(value=self.data[key]['value'])
 
         # Add unitMult
-        self.__assign_property__(requested_key='sdmx-attribute:unitMult', data=data)
+        key = self.__assign_property__(requested_key='sdmx-attribute:unitMult', data=data)
+        self.data[key]['value'] = Code(typecode=key).fix_value(value=self.data[key]['value'])
 
     def __assign_property__(self, requested_key, data):
         key = self.get_key(requested_key=requested_key)
