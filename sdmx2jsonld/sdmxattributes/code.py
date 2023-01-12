@@ -20,14 +20,12 @@ class Code:
         # then maybe could be in the form obsStatus-<value>, so we have to extract the substring and
         #      return that substring if it is in the list of values, if not return an error.
         # any other value will return an error
+        number: int() = 0
+
         m = search(f'sdmx-code:{self.typecode}-(.*)', str(value))
 
         if m is not None:
             number = int(m.group(1))
-
-            if number not in self.data_range:
-                raise ClassCode(data=value,
-                                message=f'{self.typecode} out of range, got: {number}   {self.data_range}')
         else:
             # The data is not following the sdmx-code:<value> we have to check which one
             # 1) Check if there is a value without the prefix
@@ -35,24 +33,20 @@ class Code:
 
             if m is not None:
                 number = int(m.group(1))
-
-                if number not in self.data_range:
-                    raise ClassCode(data=value,
-                                    message=f'{self.typecode} out of range, got: {number}   {self.data_range}')
             else:
                 # We need to check is there is an integer number between a valid range
                 if isinstance(value, int):
                     # Need to check the range
                     number = value
-                    if number not in self.data_range:
-                        raise ClassCode(data=value,
-                                        message=f'{self.typecode} out of range, got: {number}   {self.data_range}')
                 elif isinstance(value, str):
-                    number = int(value)
-                    if number not in self.data_range:
+                    try:
+                        number = int(value)
+                    except ValueError:
                         raise ClassCode(data=value,
-                                        message=f'{self.typecode} out of range, got: {number}   {self.data_range}')
-                else:
-                    print("Error")
+                                        message=f'Data is not a valid value')
+
+        if number not in self.data_range:
+            raise ClassCode(data=value,
+                            message=f'{self.typecode} out of range, got: {number}   {self.data_range}')
 
         return number

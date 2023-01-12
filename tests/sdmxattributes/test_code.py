@@ -109,3 +109,14 @@ class TestConfStatus(TestCase):
             _ = code.fix_value(value=value)
 
         self.assertEqual(str(error.exception), expected)
+
+    def test_any_other_code(self):
+        value = 'sadf'
+        expected = 'sadf -> Data is not a valid value'
+
+        code = Code(typecode="unitMult")
+
+        with self.assertRaises(ClassCode) as error:
+            _ = code.fix_value(value=value)
+
+        self.assertEqual(str(error.exception), expected)
