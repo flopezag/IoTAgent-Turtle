@@ -17,8 +17,8 @@ class Code:
 
     def fix_value(self, value):
         # Need to check if the value received is in the list of possible values -> return that value
-        # then maybe could be in the form obsStatus-<value>, so we have to extract the substring and
-        #      return that substring if it is in the list of values, if not return an error.
+        # then maybe could be in the form decimals-<value> or unitMult-<value>, so we have to extract
+        # the substring and return that substring if it is in the list of values, if not return an error.
         # any other value will return an error
         number: int() = 0
 

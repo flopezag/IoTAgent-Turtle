@@ -25,6 +25,7 @@ from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.sdmxattributes.confirmationStatus import ConfStatus
 from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
 from sdmx2jsonld.sdmxattributes.code import Code
+from sdmx2jsonld.sdmxattributes.frequency import Frequency
 from re import search
 
 logger = getLogger()
@@ -103,6 +104,7 @@ class Observation(CommonClass):
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:Observation:" + observation_id
+        self.data['identifier']['value'] = observation_id
 
         # Add the decimals
         key = self.__assign_property__(requested_key='sdmx-attribute:decimals', data=data)
@@ -116,10 +118,25 @@ class Observation(CommonClass):
         key = self.__assign_property__(requested_key='sdmx-attribute:unitMult', data=data)
         self.data[key]['value'] = Code(typecode=key).fix_value(value=self.data[key]['value'])
 
+        # Add freq "pattern": "^_[OUZ]|[SQBNI]|OA|OM|[AMWDH]_*[0-9]*$"
+        # TODO: Add verification of coded data following the pattern
+        key = self.__assign_property__(requested_key='sdmx-dimension:freq', data=data)
+        self.data[key]['value'] = Frequency().fix_value(value=self.data[key]['value'])
+
+        # Add reference Area
+        # TODO: Add verification of coded data following ISO-2, ISO-3, or M49 code
+        _ = self.__assign_property__(requested_key='sdmx-dimension:refArea', data=data)
+
+        # Add timePeriod
+        _ = self.__assign_property__(requested_key='sdmx-dimension:timePeriod', data=data)
+
+        # Add obsValue
+        _ = self.__assign_property__(requested_key='sdmx-measure:obsValue', data=data)
+
     def __assign_property__(self, requested_key, data):
         key = self.get_key(requested_key=requested_key)
         position = data.index(requested_key) + 1
-        self.data[key]['value'] = data[position][0]
+        self.data[key]['value'] = self.get_data(data[position])
 
         return key
 
@@ -151,3 +168,15 @@ class Observation(CommonClass):
 
     def get(self):
         return self.data
+
+    def get_data(self, data):
+        result = data
+        if isinstance(data, list):
+            result = self.get_data(data[0])
+
+        if isinstance(result, str):
+            m = search('"+(.*)"+', result)
+            if m is not None:
+                result = m.group(1)
+
+        return result
