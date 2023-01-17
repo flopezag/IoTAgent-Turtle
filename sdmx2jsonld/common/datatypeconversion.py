@@ -29,7 +29,7 @@ from sdmx2jsonld.common.tzinfos import whois_timezone_info
 class DataTypeConversion:
     def __init__(self):
         self.types = {
-            'xsd:dateTime': 'stoutc',
+            'xsd:dateTime': 'stodt',
             'xsd:int': 'stoi',
             'xsd:boolean': 'stob'
         }

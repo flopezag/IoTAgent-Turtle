@@ -61,16 +61,15 @@ class TestDataTypeConversion(TestCase):
                  "2021-07-01T11:50:37.3", "2021-09-28T15:31:24.05",
                  "Mon Jan 13 09:52:52 MST 2014", "Thu Jun 02 11:56:53 CDT 2011",
                  "2022-12-12T10:00:00", "2022-05-11T10:00:00",
-                 "Tue Dec 13 11:00:00 K 2022")
+                 "Tue Dec 13 11:00:00 K 2022", "2021-07-01T11:58:08.642000")
         expected = ("2022-01-15T08:00:00+00:00", "2022-01-10T08:00:00+00:00",
                     "2021-07-01T09:50:37.300000+00:00", "2021-09-28T13:31:24.050000+00:00",
                     "2014-01-13T16:52:52+00:00", "2011-06-02T16:56:53+00:00",
                     "2022-12-12T09:00:00+00:00",  "2022-05-11T08:00:00+00:00",
-                    "2022-12-13T01:00:00+00:00")
-
+                    "2022-12-13T01:00:00+00:00", "2021-07-01T09:58:08.642000+00:00")
+                                               # "2021-07-01T09:58:08.642000+00:00"
         d = zip(dates, expected)
 
         for test_date, expected_date in d:
-            # print(test_date)
-            # print(dtc.convert(test_date, token_type))
+            print(test_date, " | ", dtc.convert(test_date, token_type))
             assert (expected_date == dtc.convert(test_date, token_type))
