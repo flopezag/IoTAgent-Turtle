@@ -29,7 +29,7 @@ from sdmx2jsonld.common.tzinfos import whois_timezone_info
 class DataTypeConversion:
     def __init__(self):
         self.types = {
-            'xsd:dateTime': 'stodt',
+            'xsd:dateTime': 'stoutc',
             'xsd:int': 'stoi',
             'xsd:boolean': 'stob'
         }
@@ -67,7 +67,7 @@ class DataTypeConversion:
             else:
                 raise Exception(f'Invalid format received: {type(value)}')
 
-            # result = self.correct_datatype_format(result)
+            result = self.correct_datatype_format(result)
 
             # print(f'format {result}')
             result = datetime.strptime(value, result).replace(tzinfo=timezone.utc).isoformat()
@@ -105,7 +105,8 @@ class DataTypeConversion:
             raise Exception(f'Invalid value for boolean conversion: {str(value)}')
 
         try:
-            function = self.types[datatype] + f'(value="{data}")'
+            # jicg - function = self.types[datatype] + f'(value="{data}")'
+            function = self.types[datatype] + '(value=' + data + ')'
             return eval(function)
         except KeyError:
             # logger.error(f'Datatype not defined: {datatype}')
