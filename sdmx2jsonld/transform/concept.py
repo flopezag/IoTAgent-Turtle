@@ -41,7 +41,7 @@ class Concept(CommonClass):
             },
             "skos:inScheme": {
                 "type": "Relationship",
-                "value": str()
+                "object": str()
             },
             "rdfs:subClassOf": {
                 "type": "Property",
@@ -170,7 +170,7 @@ class Concept(CommonClass):
         parser = RegParser()
         concept_schema = data[position][0]
         concept_schema = "urn:ngsi-ld:ConceptSchema:" + parser.obtain_id(concept_schema)
-        self.data['skos:inScheme']['value'] = concept_schema
+        self.data['skos:inScheme']['object'] = concept_schema
 
     def need_add_notation(self, data):
         try:

@@ -26,6 +26,7 @@ from sdmx2jsonld.sdmxattributes.confirmationStatus import ConfStatus
 from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
 from sdmx2jsonld.sdmxattributes.code import Code
 from sdmx2jsonld.sdmxattributes.frequency import Frequency
+from sdmx2jsonld.common.regparser import RegParser
 from re import search
 
 logger = getLogger()
@@ -47,7 +48,7 @@ class Observation(CommonClass):
                 "value": str()
             },
             "dataSet": {
-                "type": "Property",
+                "type": "Relationship",
                 "object": str()
             },
             "confStatus": {
@@ -106,6 +107,9 @@ class Observation(CommonClass):
         self.data['id'] = "urn:ngsi-ld:Observation:" + observation_id
         self.data['identifier']['value'] = observation_id
 
+        # Add title, the url string as it is in the turtle document
+        self.data['title']['value'] = title
+
         # Add the decimals
         key = self.__assign_property__(requested_key='sdmx-attribute:decimals', data=data)
         self.data[key]['value'] = Code(typecode=key).fix_value(value=self.data[key]['value'])
@@ -133,10 +137,16 @@ class Observation(CommonClass):
         # Add obsValue
         _ = self.__assign_property__(requested_key='sdmx-measure:obsValue', data=data)
 
-    def __assign_property__(self, requested_key, data):
+        # Add dataset
+        parser = RegParser()
+        key = self.__assign_property__(requested_key='qb:dataSet', data=data, key_property='object')
+        identifier = parser.obtain_id(self.data[key]['object'])
+        self.data[key]['object'] = 'urn:ngsi-ld:CatalogueDCAT-AP:' + identifier
+
+    def __assign_property__(self, requested_key, data, key_property='value'):
         key = self.get_key(requested_key=requested_key)
         position = data.index(requested_key) + 1
-        self.data[key]['value'] = self.get_data(data[position])
+        self.data[key][key_property] = self.get_data(data[position])
 
         return key
 
