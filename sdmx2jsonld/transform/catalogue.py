@@ -68,13 +68,7 @@ class CatalogueDCATAP(CommonClass):
             "dct:title": {
                 "type": "Property",
                 "value": list()
-            },
-
-
-            "@context": [
-                "https://raw.githubusercontent.com/SEMICeu/DCAT-AP/master/releases/1.1/dcat-ap_1.1.jsonld",
-                "https://raw.githubusercontent.com/smart-data-models/dataModel.DCAT-AP/master/context.jsonld"
-            ]
+            }
         }
 
         self.concept_id = str()
@@ -115,10 +109,19 @@ class CatalogueDCATAP(CommonClass):
         self.data['qb:dataset']['value'] = data[position][0]
 
         # Get the rest of the data
-        data = get_rest_data(data=data, not_allowed_keys=['rdfs:label'])
+        data = get_rest_data(data=data, not_allowed_keys=['label', 'publisher'])
 
         # add the new data to the dataset structure
         self.patch_data(data, False)
+
+        # Add context
+        context = {
+            "@context": [
+                "https://raw.githubusercontent.com/SEMICeu/DCAT-AP/master/releases/1.1/dcat-ap_1.1.jsonld",
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.DCAT-AP/master/context.jsonld"
+            ]
+        }
+        self.data.update(context)
 
     def patch_data(self, data, language_map):
         if language_map:
@@ -126,7 +129,17 @@ class CatalogueDCATAP(CommonClass):
         else:
             # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
-            [self.data.update({k: v}) for k, v in data.items()]
+            [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
+
+    def __generate_property__(self, key, value):
+        result = {
+            key: {
+                "type": "Property",
+                "value": value
+            }
+        }
+
+        return result
 
     def __complete_label__(self, title, data):
         try:

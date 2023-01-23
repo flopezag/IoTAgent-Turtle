@@ -121,7 +121,7 @@ class Dataset(CommonClass):
         except ValueError:
             logger.error(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
-        # Simplify Context amd order keys. It is possible that we call add_component before the dataset has been created
+        # Simplify Context and order keys. It is possible that we call add_component before the dataset has been created
         # therefore we need to add the corresponding context to the dataset
         if len(self.data['@context']) == 0:
             self.data['@context'] = context['@context']
