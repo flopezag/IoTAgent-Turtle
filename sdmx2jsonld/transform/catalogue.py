@@ -131,16 +131,6 @@ class CatalogueDCATAP(CommonClass):
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
             [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
-    def __generate_property__(self, key, value):
-        result = {
-            key: {
-                "type": "Property",
-                "value": value
-            }
-        }
-
-        return result
-
     def __complete_label__(self, title, data):
         try:
             key = self.get_key(requested_key='rdfs:label')
