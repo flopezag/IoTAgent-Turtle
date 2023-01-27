@@ -27,7 +27,7 @@ from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
 from sdmx2jsonld.sdmxattributes.code import Code
 from sdmx2jsonld.sdmxattributes.frequency import Frequency
 from sdmx2jsonld.common.regparser import RegParser
-from re import search
+from re import search, compile
 
 logger = getLogger()
 
@@ -94,6 +94,7 @@ class Observation(CommonClass):
 
         self.concept_id = str()
         self.keys = {k: k for k in self.data.keys()}
+        self.regexpDimension = compile('ns1:.*')
 
     def add_data(self, title, observation_id, data):
         # We have a list of dimensions, a dataset, a list of attributes, a list of dimensions attributes
@@ -142,6 +143,34 @@ class Observation(CommonClass):
         key = self.__assign_property__(requested_key='qb:dataSet', data=data, key_property='object')
         identifier = parser.obtain_id(self.data[key]['object'])
         self.data[key]['object'] = 'urn:ngsi-ld:CatalogueDCAT-AP:' + identifier
+
+        # Add dimensions
+        result = self.__assign_dimensions__(data=data)
+        self.data['dimensions']['value'] = result
+
+    def __assign_dimensions__(self, data):
+        def create_data(key, value):
+            new_dimension = {
+                "key": key,
+                "value": value
+            }
+
+            return new_dimension
+        parser = RegParser()
+
+        # We need to get the list of available dimension keys
+        dimension_keys = [a for a in data if self.regexpDimension.match(a.__str__()) is not None]
+
+        # We need to get the list of values for these keys, if there is an url, it is considered a
+        values = [self.get_data(data[data.index(a) + 1]) for a in dimension_keys]
+        values = [parser.obtain_id(a, prefix_string="urn:ngsi-ld:Concept:") for a in values]
+
+        # Get the list of Entity IDs
+        entity_ids = ["urn:ngsi-ld:DimensionProperty:" + b.split("ns1:", 1)[1] for b in dimension_keys]
+
+        result = [create_data(key=entity_ids[i], value=values[i]) for i in range(0, len(values))]
+
+        return result
 
     def __assign_property__(self, requested_key, data, key_property='value'):
         key = self.get_key(requested_key=requested_key)
