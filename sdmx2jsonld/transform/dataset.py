@@ -67,7 +67,7 @@ class Dataset(CommonClass):
                 'key': 'stat:attribute',
                 'value': {
                     "stat:attribute": {
-                        "type": "Property",
+                        "type": "Relationship",
                         "value": list()
                     }
                 }
@@ -77,7 +77,7 @@ class Dataset(CommonClass):
                 'key': 'stat:dimension',
                 'value': {
                     "stat:dimension": {
-                        "type": "Property",
+                        "type": "Relationship",
                         "value": list()
                     }
                 }
@@ -87,7 +87,7 @@ class Dataset(CommonClass):
                 'key': 'stat:statUnitMeasure',
                 'value': {
                     "stat:statUnitMeasure": {
-                        "type": "Property",
+                        "type": "Relationship",
                         "value": list()
                     }
                 }
@@ -170,7 +170,7 @@ class Dataset(CommonClass):
         else:
             # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
-            [self.data.update({k: v}) for k, v in data.items()]
+            [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
     def __complete_label__(self, title, data):
         try:

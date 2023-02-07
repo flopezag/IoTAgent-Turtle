@@ -39,7 +39,7 @@ class ConceptSchema(CommonClass):
                 "value": list()
             },
             "skos:hasTopConcept": {
-                "type": "Property",
+                "type": "Relationship",
                 "value": list()
             },
 

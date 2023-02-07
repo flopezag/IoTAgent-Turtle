@@ -60,7 +60,7 @@ class Property(CommonClass):
                 "object": str()
             },
             "qb:concept": {
-                "type": "Property",
+                "type": "Relationship",
                 "value": str()
             },
             "@context": dict()
@@ -141,7 +141,7 @@ class Property(CommonClass):
                              ])
 
         # add the new data to the dataset structure
-        [self.data.update({k: v}) for k, v in data.items()]
+        [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
         # Simplify Context and order keys
         a = Context()
