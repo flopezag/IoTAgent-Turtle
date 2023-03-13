@@ -35,8 +35,8 @@ class CatalogueDCATAP(CommonClass):
             "id": str(),
             "type": "CatalogueDCAT-AP",
             "dataset": {
-                "type": "object",
-                "value": str()
+                "type": "Relationship",
+                "object": str()
             },
 
             "language": {
@@ -65,7 +65,7 @@ class CatalogueDCATAP(CommonClass):
             },
 
             "title": {
-                "type": "Array",
+                "type": "Property",
                 "value": list()
             },
 
@@ -89,7 +89,7 @@ class CatalogueDCATAP(CommonClass):
         self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + hash1
 
         # Add dataset id
-        self.data['dataset']['value'] = dataset_id
+        self.data['dataset']['object'] = dataset_id
 
     def get(self):
         return self.data

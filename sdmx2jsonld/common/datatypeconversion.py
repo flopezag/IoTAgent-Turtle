@@ -40,7 +40,6 @@ class DataTypeConversion:
         self.regex_false_date2 = compile(r"^%Y-%d-%m(.*)%f")
 
     def correct_datatype_format(self, format_dt: str, hour24: bool = True):
-
         if hour24:
             format_dt = sub(self.regex_12hour, r"\1H\3", format_dt)
 
@@ -54,6 +53,9 @@ class DataTypeConversion:
 
     def convert(self, data, datatype):
         def stoutc(value):
+            """
+                Converts a date in string format to UTC date using
+            """
             dt = parser.parse(value, tzinfos=whois_timezone_info)
             dt = dt.astimezone(pytz.UTC)
             return dt.replace(tzinfo=timezone.utc).isoformat()

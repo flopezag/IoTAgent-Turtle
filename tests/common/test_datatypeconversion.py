@@ -35,15 +35,12 @@ class TestDataTypeConversion(TestCase):
 
         values = ("True", "true", "y", "yes", "T", "1", 1, True)
         for value in values:
-            assert (dtc.convert(value, token_type))
-
-        values = ("True", "true", "y", "yes", "T", "1", 1, True)
-        for value in values:
-            assert (dtc.convert(value, token_type))
+            print(f"2 convert {value}")
+            assert (dtc.convert(f'"{value}"', token_type))
 
         values = ("fAlsE", "False", "N", "No", "F", "0", "0.0", "", "None", None, [], {}, 0, 0.0)
         for value in values:
-            assert (not dtc.convert(value, token_type))
+            assert (not dtc.convert(f'"{value}"', token_type))
 
         invalid_values = (5, 4.2, "invalid value", "nil")
         for value in invalid_values:
