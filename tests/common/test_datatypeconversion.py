@@ -3,7 +3,6 @@ from sdmx2jsonld.common.datatypeconversion import DataTypeConversion
 import sys
 
 
-
 class TestDataTypeConversion(TestCase):
     def setUp(self) -> None:
         pass

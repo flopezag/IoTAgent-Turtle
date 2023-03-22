@@ -85,4 +85,5 @@ class CommonClass:
         else:
             aux = "urn:ngsi-ld:" + entity + ":" + aux
 
+        self.data['id'] = aux
         return aux

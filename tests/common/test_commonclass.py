@@ -23,6 +23,7 @@
 from unittest import TestCase
 from sdmx2jsonld.common.commonclass import CommonClass
 import os
+import json
 
 class TestCommonClass(TestCase):
     def setUp(self) -> None:
@@ -36,10 +37,21 @@ class TestCommonClass(TestCase):
         # print(urnid)
 
     def test_save(self):
+        context = {"@context": "https://raw.githubusercontent.com/smart-data-models/data-models/master/context/merge_subjects_config_example.json"}
+        context_map = {"address": "https://smartdatamodels.org/address",
+                       "alternateName": "https://smartdatamodels.org/alternateName",
+                       "status": "ngsi-ld:status"}
         cclass = CommonClass("test.common.entity")
         urnid = cclass.generate_id("https://string-to-parse-ur/entity_id")
+        assert(urnid == "urn:ngsi-ld:test.common.entity:entity_id")
+
+        cclass.add_context(context, context_map)
 
         os.makedirs("/tmp/commonclass", exist_ok=True)
         os.chdir("/tmp/commonclass")
         cclass.save()
 
+        with open("/tmp/commonclass/output/test.common.entity_entity_id.jsonld", "r") as f:
+            data = json.load(f)
+        assert(data['id'] == urnid)
+        assert(data['@context'] == context['@context'])
