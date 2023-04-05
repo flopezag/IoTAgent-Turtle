@@ -38,7 +38,7 @@ def filter_key_with_prefix(prefix_key, not_allowed_keys, further_process_keys):
         else:
             if aux[1] not in ['component', 'label']:
                 # These are the identified not allowed keys, we need to inform about them
-                logger.warn(f'The property {aux[1]} is not supported in statDCAT-AP')
+                logger.warning(f'The property {aux[1]} is not supported in statDCAT-AP')
             else:
                 # These are the identified keys managed in a different way
                 logger.info(f'The property {aux[1]} is manage afterwards in Dataset Class or in Property Class')
@@ -56,6 +56,14 @@ def flatten_value(y):
 
 
 def get_rest_data(data, not_allowed_keys, further_process_keys):
+    with open("/tmp/output.txt", "a") as f:
+        f.write("---- data ----- \n")
+        f.write(str(data))
+        f.write("\n---- not_allowed_keys ----- \n")
+        f.write(str(not_allowed_keys))
+        f.write("\n---- not_allowed_keys ----- \n")
+        f.write(str(further_process_keys))
+
     aux = {data[i]: flatten_value(data[i + 1]) for i in range(0, len(data), 2)}
 
     # We need to get the list of keys from the dict
@@ -64,4 +72,9 @@ def get_rest_data(data, not_allowed_keys, further_process_keys):
 
     new_data = {k: aux[k] for k in new_keys}
 
+
+    with open("/tmp/output.txt", "a") as f:
+        f.write("\n\n---- OUTPUT ----- \n")
+        f.write(str(new_data))
+        f.write("\n---- END OUTPUT ----- \n\n")
     return new_data
