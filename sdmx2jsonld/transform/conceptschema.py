@@ -40,7 +40,7 @@ class ConceptSchema(CommonClass):
             },
             "skos:hasTopConcept": {
                 "type": "Relationship",
-                "value": list()
+                "object": list()
             },
 
 
@@ -107,7 +107,7 @@ class ConceptSchema(CommonClass):
         # skos:hasTopConcept, this is a list of ids
         position = data.index('skos:hasTopConcept') + 1
         result = list(map(lambda x: self.generate_id(value=x, entity='Concept'), data[position]))
-        self.data['skos:hasTopConcept']['value'] = result
+        self.data['skos:hasTopConcept']['object'] = result
 
         # Simplify Context and order keys
         a = Context()

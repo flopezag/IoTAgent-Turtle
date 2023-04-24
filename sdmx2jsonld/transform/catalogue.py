@@ -37,7 +37,7 @@ class CatalogueDCATAP(CommonClass):
             "type": "CatalogueDCAT-AP",
             "qb:dataset": {
                 "type": "Relationship",
-                "value": str()
+                "object": str()
             },
 
             "dct:language": {
@@ -85,7 +85,7 @@ class CatalogueDCATAP(CommonClass):
         self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + hash1
 
         # Add dataset id
-        self.data['qb:dataset']['value'] = dataset_id
+        self.data['qb:dataset']['object'] = dataset_id
 
     def add_data(self, title, dataset_id, data):
         # We need to complete the data corresponding to the Catalogue: rdfs:label
@@ -106,7 +106,7 @@ class CatalogueDCATAP(CommonClass):
         # Add structure
         key = self.get_key(requested_key='qb:structure')
         position = data.index(key) + 1
-        self.data['qb:dataset']['value'] = data[position][0]
+        self.data['qb:dataset']['object'] = data[position][0]
 
         # Get the rest of the data
         data = get_rest_data(data=data, not_allowed_keys=['label', 'publisher'])

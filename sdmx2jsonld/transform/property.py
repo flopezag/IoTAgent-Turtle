@@ -61,7 +61,7 @@ class Property(CommonClass):
             },
             "qb:concept": {
                 "type": "Relationship",
-                "value": str()
+                "object": str()
             },
             "@context": dict()
         }
@@ -121,7 +121,7 @@ class Property(CommonClass):
         # TODO: the concept id need to check if it is a normal id or an url
         position = data.index('qb:concept') + 1
         concept = self.generate_id(entity="Concept", value=data[position][0])
-        self.data['qb:concept']['value'] = concept
+        self.data['qb:concept']['object'] = concept
 
         # Get the rest of the data
         data = get_rest_data(data=data,

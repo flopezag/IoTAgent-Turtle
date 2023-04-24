@@ -68,7 +68,7 @@ class Dataset(CommonClass):
                 'value': {
                     "stat:attribute": {
                         "type": "Relationship",
-                        "value": list()
+                        "object": list()
                     }
                 }
             },
@@ -78,7 +78,7 @@ class Dataset(CommonClass):
                 'value': {
                     "stat:dimension": {
                         "type": "Relationship",
-                        "value": list()
+                        "object": list()
                     }
                 }
             },
@@ -88,7 +88,7 @@ class Dataset(CommonClass):
                 'value': {
                     "stat:statUnitMeasure": {
                         "type": "Relationship",
-                        "value": list()
+                        "object": list()
                     }
                 }
             }
@@ -112,11 +112,11 @@ class Dataset(CommonClass):
             key = self.components[type_component]['key']
 
             # It is possible that the original file contains already the description
-            if new_id in self.components[type_component]['value'][key]['value']:
+            if new_id in self.components[type_component]['value'][key]['object']:
                 logger.warning(
                     f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
             else:
-                self.components[type_component]['value'][key]['value'].append(new_id)
+                self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']
         except ValueError:
             logger.error(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
