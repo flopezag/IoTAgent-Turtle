@@ -55,10 +55,18 @@ def flatten_value(y):
             return flatten_value(y[0])
         elif aux > 1:
             # for each element of the list we have to flatten to string and create the corresponding list
+            # We need to differentiate between multilingual case and multiple data
             # this case corresponds to multilingual content
-            result = dict()
-            for i in range(0, aux):
-                result[y[i][1][1:]] = flatten_value(y[i][0])
+            if len(y[0]) == 2:
+                # Multilingual case
+                result = dict()
+                for i in range(0, aux):
+                    result[y[i][1][1:]] = flatten_value(y[i][0])
+            else:
+                # Normal case
+                result = list()
+                for i in range(0, aux):
+                    result.append(flatten_value(y[i]))
             return result
         else:  # in case of len == 0 be return the empty string
             return ''

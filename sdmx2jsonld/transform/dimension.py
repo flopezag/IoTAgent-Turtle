@@ -28,8 +28,8 @@ class Dimension(Property):
         super().__init__(entity='DimensionProperty')
         self.data['type'] = 'DimensionProperty'
 
-    def add_data(self, id, data):
-        super().add_data(id=id, data=data)
+    def add_data(self, property_id, data):
+        super().add_data(property_id=property_id, data=data)
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:DimensionProperty:" + id
+        self.data['id'] = "urn:ngsi-ld:DimensionProperty:" + property_id

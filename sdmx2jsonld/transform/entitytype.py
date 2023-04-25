@@ -167,7 +167,7 @@ class EntityType:
             dimension = Dimension()
             dimension.add_context(context=self.context, context_mapping=self.context_mapping)
             dimension_id = parser.obtain_id(title)
-            dimension.add_data(id=dimension_id, data=data)
+            dimension.add_data(property_id=dimension_id, data=data)
             self.dimensions.append(dimension)
         elif type == 'Attribute':
             attribute = Attribute()
