@@ -55,15 +55,7 @@ def flatten_value(y):
         return y.replace('"', '')
 
 
-def get_rest_data(data, not_allowed_keys, further_process_keys):
-    with open("/tmp/output.txt", "a") as f:
-        f.write("---- data ----- \n")
-        f.write(str(data))
-        f.write("\n---- not_allowed_keys ----- \n")
-        f.write(str(not_allowed_keys))
-        f.write("\n---- not_allowed_keys ----- \n")
-        f.write(str(further_process_keys))
-
+def get_rest_data(data, not_allowed_keys=[], further_process_keys=[]):
     aux = {data[i]: flatten_value(data[i + 1]) for i in range(0, len(data), 2)}
 
     # We need to get the list of keys from the dict
@@ -72,9 +64,4 @@ def get_rest_data(data, not_allowed_keys, further_process_keys):
 
     new_data = {k: aux[k] for k in new_keys}
 
-
-    with open("/tmp/output.txt", "a") as f:
-        f.write("\n\n---- OUTPUT ----- \n")
-        f.write(str(new_data))
-        f.write("\n---- END OUTPUT ----- \n\n")
     return new_data

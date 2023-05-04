@@ -31,8 +31,10 @@ class DataTypeConversion:
         self.types = {
             'xsd:dateTime': 'stoutc',
             'xsd:int': 'stoi',
-            'xsd:boolean': 'stob'
+            'xsd:boolean': 'stob',
+            'xsd:float': 'stof'
         }
+
         self.regex_12hour = compile(r"(^.*T%)(I)(.*)$")
         self.regex_microseconds = compile(r"^(.*T%.*:%S\.)(%H)*$")
         self.regex_microseconds2 = compile(r"^(.*T%.*:%S\.)(%y)*$")
@@ -61,7 +63,6 @@ class DataTypeConversion:
             return dt.replace(tzinfo=timezone.utc).isoformat()
 
         def stodt(value):
-            # print(f'toDateTime function, arguments {value}')
             if isinstance(value, str):
                 result = infer([value])
             elif isinstance(value, list):
@@ -70,10 +71,8 @@ class DataTypeConversion:
                 raise Exception(f'Invalid format received: {type(value)}')
 
             result = self.correct_datatype_format(result)
-
-            # print(f'format {result}')
             result = datetime.strptime(value, result).replace(tzinfo=timezone.utc).isoformat()
-            # print(f'result {result}')
+
             return result
 
         def stoi(value):
@@ -89,14 +88,25 @@ class DataTypeConversion:
 
             return int(result)
 
+        def stof(value):
+            """
+               Converts 'something' to float. Raises exception for invalid formats
+            """
+            if isinstance(value, str):
+                result = value.replace('"', '')
+            elif isinstance(value, float):
+                result = value
+            else:
+                raise Exception(f'Invalid format received: {type(value)}')
+
+            return float(result)
+
         def stob(value):
             """
                Converts 'something' to boolean. Raises exception for invalid formats
                    Possible True  values: 1, True, "1", "TRue", "yes", "y", "t"
                    Possible False values: 0, False, None, [], {}, "", "0", "faLse", "no", "n", "f", 0.0, ...
             """
-            print(f'toBool function, arguments {value}')
-
             if str(value).lower() in ("yes", "y", "true", "t", "1"):
                 return True
 
@@ -168,3 +178,6 @@ if __name__ == '__main__':
     print(dataConversionType.convert(data6[0], data6[2]))
 
     print(dataConversionType.convert(data7[0], data7[2]))
+
+    data101 = ['"3016.9"', Token('FORMATCONNECTOR', '^^'), 'xsd:float']
+    print(dataConversionType.convert(data101[0], data101[2]))

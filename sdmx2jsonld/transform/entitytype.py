@@ -37,6 +37,8 @@ logger = getLogger()
 class EntityType:
     def __init__(self):
         self.entities = {
+            'qb:DataSet': 'Catalogue',
+            'qb:Observation': 'Observation',
             'qb:DataStructureDefinition': 'Dataset',
             'qb:ComponentSpecification': 'Component',
             'qb:AttributeProperty': 'Attribute',
@@ -142,6 +144,14 @@ class EntityType:
 
         if type == 'Component':
             self.dataset.add_components(context=self.context, component=data)
+        elif type == 'Catalogue':
+            identifier = parser.obtain_id(title)
+            self.catalogue.add_data(title=title, dataset_id=identifier, data=data)
+
+            print(identifier)
+        elif type == 'Observation':
+            identifier = parser.obtain_id(title)
+            print(identifier)
         elif type == 'Dataset':
             identifier = parser.obtain_id(title)
             self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)
