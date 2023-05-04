@@ -38,7 +38,7 @@ def filter_key_with_prefix(prefix_key, not_allowed_keys, further_process_keys):
         else:
             if aux[1] not in ['component', 'label']:
                 # These are the identified not allowed keys, we need to inform about them
-                logger.warn(f'The property {aux[1]} is not supported in statDCAT-AP')
+                logger.warning(f'The property {aux[1]} is not supported in statDCAT-AP')
             else:
                 # These are the identified keys managed in a different way
                 logger.info(f'The property {aux[1]} is manage afterwards in Dataset Class or in Property Class')
@@ -50,12 +50,31 @@ def filter_key_with_prefix(prefix_key, not_allowed_keys, further_process_keys):
 
 def flatten_value(y):
     if isinstance(y, list):
-        return flatten_value(y[0])
+        aux = len(y)
+        if aux == 1:
+            return flatten_value(y[0])
+        elif aux > 1:
+            # for each element of the list we have to flatten to string and create the corresponding list
+            # We need to differentiate between multilingual case and multiple data
+            # this case corresponds to multilingual content
+            if len(y[0]) == 2:
+                # Multilingual case
+                result = dict()
+                for i in range(0, aux):
+                    result[y[i][1][1:]] = flatten_value(y[i][0])
+            else:
+                # Normal case
+                result = list()
+                for i in range(0, aux):
+                    result.append(flatten_value(y[i]))
+            return result
+        else:  # in case of len == 0 be return the empty string
+            return ''
     else:
         return y.replace('"', '')
 
 
-def get_rest_data(data, not_allowed_keys, further_process_keys):
+def get_rest_data(data, not_allowed_keys=[], further_process_keys=[]):
     aux = {data[i]: flatten_value(data[i + 1]) for i in range(0, len(data), 2)}
 
     # We need to get the list of keys from the dict

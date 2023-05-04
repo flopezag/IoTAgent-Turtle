@@ -63,22 +63,22 @@ class Precedence:
         # the same time a DimensionProperty and AttributeProperty, this is an ERROR and we need to report.
         result = all(element == 250 for element in classes_values) and len(data) > 1
         if result is True:
-            raise ClassesPrecedencePropertyError(data)
+            raise ClassPrecedencePropertyError(data)
 
         # In case that we have several values identical of type Class, we need to report a WARNING message because maybe
         # it is not needed multitype in that case.
         result = all(element == 20 for element in classes_values) and len(data) > 1
         if result is True:
-            raise ClassesPrecedenceClassError(data)
+            raise ClassPrecedenceClassError(data)
 
-        # In other chase, we return the max value of the list
+        # In other case, we return the max value of the list
         aux = max(classes_values)
         aux = data[classes_values.index(aux)]
 
         return aux
 
 
-class ClassesPrecedenceError(Exception):
+class ClassPrecedenceError(Exception):
     """Base class for other exceptions"""
 
     def __init__(self, data, message):
@@ -89,12 +89,12 @@ class ClassesPrecedenceError(Exception):
         return f'{self.data} -> {self.message}'
 
 
-class ClassesPrecedencePropertyError(ClassesPrecedenceError):
+class ClassPrecedencePropertyError(ClassPrecedenceError):
     """Raised when the input value is too small"""
-    """Exception raised for errors in the input salary.
+    """Exception raised for errors in the input data.
 
     Attributes:
-        salary -- input salary which caused the error
+        data -- input data which caused the error
         message -- explanation of the error
     """
 
@@ -102,12 +102,12 @@ class ClassesPrecedencePropertyError(ClassesPrecedenceError):
         super().__init__(data=data, message=message)
 
 
-class ClassesPrecedenceClassError(ClassesPrecedenceError):
+class ClassPrecedenceClassError(ClassPrecedenceError):
     """Raised when the input value is too large"""
-    """Exception raised for errors in the input salary.
+    """Exception raised for errors in the input data.
 
     Attributes:
-        salary -- input salary which caused the error
+        data -- input data which caused the error
         message -- explanation of the error
     """
 

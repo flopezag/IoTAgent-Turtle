@@ -29,7 +29,7 @@ class Attribute(Property):
         self.data['type'] = 'AttributeProperty'
 
     def add_data(self, attribute_id, data):
-        super().add_data(id=id, data=data)
+        super().add_data(property_id=attribute_id, data=data)
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:AttributeProperty:" + attribute_id

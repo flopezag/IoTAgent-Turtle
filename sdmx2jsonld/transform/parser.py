@@ -62,11 +62,13 @@ class Parser:
     def parsing_file(self, content: TextIOWrapper, out: bool):
         transform = TreeToJson()
 
-        content = content.read()
-        content = turtle_terse(rdf_content=content)
+        with content as f:
+            data = f.read()
+
+        data = turtle_terse(rdf_content=data)
 
         try:
-            tree = self.parser.parse(content)
+            tree = self.parser.parse(data)
         except UnexpectedToken as err:
             raise err
         except UnexpectedInput as err:
@@ -82,12 +84,14 @@ class Parser:
             transform.save()
         elif content is not None:
             print()
+
             pprint(transform.get_catalogue())
-            pprint(transform.get_dataset())
+            self.__check_pprint__(transform.get_observation())
+            self.__check_pprint__(transform.get_dataset())
             [pprint(x.get()) for x in transform.get_dimensions()]
             [pprint(x.get()) for x in transform.get_attributes()]
-            [pprint(x.get()) for x in transform.get_conceptSchemas()]
-            [pprint(x.get()) for x in transform.get_conceptLists()]
+            [pprint(x.get()) for x in transform.get_concept_schemas()]
+            [pprint(x.get()) for x in transform.get_concept_lists()]
 
     def parsing_string(self, content: StringIO):
         transform = TreeToJson()
@@ -101,11 +105,12 @@ class Parser:
         # Serializing json payload
         result = list()
         result.append(transform.get_catalogue())
+        result.append(transform.get_observation())
         result.append(transform.get_dataset())
         [result.append(x.get()) for x in transform.get_dimensions()]
         [result.append(x.get()) for x in transform.get_attributes()]
-        [result.append(x.get()) for x in transform.get_conceptSchemas()]
-        [result.append(x.get()) for x in transform.get_conceptLists()]
+        [result.append(x.get()) for x in transform.get_concept_schemas()]
+        [result.append(x.get()) for x in transform.get_concept_lists()]
 
         json_object = dumps(result, indent=4, ensure_ascii=False)
 
@@ -113,3 +118,8 @@ class Parser:
             outfile.write(json_object)
 
         return json_object
+
+    @staticmethod
+    def __check_pprint__(data):
+        if data is not None:
+            pprint(data)

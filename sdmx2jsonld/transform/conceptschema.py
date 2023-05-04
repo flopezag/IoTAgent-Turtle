@@ -23,6 +23,7 @@
 from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.transform.context import Context
+from sdmx2jsonld.common.listmanagement import flatten_value
 
 logger = getLogger()
 
@@ -39,8 +40,8 @@ class ConceptSchema(CommonClass):
                 "value": list()
             },
             "skos:hasTopConcept": {
-                "type": "Property",
-                "value": list()
+                "type": "Relationship",
+                "object": list()
             },
 
 
@@ -107,7 +108,20 @@ class ConceptSchema(CommonClass):
         # skos:hasTopConcept, this is a list of ids
         position = data.index('skos:hasTopConcept') + 1
         result = list(map(lambda x: self.generate_id(value=x, entity='Concept'), data[position]))
-        self.data['skos:hasTopConcept']['value'] = result
+        self.data['skos:hasTopConcept']['object'] = result
+
+        # Get the rest of data, dct:created and dct:modified properties
+        position = data.index('dct:created') + 1
+        self.data['dct:created'] = {
+            "type": "Property",
+            "value": flatten_value(data[position])
+        }
+
+        position = data.index('dct:modified') + 1
+        self.data['dct:modified'] = {
+            "type": "Property",
+            "value": flatten_value(data[position])
+        }
 
         # Simplify Context and order keys
         a = Context()
