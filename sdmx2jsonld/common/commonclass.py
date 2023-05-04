@@ -53,6 +53,9 @@ class CommonClass:
 
         self.data = new_data
 
+    def get(self):
+        return self.data
+
     def save(self):
         data = self.get()
 
@@ -61,7 +64,7 @@ class CommonClass:
 
         # We need to check that the output folder exist
         if exists('./output') is False:
-            # We need to create the folder because it does not exits
+            # We need to create the folder because it does not exist
             mkdir('./output')
 
         filename = './output/' + '_'.join(aux[length_aux - 2:]) + '.jsonld'
@@ -82,6 +85,7 @@ class CommonClass:
         else:
             aux = "urn:ngsi-ld:" + entity + ":" + aux
 
+        self.data['id'] = aux
         return aux
 
     def __generate_property__(self, key, value):

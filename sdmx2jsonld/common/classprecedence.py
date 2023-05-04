@@ -71,7 +71,7 @@ class Precedence:
         if result is True:
             raise ClassPrecedenceClassError(data)
 
-        # In other chase, we return the max value of the list
+        # In other case, we return the max value of the list
         aux = max(classes_values)
         aux = data[classes_values.index(aux)]
 

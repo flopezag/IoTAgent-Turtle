@@ -94,6 +94,7 @@ class CatalogueDCATAP(CommonClass):
         # Add dataset id
         self.data['qb:dataset']['object'] = dataset_id
 
+
     def add_data(self, title, dataset_id, data):
         # We need to complete the data corresponding to the Catalogue: rdfs:label
         self.__complete_label__(title=title, data=data)

@@ -38,7 +38,7 @@ def filter_key_with_prefix(prefix_key, not_allowed_keys, further_process_keys):
         else:
             if aux[1] not in ['component', 'label']:
                 # These are the identified not allowed keys, we need to inform about them
-                logger.warn(f'The property {aux[1]} is not supported in statDCAT-AP')
+                logger.warning(f'The property {aux[1]} is not supported in statDCAT-AP')
             else:
                 # These are the identified keys managed in a different way
                 logger.info(f'The property {aux[1]} is manage afterwards in Dataset Class or in Property Class')
