@@ -36,6 +36,7 @@ class CatalogueDCATAP(CommonClass):
         self.data = {
             "id": str(),
             "type": "CatalogueDCAT-AP",
+
             "qb:dataset": {
                 "type": "Relationship",
                 "object": str()
@@ -66,6 +67,7 @@ class CatalogueDCATAP(CommonClass):
                 "value": str()
             },
 
+
             "dct:title": {
                 "type": "Property",
                 "value": list()
@@ -92,6 +94,7 @@ class CatalogueDCATAP(CommonClass):
         self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + hash1
 
         # Add dataset id
+
         self.data['qb:dataset']['object'] = dataset_id
 
 

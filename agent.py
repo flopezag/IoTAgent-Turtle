@@ -24,6 +24,7 @@ from cli.command import parse_cli
 from sdmx2jsonld.transform.parser import Parser
 from api.server import launch
 from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
+from ngsild.ngsild_connector import NGSILDConnector
 
 if __name__ == '__main__':
     args = parse_cli()
