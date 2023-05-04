@@ -23,6 +23,7 @@
 from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.common.listmanagement import get_rest_data
+from sdmx2jsonld.transform.context import Context
 import random
 
 logger = getLogger()
@@ -74,6 +75,7 @@ class CatalogueDCATAP(CommonClass):
                 "https://raw.githubusercontent.com/SEMICeu/DCAT-AP/master/releases/1.1/dcat-ap_1.1.jsonld",
                 "https://raw.githubusercontent.com/smart-data-models/dataModel.DCAT-AP/master/context.jsonld"
             ]
+
         }
 
         self.concept_id = str()
@@ -90,7 +92,8 @@ class CatalogueDCATAP(CommonClass):
         self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + hash1
 
         # Add dataset id
-        self.data['dataset']['object'] = dataset_id
+        self.data['qb:dataset']['object'] = dataset_id
+
 
     def add_data(self, title, dataset_id, data):
         # We need to complete the data corresponding to the Catalogue: rdfs:label
@@ -98,16 +101,28 @@ class CatalogueDCATAP(CommonClass):
 
         # Add the title
         key = self.keys['dct:title']
-        self.data[key] = title
+        self.data[key]['value'] = title
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + dataset_id
 
-        # Get the rest of the data
-        data = get_rest_data(data=data)
+        # Add the publisher
+        key = self.get_key(requested_key='dcterms:publisher')
+        position = data.index(key) + 1
+        self.data['dct:publisher']['value'] = data[position][0]
+
+        # Get the rest of the data, qb:structure has the same value of qb:dataset so we decide to
+        # use only qb:dataset in CatalogueDCAT-AP
+        data = get_rest_data(data=data, not_allowed_keys=['label', 'publisher', 'structure'])
 
         # add the new data to the dataset structure
         self.patch_data(data, False)
+
+        # Order Context keys
+        a = Context()
+        a.set_data(data=self.data)
+        a.order_context()
+        self.data = a.get_data()
 
     def patch_data(self, data, language_map):
         if language_map:
@@ -115,7 +130,7 @@ class CatalogueDCATAP(CommonClass):
         else:
             # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
-            [self.data.update({k: v}) for k, v in data.items()]
+            [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
     def __complete_label__(self, title, data):
         try:

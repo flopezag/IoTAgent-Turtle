@@ -67,8 +67,8 @@ class Dataset(CommonClass):
                 'key': 'stat:attribute',
                 'value': {
                     "stat:attribute": {
-                        "type": "Property",
-                        "value": list()
+                        "type": "Relationship",
+                        "object": list()
                     }
                 }
             },
@@ -77,8 +77,8 @@ class Dataset(CommonClass):
                 'key': 'stat:dimension',
                 'value': {
                     "stat:dimension": {
-                        "type": "Property",
-                        "value": list()
+                        "type": "Relationship",
+                        "object": list()
                     }
                 }
             },
@@ -87,8 +87,8 @@ class Dataset(CommonClass):
                 'key': 'stat:statUnitMeasure',
                 'value': {
                     "stat:statUnitMeasure": {
-                        "type": "Property",
-                        "value": list()
+                        "type": "Relationship",
+                        "object": list()
                     }
                 }
             }
@@ -112,16 +112,16 @@ class Dataset(CommonClass):
             key = self.components[type_component]['key']
 
             # It is possible that the original file contains already the description
-            if new_id in self.components[type_component]['value'][key]['value']:
+            if new_id in self.components[type_component]['value'][key]['object']:
                 logger.warning(
                     f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
             else:
-                self.components[type_component]['value'][key]['value'].append(new_id)
+                self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']
         except ValueError:
             logger.error(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
-        # Simplify Context amd order keys. It is possible that we call add_component before the dataset has been created
+        # Simplify Context and order keys. It is possible that we call add_component before the dataset has been created
         # therefore we need to add the corresponding context to the dataset
         if len(self.data['@context']) == 0:
             self.data['@context'] = context['@context']
@@ -170,7 +170,7 @@ class Dataset(CommonClass):
         else:
             # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
-            [self.data.update({k: v}) for k, v in data.items()]
+            [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
     def __complete_label__(self, title, data):
         try:

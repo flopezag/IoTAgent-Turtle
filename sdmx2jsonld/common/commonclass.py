@@ -87,3 +87,13 @@ class CommonClass:
 
         self.data['id'] = aux
         return aux
+
+    def __generate_property__(self, key, value):
+        result = {
+            key: {
+                "type": "Property",
+                "value": value
+            }
+        }
+
+        return result

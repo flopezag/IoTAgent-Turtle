@@ -175,6 +175,7 @@ class Concept(CommonClass):
         else:
             self.data['skos:inScheme']['value'] = concept_schema
 
+
     def need_add_notation(self, data):
         try:
             position = data.index('skos:notation') + 1
