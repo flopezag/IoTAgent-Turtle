@@ -2,7 +2,6 @@ from pathlib import Path
 import json
 from requests import post, exceptions
 
-
 class NGSILDConnector:
     def __init__(self, path=None):
         if path == None:
