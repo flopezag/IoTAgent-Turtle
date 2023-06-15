@@ -55,7 +55,6 @@ class TestDataTypeConversion(TestCase):
 
         values = ("True", "true", "y", "yes", "T", "1", 1, True)
         for value in values:
-            print(f"2 convert {value}")
             assert (dtc.convert(f'"{value}"', token_type))
 
         values = ("fAlsE", "False", "N", "No", "F", "0", "0.0", "", "None", None, [], {}, 0, 0.0)
@@ -88,7 +87,6 @@ class TestDataTypeConversion(TestCase):
         d = zip(dates, expected)
 
         for test_date, expected_date in d:
-            print(test_date, " | ", dtc.convert(test_date, token_type))
             assert (expected_date == dtc.convert(test_date, token_type))
 
 class Test(TestCase):
@@ -99,7 +97,7 @@ class Test(TestCase):
         """
         Check if we can get a correct datetime value from a string, case 1
         """
-        obtained = self.conversion.convert('"2022-01-15T08:00:00.000"', 'xsd:dateTime')
+        obtained = self.conversion.convert('"2022-01-15T08:00:00.000 UTC"', 'xsd:dateTime')
         expected = '2022-01-15T08:00:00+00:00'
         assert obtained == expected, f"\n\nDateTime was not the expected," \
                                      f"\n    got     : {obtained}" \

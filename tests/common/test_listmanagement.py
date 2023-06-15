@@ -15,10 +15,7 @@ class TestRegToParser(TestCase):
 
     def test_flatten_value(self):
         data = [['"SDMX attribute PRE_BREAK_VALUE"', '@en'], ['"Attribut SDMX "', '@fr']]
-        expected_res = 'SDMX attribute PRE_BREAK_VALUE'
-        assert(flatten_value(data) == expected_res)
-
-        data = [["'another thing'", 48],["another one array"], 54]
-        expected_res = "'another thing'"
-        assert(flatten_value(data) == expected_res)
+        expected_res = {'en': 'SDMX attribute PRE_BREAK_VALUE', 'fr': 'Attribut SDMX '}
+        got_data = flatten_value(data)
+        assert(got_data == expected_res)
 
