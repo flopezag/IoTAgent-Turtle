@@ -74,7 +74,11 @@ def flatten_value(y):
         return y.replace('"', '')
 
 
-def get_rest_data(data, not_allowed_keys=[], further_process_keys=[]):
+def get_rest_data(data, not_allowed_keys=None, further_process_keys=None):
+    if further_process_keys is None:
+        further_process_keys = []
+    if not_allowed_keys is None:
+        not_allowed_keys = []
     aux = {data[i]: flatten_value(data[i + 1]) for i in range(0, len(data), 2)}
 
     # We need to get the list of keys from the dict

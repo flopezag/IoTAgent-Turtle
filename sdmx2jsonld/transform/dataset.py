@@ -103,18 +103,28 @@ class Dataset(CommonClass):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
         list_components = ['qb:attribute', 'qb:dimension', 'qb:measure']
+
+        # TODO: These dimensions are not defined in the turtle file but defined in a prefix therefore at the moment
+        # we create manually their corresponding DimensionProperty entity. Should we generated from checking the prefix
+        list_special_dimensions = ['freq', 'refArea', 'timePeriod']
+
         type_component = [x for x in list_components if x in component][0]
         position = component.index(type_component) + 1
 
         try:
             entity = self.components[type_component]['entity']
-            new_id = self.generate_id(entity=entity, value=component[position][0])
+            name, new_id = self.generate_id(entity=entity, value=component[position][0], update_id=False)
             key = self.components[type_component]['key']
 
             # It is possible that the original file contains already the description
             if new_id in self.components[type_component]['value'][key]['object']:
                 logger.warning(
                     f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
+            elif name in list_special_dimensions:
+                # We need to create manually the description of these dimensions
+                logger.warning(
+                    f"The component {name} is defined probably outside of the file, "
+                    f"creating manually the DimensionsProperty entity")
             else:
                 self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']

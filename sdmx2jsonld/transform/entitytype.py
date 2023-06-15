@@ -63,6 +63,7 @@ class EntityType:
         self.observation = Observation()
 
         self.pre = Precedence()
+        self.parser = RegParser()
 
     def __find_entity_type__(self, string):
         """
@@ -142,22 +143,16 @@ class EntityType:
             self.dataset.patch_data(data=flatten_data, language_map=language_map)
 
     def create_data(self, type, data, title):
-        parser = RegParser()
-
         if type == 'Component':
             self.dataset.add_components(context=self.context, component=data)
         elif type == 'Catalogue':
-            identifier = parser.obtain_id(title)
+            identifier = self.parser.obtain_id(title)
             self.catalogue.add_data(title=title, dataset_id=identifier, data=data)
-
-            print(identifier)
         elif type == 'Observation':
-            identifier = parser.obtain_id(title)
+            identifier = self.parser.obtain_id(title)
             self.observation.add_data(title=title, observation_id=identifier, data=data)
-
-            print(identifier)
         elif type == 'Dataset':
-            identifier = parser.obtain_id(title)
+            identifier = self.parser.obtain_id(title)
             self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)
             self.dataset.add_data(title=title, dataset_id=identifier, data=data)
 
@@ -166,26 +161,26 @@ class EntityType:
         elif type == 'Dimension':
             dimension = Dimension()
             dimension.add_context(context=self.context, context_mapping=self.context_mapping)
-            dimension_id = parser.obtain_id(title)
+            dimension_id = self.parser.obtain_id(title)
             dimension.add_data(property_id=dimension_id, data=data)
             self.dimensions.append(dimension)
         elif type == 'Attribute':
             attribute = Attribute()
             attribute.add_context(context=self.context, context_mapping=self.context_mapping)
-            attribute_id = parser.obtain_id(title)
+            attribute_id = self.parser.obtain_id(title)
             attribute.add_data(attribute_id=attribute_id, data=data)
             self.attributes.append(attribute)
         elif type == 'ConceptScheme':
             concept_schema = ConceptSchema()
             concept_schema.add_context(context=self.context, context_mapping=self.context_mapping)
-            concept_schema_id = parser.obtain_id(title)
+            concept_schema_id = self.parser.obtain_id(title)
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=data)
             self.conceptSchemas.append(concept_schema)
         elif type == 'Class':
             # We need the Concept because each of the Range description is of the type Concept
             concept_list = Concept()
             concept_list.add_context(context=self.context, context_mapping=self.context_mapping)
-            concept_list_id = parser.obtain_id(title)
+            concept_list_id = self.parser.obtain_id(title)
             concept_list.add_data(concept_id=concept_list_id, data=data)
             self.conceptLists.append(concept_list)
             self.conceptListsIds[title] = concept_list.get_id()
@@ -193,7 +188,7 @@ class EntityType:
             # TODO: Range is associated to a Concept and identified properly in the ConceptSchema
             data_range = Concept()
             data_range.add_context(context=self.context, context_mapping=self.context_mapping)
-            data_range_id = parser.obtain_id(title)
+            data_range_id = self.parser.obtain_id(title)
             data_range.add_data(concept_id=data_range_id, data=data)
             self.conceptLists.append(data_range)
             self.conceptListsIds[title] = data_range.get_id()

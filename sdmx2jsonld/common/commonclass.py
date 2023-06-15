@@ -76,17 +76,20 @@ class CommonClass:
         with open(filename, "w") as outfile:
             outfile.write(json_object)
 
-    def generate_id(self, value, entity=None):
+    def generate_id(self, value, entity=None, update_id=False):
         parse = RegParser()
         aux = parse.obtain_id(value)
 
         if entity is None:
-            aux = "urn:ngsi-ld:" + self.entity + ":" + aux
+            new_aux = "urn:ngsi-ld:" + self.entity + ":" + aux
         else:
-            aux = "urn:ngsi-ld:" + entity + ":" + aux
+            new_aux = "urn:ngsi-ld:" + entity + ":" + aux
 
-        self.data['id'] = aux
-        return aux
+        if update_id:
+            self.data['id'] = new_aux
+            return new_aux
+        else:
+            return aux, new_aux
 
     def __generate_property__(self, key, value):
         result = {
