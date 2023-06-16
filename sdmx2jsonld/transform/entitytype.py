@@ -144,10 +144,15 @@ class EntityType:
 
     def create_data(self, entity_type, data, title):
         if entity_type == 'Component':
-            some_new_dimensions = self.dataset.add_components(context=self.context, component=data)
-            if some_new_dimensions is not None:
+            some_new_dimension, some_new_concept, some_new_concept_schema = \
+                self.dataset.add_components(context=self.context, component=data)
+
+            if some_new_dimension is not None:
                 # we have found special sdmx_dimensions that we have to add to dimensions list
-                self.dimensions.append(some_new_dimensions)
+                self.dimensions.append(some_new_dimension)
+                self.conceptLists.append(some_new_concept)
+                #self.conceptListsIds[title] = concept_list.get_id()
+                self.conceptSchemas.append(some_new_concept_schema)
         elif entity_type == 'Catalogue':
             identifier = self.parser.obtain_id(title)
             self.catalogue.add_data(title=title, dataset_id=identifier, data=data)

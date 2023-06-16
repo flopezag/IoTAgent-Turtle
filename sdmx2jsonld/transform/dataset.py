@@ -27,6 +27,10 @@ from sdmx2jsonld.transform.context import Context
 from sdmx2jsonld.sdmxdimensions.frequency import Frequency
 from sdmx2jsonld.sdmxdimensions.refarea import RefArea
 from sdmx2jsonld.sdmxdimensions.timeperiod import TimePeriod
+from sdmx2jsonld.sdmxconcepts.freqconcept import FreqConcept
+from sdmx2jsonld.sdmxconcepts.cogconceptschema import CogConceptSchema
+from sdmx2jsonld.sdmxconcepts.timeperiodconcept import TimePeriodConcept
+from sdmx2jsonld.sdmxconcepts.refareaconcept import RefAreaConcept
 
 logger = getLogger()
 
@@ -108,6 +112,14 @@ class Dataset(CommonClass):
             "timePeriod": TimePeriod()
         }
 
+        self.sdmx_concepts = {
+            "freq": FreqConcept(),
+            "refArea": RefAreaConcept(),
+            "timePeriod": TimePeriodConcept()
+        }
+
+        self.sdmx_concept_schemas = CogConceptSchema()
+
     def add_components(self, context, component):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
@@ -130,13 +142,18 @@ class Dataset(CommonClass):
                 logger.warning(
                     f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
             elif name in list_special_dimensions:
-                # We need to create manually the description of these dimensions
+                # We need to create manually the description of these dimensions, concepts, and conceptschemas
                 logger.warning(
                     f"The component {name} is defined probably outside of the file, "
                     f"creating manually the DimensionsProperty entity")
                 self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']
-                return self.sdmx_dimensions[name]
+
+                new_dimension = self.sdmx_dimensions[name]
+                new_concept = self.sdmx_concepts[name]
+                new_concept_schema = self.sdmx_concept_schemas
+
+                return new_dimension, new_concept, new_concept_schema
             else:
                 self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']
@@ -154,7 +171,7 @@ class Dataset(CommonClass):
         a.order_context()
         self.data = a.get_data()
 
-        return None
+        return None, None, None
 
     def get(self):
         return self.data

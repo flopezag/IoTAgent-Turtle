@@ -52,14 +52,9 @@ class TimePeriod(CommonClass):
                     "en": "The period of time or point in time to which the measured observation refers.",
                 }
             },
-            "conceptDefinedBy": {
-                "type": "Property",
-                "value": "https://raw.githubusercontent.com/UKGovLD/publishing-statistical-data/master/specs/src/main"
-                         "/vocab/sdmx-concept.ttl"
-            },
-            "isDefinedBy": {
-                "type": "Property",
-                "value": "https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf"
+            "concept": {
+                "type": "Relationship",
+                "object": "urn:ngsi-ld:Concept:timePeriod"
             },
             "dct:identifier": {
                 "type": "Property",

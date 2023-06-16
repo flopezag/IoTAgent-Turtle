@@ -24,7 +24,7 @@ from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.common.listmanagement import get_rest_data
 from sdmx2jsonld.transform.context import Context
-import random
+from random import getrandbits
 
 logger = getLogger()
 
@@ -87,7 +87,7 @@ class CatalogueDCATAP(CommonClass):
         self.concept_id = dataset_id
 
         # generate hash id
-        random_bits = random.getrandbits(128)
+        random_bits = getrandbits(128)
         hash1 = "%032x" % random_bits
 
         # Add the id

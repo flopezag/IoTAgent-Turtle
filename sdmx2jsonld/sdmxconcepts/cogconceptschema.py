@@ -24,52 +24,31 @@ from sdmx2jsonld.sdmxattributes.exceptions import ClassFreqError
 from sdmx2jsonld.common.commonclass import CommonClass
 
 
-class RefArea(CommonClass):
+class CogConceptSchema(CommonClass):
     def __init__(self):
-        # sdmx-dimension:refArea a qb:DimensionProperty, rdf:Property;
-        #   rdfs:range rdfs:Resource;
-        #   qb:concept sdmx-concept:refArea;
-        #   rdfs:label "Reference Area"@en;
-        #   rdfs:comment "The country or geographic area to which the measured statistical phenomenon relates."@en;
+        # sdmx-concept:cog a skos:ConceptScheme;
+        #   rdfs:label "Content Oriented Guidelines concept scheme"@en;
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity='DimensionProperty')
+        super().__init__(entity='ConceptSchema')
+
         self.data = {
-            "id": "urn:ngsi-ld:DimensionProperty:refArea",
-            "type": "DimensionProperty",
+            "id": "urn:ngsi-ld:ConceptSchema:cog",
+            "type": "ConceptScheme",
             "dct:language": {
                 "type": "Property",
                 "value": ["en"]
             },
-            "rdfs:label": {
+            "skos:prefLabel": {
                 "type": "Property",
                 "value": {
-                    "en": "Reference Area",
+                    "en": "Content Oriented Guidelines concept scheme"
                 }
-            },
-            "dct:description": {
-                "type": "Property",
-                "value": {
-                    "en": "The country or geographic area to which the measured statistical phenomenon relates.",
-                }
-            },
-            "concept": {
-                "type": "Relationship",
-                "object": "urn:ngsi-ld:Concept:refArea"
-            },
-            "dct:identifier": {
-                "type": "Property",
-                "value": "refArea"
-            },
-            "rdfs:range": {
-                "type": "Property",
-                "value": "xsd:string"
             },
             "@context": {
                 "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
                 "dcat": "http://www.w3.org/ns/dcat#",
                 "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
                 "dct": "http://purl.org/dc/terms/",
-                "qb": "http://purl.org/linked-data/cube#",
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+                "skos": "http://www.w3.org/2004/02/skos/core#"
             }
         }

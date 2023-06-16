@@ -24,52 +24,42 @@ from sdmx2jsonld.sdmxattributes.exceptions import ClassFreqError
 from sdmx2jsonld.common.commonclass import CommonClass
 
 
-class RefArea(CommonClass):
+class FreqConcept(CommonClass):
     def __init__(self):
-        # sdmx-dimension:refArea a qb:DimensionProperty, rdf:Property;
-        #   rdfs:range rdfs:Resource;
-        #   qb:concept sdmx-concept:refArea;
-        #   rdfs:label "Reference Area"@en;
-        #   rdfs:comment "The country or geographic area to which the measured statistical phenomenon relates."@en;
-        #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity='DimensionProperty')
+        # sdmx-concept:freq a sdmx:Concept, skos:Concept;
+        #   rdfs:label "Frequency"@en;
+        #   rdfs:comment """The time interval at which observations occur over a given time period."""@en;
+        #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>;
+        #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ";
+        #   skos:inScheme sdmx-concept:cog.
+        super().__init__(entity='Concept')
+
         self.data = {
-            "id": "urn:ngsi-ld:DimensionProperty:refArea",
-            "type": "DimensionProperty",
+            "id": "urn:ngsi-ld:Concept:freq",
+            "type": "Concept",
             "dct:language": {
                 "type": "Property",
                 "value": ["en"]
             },
-            "rdfs:label": {
-                "type": "Property",
-                "value": {
-                    "en": "Reference Area",
-                }
-            },
-            "dct:description": {
-                "type": "Property",
-                "value": {
-                    "en": "The country or geographic area to which the measured statistical phenomenon relates.",
-                }
-            },
-            "concept": {
+            "skos:inScheme": {
                 "type": "Relationship",
-                "object": "urn:ngsi-ld:Concept:refArea"
+                "object": "urn:ngsi-ld:ConceptSchema:cog"
             },
-            "dct:identifier": {
+            "skos:prefLabel": {
                 "type": "Property",
-                "value": "refArea"
+                "value": {
+                    "en": "Frequency"
+                }
             },
-            "rdfs:range": {
+            "skos:notation": {
                 "type": "Property",
-                "value": "xsd:string"
+                "value": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ"
             },
             "@context": {
                 "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
                 "dcat": "http://www.w3.org/ns/dcat#",
                 "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
                 "dct": "http://purl.org/dc/terms/",
-                "qb": "http://purl.org/linked-data/cube#",
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+                "skos": "http://www.w3.org/2004/02/skos/core#"
             }
         }

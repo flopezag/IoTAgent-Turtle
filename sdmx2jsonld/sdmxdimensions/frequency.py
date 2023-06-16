@@ -52,14 +52,9 @@ class Frequency(CommonClass):
                     "en": "The time interval at which observations occur over a given time period.",
                 }
             },
-            "conceptDefinedBy": {
-                "type": "Property",
-                "value": "https://raw.githubusercontent.com/UKGovLD/publishing-statistical-data/master/specs/src/main"
-                         "/vocab/sdmx-concept.ttl"
-            },
-            "isDefinedBy": {
-                "type": "Property",
-                "value": "https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf"
+            "concept": {
+                "type": "Relationship",
+                "object": "urn:ngsi-ld:Concept:freq"
             },
             "dct:identifier": {
                 "type": "Property",

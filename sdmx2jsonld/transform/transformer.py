@@ -24,6 +24,7 @@ from lark import Transformer, Tree, Token
 from sdmx2jsonld.transform.context import Context
 from sdmx2jsonld.transform.entitytype import EntityType
 from sdmx2jsonld.common.datatypeconversion import DataTypeConversion
+from sdmx2jsonld.transform.distribution import Distribution
 import re
 
 
@@ -156,3 +157,10 @@ class TreeToJson(Transformer):
         if len(self.entity_type.observations) != 0:
             observations = self.entity_type.get_observation()
             [observation.save() for observation in observations]
+
+            # If we have several observations, we need to generate the DCAT-AP:Distribution class
+            distribution = Distribution()
+            distribution.generate_data(catalogue=self.entity_type.catalogue)
+
+            distribution.save()
+

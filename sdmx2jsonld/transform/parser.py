@@ -29,6 +29,7 @@ from logging import getLogger
 from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 from sdmx2jsonld.common.rdf import turtle_terse
 from sdmx2jsonld.common.config import GRAMMARFILE
+from sdmx2jsonld.transform.distribution import Distribution
 
 
 logger = getLogger(__name__)
@@ -85,13 +86,23 @@ class Parser:
         elif content is not None:
             print()
 
-            pprint(transform.get_catalogue())
+            catalogue = transform.get_catalogue()
+            pprint(catalogue)
             self.__check_pprint__(transform.get_dataset())
             [pprint(x.get()) for x in transform.get_dimensions()]
             [pprint(x.get()) for x in transform.get_attributes()]
             [pprint(x.get()) for x in transform.get_concept_schemas()]
             [pprint(x.get()) for x in transform.get_concept_lists()]
-            [pprint(x.get()) for x in transform.get_observation()]
+
+            observations = transform.get_observation()
+            if len(observations) != 0:
+                [pprint(x.get()) for x in observations]
+
+                # If we have several observations, we need to generate the DCAT-AP:Distribution class
+                distribution = Distribution()
+                distribution.generate_data(catalogue=catalogue)
+
+                pprint(distribution)
 
     def parsing_string(self, content: StringIO):
         transform = TreeToJson()
@@ -104,13 +115,24 @@ class Parser:
 
         # Serializing json payload
         result = list()
-        result.append(transform.get_catalogue())
+        catalogue = transform.get_catalogue()
+        result.append(catalogue)
         result.append(transform.get_dataset())
         [result.append(x.get()) for x in transform.get_dimensions()]
         [result.append(x.get()) for x in transform.get_attributes()]
         [result.append(x.get()) for x in transform.get_concept_schemas()]
         [result.append(x.get()) for x in transform.get_concept_lists()]
         [result.append(x.get()) for x in transform.get_observation()]
+
+        observations = transform.get_observation()
+        if len(observations) != 0:
+            [result.append(x.get()) for x in observations]
+
+            # If we have several observations, we need to generate the DCAT-AP:Distribution class
+            distribution = Distribution()
+            distribution.generate_data(catalogue=catalogue)
+
+            result.append(distribution)
 
         json_object = dumps(result, indent=4, ensure_ascii=False)
 
