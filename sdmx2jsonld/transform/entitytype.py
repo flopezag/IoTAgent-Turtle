@@ -60,7 +60,7 @@ class EntityType:
         self.context = dict()
         self.context_mapping = dict()
         self.catalogue = CatalogueDCATAP()
-        self.observation = Observation()
+        self.observations = list()
 
         self.pre = Precedence()
         self.parser = RegParser()
@@ -117,7 +117,7 @@ class EntityType:
         data_type, new_string, is_new = self.__find_entity_type__(string=string)
 
         if is_new:
-            self.create_data(type=data_type, data=new_string, title=string[0])
+            self.create_data(entity_type=data_type, data=new_string, title=string[0])
         else:
             logger.info(f'Checking previous subjects to find if it was created previously')
             self.patch_data(datatype=data_type, data=new_string)
@@ -142,41 +142,44 @@ class EntityType:
         if datatype == 'Dataset':
             self.dataset.patch_data(data=flatten_data, language_map=language_map)
 
-    def create_data(self, type, data, title):
-        if type == 'Component':
+    def create_data(self, entity_type, data, title):
+        if entity_type == 'Component':
             self.dataset.add_components(context=self.context, component=data)
-        elif type == 'Catalogue':
+        elif entity_type == 'Catalogue':
             identifier = self.parser.obtain_id(title)
             self.catalogue.add_data(title=title, dataset_id=identifier, data=data)
-        elif type == 'Observation':
+        elif entity_type == 'Observation':
+            observation = Observation()
             identifier = self.parser.obtain_id(title)
-            self.observation.add_data(title=title, observation_id=identifier, data=data)
-        elif type == 'Dataset':
+            observation.add_data(title=title, observation_id=identifier, data=data)
+            self.observations.append(observation)
+            # self.observation.add_data(title=title, observation_id=identifier, data=data)
+        elif entity_type == 'Dataset':
             identifier = self.parser.obtain_id(title)
             self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)
             self.dataset.add_data(title=title, dataset_id=identifier, data=data)
 
             # Create the CatalogueDCAT-AP and assign the dataset id
             self.catalogue.add_dataset(dataset_id=self.dataset.data['id'])
-        elif type == 'Dimension':
+        elif entity_type == 'Dimension':
             dimension = Dimension()
             dimension.add_context(context=self.context, context_mapping=self.context_mapping)
             dimension_id = self.parser.obtain_id(title)
             dimension.add_data(property_id=dimension_id, data=data)
             self.dimensions.append(dimension)
-        elif type == 'Attribute':
+        elif entity_type == 'Attribute':
             attribute = Attribute()
             attribute.add_context(context=self.context, context_mapping=self.context_mapping)
             attribute_id = self.parser.obtain_id(title)
             attribute.add_data(attribute_id=attribute_id, data=data)
             self.attributes.append(attribute)
-        elif type == 'ConceptScheme':
+        elif entity_type == 'ConceptScheme':
             concept_schema = ConceptSchema()
             concept_schema.add_context(context=self.context, context_mapping=self.context_mapping)
             concept_schema_id = self.parser.obtain_id(title)
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=data)
             self.conceptSchemas.append(concept_schema)
-        elif type == 'Class':
+        elif entity_type == 'Class':
             # We need the Concept because each of the Range description is of the type Concept
             concept_list = Concept()
             concept_list.add_context(context=self.context, context_mapping=self.context_mapping)
@@ -184,7 +187,7 @@ class EntityType:
             concept_list.add_data(concept_id=concept_list_id, data=data)
             self.conceptLists.append(concept_list)
             self.conceptListsIds[title] = concept_list.get_id()
-        elif type == 'Range':
+        elif entity_type == 'Range':
             # TODO: Range is associated to a Concept and identified properly in the ConceptSchema
             data_range = Concept()
             data_range.add_context(context=self.context, context_mapping=self.context_mapping)
@@ -212,7 +215,7 @@ class EntityType:
         return self.catalogue.get()
 
     def get_observation(self):
-        return self.observation.get()
+        return self.observations
 
     def get_dataset(self):
         return self.dataset.get()
@@ -223,10 +226,10 @@ class EntityType:
     def get_attributes(self):
         return self.attributes
 
-    def get_conceptSchemas(self):
+    def get_concept_schemas(self):
         return self.conceptSchemas
 
-    def get_conceptList(self):
+    def get_concept_list(self):
         return self.conceptLists
 
     def set_context(self, context, mapping):

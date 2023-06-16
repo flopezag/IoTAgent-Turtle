@@ -116,7 +116,7 @@ class TreeToJson(Transformer):
         return self.entity_type.get_catalogue()
 
     def get_observation(self):
-        if self.entity_type.observation.data['id'] != '':
+        if self.entity_type.observations.data['id'] != '':
             return self.entity_type.get_observation()
 
     def get_dataset(self):
@@ -130,16 +130,16 @@ class TreeToJson(Transformer):
         return self.entity_type.get_attributes()
 
     def get_concept_schemas(self):
-        return self.entity_type.get_conceptSchemas()
+        return self.entity_type.get_concept_schemas()
 
     def get_concept_lists(self):
-        return self.entity_type.get_conceptList()
+        return self.entity_type.get_concept_list()
 
     def save(self):
         self.entity_type.save('catalogue')
 
-        if self.entity_type.observation.data['id'] != '':
-            self.entity_type.save('observation')
+        #if len(self.entity_type.observations) != 0:
+        #    self.entity_type.save('observation')
 
         if self.entity_type.dataset.data['id'] != '':
             self.entity_type.save('dataset')
@@ -150,9 +150,12 @@ class TreeToJson(Transformer):
         attributes = self.entity_type.get_attributes()
         [attribute.save() for attribute in attributes]
 
-        concept_schemas = self.entity_type.get_conceptSchemas()
+        concept_schemas = self.entity_type.get_concept_schemas()
         [x.save() for x in concept_schemas]
 
-        concept_lists = self.entity_type.get_conceptList()
+        concept_lists = self.entity_type.get_concept_list()
         [x.save() for x in concept_lists]
 
+        if len(self.entity_type.observations) != 0:
+            observations = self.entity_type.get_observation()
+            [observation.save() for observation in observations]

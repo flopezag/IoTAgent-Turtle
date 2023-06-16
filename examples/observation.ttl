@@ -23,6 +23,29 @@ qb:structure <http://bauhaus/structuresDeDonnees/structure/dsd3001> ;
 rdfs:label "GDP and main components (current prices)"@en, "PIB et principales composantes (prix courants)"@fr ;
 sdmx-attribute:title "GDP and main components (current prices)"@en, "PIB et principales composantes (prix courants)"@fr .
 
+<http://bauhaus/jeuDeDonnees/ds1002/obs-A-N-BE-W2-S1-S1-NA-B1G-_Z-A-_Z-XDC-V-N-2011> a qb:Observation;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3002> <http://bauhaus/codes/ajustementSaisonnier/N> ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3004> "W2" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3005> "S1" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3006> "S1" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3007> "B" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3008> "B1G" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3009> "_Z" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3010> "A" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3011> "_Z" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3012> "XDC" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3013> "V" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3014> "N" ;
+qb:dataSet <http://bauhaus/jeuDeDonnees/ds1002> ;
+sdmx-attribute:confStatus sdmx-code:confStatus-F ;
+sdmx-attribute:decimals sdmx-code:decimals-1 ;
+sdmx-attribute:obsStatus sdmx-code:obsStatus-A ;
+sdmx-attribute:unitMult sdmx-code:unitMult-6 ;
+sdmx-dimension:freq sdmx-code:freq-A ;
+sdmx-dimension:refArea "BE" ;
+sdmx-dimension:timePeriod "2011" ;
+sdmx-measure:obsValue "1016.9"^^xsd:float .
+
 <http://bauhaus/jeuDeDonnees/ds1002/obs-A-N-BE-W2-S1-S1-NA-B1G-_Z-A-_Z-XDC-V-N-2012> a qb:Observation;
 <http://bauhaus/structuresDeDonnees/composants/dimension/d3002> <http://bauhaus/codes/ajustementSaisonnier/N> ;
 <http://bauhaus/structuresDeDonnees/composants/dimension/d3004> "W2" ;
@@ -45,3 +68,26 @@ sdmx-dimension:freq sdmx-code:freq-A ;
 sdmx-dimension:refArea "BE" ;
 sdmx-dimension:timePeriod "2012" ;
 sdmx-measure:obsValue "3016.9"^^xsd:float .
+
+<http://bauhaus/jeuDeDonnees/ds1002/obs-A-N-BE-W2-S1-S1-NA-B1G-_Z-A-_Z-XDC-V-N-2013> a qb:Observation;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3002> <http://bauhaus/codes/ajustementSaisonnier/N> ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3004> "W2" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3005> "S1" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3006> "S1" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3007> "B" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3008> "B1G" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3009> "_Z" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3010> "A" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3011> "_Z" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3012> "XDC" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3013> "V" ;
+<http://bauhaus/structuresDeDonnees/composants/dimension/d3014> "N" ;
+qb:dataSet <http://bauhaus/jeuDeDonnees/ds1002> ;
+sdmx-attribute:confStatus sdmx-code:confStatus-F ;
+sdmx-attribute:decimals sdmx-code:decimals-1 ;
+sdmx-attribute:obsStatus sdmx-code:obsStatus-A ;
+sdmx-attribute:unitMult sdmx-code:unitMult-6 ;
+sdmx-dimension:freq sdmx-code:freq-A ;
+sdmx-dimension:refArea "BE" ;
+sdmx-dimension:timePeriod "2013" ;
+sdmx-measure:obsValue "9016.9"^^xsd:float .
