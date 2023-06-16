@@ -24,6 +24,9 @@ from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.common.listmanagement import get_rest_data
 from sdmx2jsonld.transform.context import Context
+from sdmx2jsonld.sdmxdimensions.frequency import Frequency
+from sdmx2jsonld.sdmxdimensions.refarea import RefArea
+from sdmx2jsonld.sdmxdimensions.timeperiod import TimePeriod
 
 logger = getLogger()
 
@@ -99,6 +102,12 @@ class Dataset(CommonClass):
                     {self.components['qb:dimension']['key']: self.components['qb:dimension']['key']} | \
                     {self.components['qb:measure']['key']: self.components['qb:measure']['key']}
 
+        self.sdmx_dimensions = {
+            "freq": Frequency(),
+            "refArea": RefArea(),
+            "timePeriod": TimePeriod()
+        }
+
     def add_components(self, context, component):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
@@ -125,6 +134,9 @@ class Dataset(CommonClass):
                 logger.warning(
                     f"The component {name} is defined probably outside of the file, "
                     f"creating manually the DimensionsProperty entity")
+                self.components[type_component]['value'][key]['object'].append(new_id)
+                self.data = self.data | self.components[type_component]['value']
+                return self.sdmx_dimensions[name]
             else:
                 self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']
@@ -141,6 +153,8 @@ class Dataset(CommonClass):
         a.new_analysis()
         a.order_context()
         self.data = a.get_data()
+
+        return None
 
     def get(self):
         return self.data

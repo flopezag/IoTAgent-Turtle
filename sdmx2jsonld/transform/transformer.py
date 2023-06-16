@@ -138,9 +138,6 @@ class TreeToJson(Transformer):
     def save(self):
         self.entity_type.save('catalogue')
 
-        #if len(self.entity_type.observations) != 0:
-        #    self.entity_type.save('observation')
-
         if self.entity_type.dataset.data['id'] != '':
             self.entity_type.save('dataset')
 

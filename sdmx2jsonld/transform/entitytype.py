@@ -144,7 +144,10 @@ class EntityType:
 
     def create_data(self, entity_type, data, title):
         if entity_type == 'Component':
-            self.dataset.add_components(context=self.context, component=data)
+            some_new_dimensions = self.dataset.add_components(context=self.context, component=data)
+            if some_new_dimensions is not None:
+                # we have found special sdmx_dimensions that we have to add to dimensions list
+                self.dimensions.append(some_new_dimensions)
         elif entity_type == 'Catalogue':
             identifier = self.parser.obtain_id(title)
             self.catalogue.add_data(title=title, dataset_id=identifier, data=data)
@@ -153,7 +156,6 @@ class EntityType:
             identifier = self.parser.obtain_id(title)
             observation.add_data(title=title, observation_id=identifier, data=data)
             self.observations.append(observation)
-            # self.observation.add_data(title=title, observation_id=identifier, data=data)
         elif entity_type == 'Dataset':
             identifier = self.parser.obtain_id(title)
             self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)

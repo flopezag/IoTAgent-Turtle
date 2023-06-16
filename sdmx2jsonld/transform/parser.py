@@ -86,7 +86,6 @@ class Parser:
             print()
 
             pprint(transform.get_catalogue())
-            # self.__check_pprint__(transform.get_observation())
             self.__check_pprint__(transform.get_dataset())
             [pprint(x.get()) for x in transform.get_dimensions()]
             [pprint(x.get()) for x in transform.get_attributes()]
@@ -106,7 +105,6 @@ class Parser:
         # Serializing json payload
         result = list()
         result.append(transform.get_catalogue())
-        # result.append(transform.get_observation())
         result.append(transform.get_dataset())
         [result.append(x.get()) for x in transform.get_dimensions()]
         [result.append(x.get()) for x in transform.get_attributes()]

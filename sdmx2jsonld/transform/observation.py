@@ -25,7 +25,7 @@ from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.sdmxattributes.confirmationStatus import ConfStatus
 from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
 from sdmx2jsonld.sdmxattributes.code import Code
-from sdmx2jsonld.sdmxattributes.frequency import Frequency
+from sdmx2jsonld.sdmxdimensions.frequency import Frequency
 from sdmx2jsonld.common.regparser import RegParser
 from re import search, compile
 
