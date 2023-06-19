@@ -20,7 +20,7 @@
 # under the License.
 ##
 from re import search
-from sdmx2jsonld.sdmxattributes.exceptions import ClassCode
+from sdmx2jsonld.exceptions.exceptions import ClassCode
 
 
 class Code:

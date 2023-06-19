@@ -1,6 +1,6 @@
 from unittest import TestCase
 from sdmx2jsonld.sdmxattributes.code import Code
-from sdmx2jsonld.sdmxattributes.exceptions import ClassCode
+from sdmx2jsonld.exceptions.exceptions import ClassCode
 
 
 class TestConfStatus(TestCase):

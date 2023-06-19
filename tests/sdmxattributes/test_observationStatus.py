@@ -1,6 +1,6 @@
 from unittest import TestCase
 from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
-from sdmx2jsonld.sdmxattributes.exceptions import ClassObsStatusError
+from sdmx2jsonld.exceptions.exceptions import ClassObsStatusError
 
 
 class TestObsStatus(TestCase):

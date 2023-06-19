@@ -20,7 +20,7 @@
 # under the License.
 ##
 from re import search
-from sdmx2jsonld.sdmxattributes.exceptions import ClassObsStatusError
+from sdmx2jsonld.exceptions.exceptions import ClassObsStatusError
 from sdmx2jsonld.common.commonclass import CommonClass
 
 
