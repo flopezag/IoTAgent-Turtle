@@ -47,54 +47,12 @@ class ConfStatus(SDMXAttribute):
         #     rdfs:comment """Information about the confidentiality status of the object to which this
         #     attribute is attached."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        # super().__init__(entity='AttributeProperty')
         super().__init__(entity_id='confStatus',
                          label='Confidentiality - status',
                          description='Information about the confidentiality status of the object to which this attribute is attached.',
                          concept_id='confStatus',
                          identifier='confStatus',
                          entity_range='xsd:string')
-        # self.data = {
-        #     "id": "urn:ngsi-ld:AttributeProperty:confStatus",
-        #     "type": "AttributeProperty",
-        #     "dct:language": {
-        #         "type": "Property",
-        #         "value": ["en"]
-        #     },
-        #     "rdfs:label": {
-        #         "type": "Property",
-        #         "value": {
-        #             "en": "Confidentiality - status",
-        #         }
-        #     },
-        #     "dct:description": {
-        #         "type": "Property",
-        #         "value": {
-        #             "en": "Information about the confidentiality status of the object "
-        #                   "to which this attribute is attached.",
-        #         }
-        #     },
-        #     "concept": {
-        #         "type": "Relationship",
-        #         "object": "urn:ngsi-ld:Concept:confStatus"
-        #     },
-        #     "dct:identifier": {
-        #         "type": "Property",
-        #         "value": "confStatus"
-        #     },
-        #     "rdfs:range": {
-        #         "type": "Property",
-        #         "value": "xsd:string"
-        #     },
-        #     "@context": {
-        #         "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-        #         "dcat": "http://www.w3.org/ns/dcat#",
-        #         "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-        #         "dct": "http://purl.org/dc/terms/",
-        #         "qb": "http://purl.org/linked-data/cube#",
-        #         "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-        #     }
-        # }
 
     def fix_value(self, value):
         # Need to check if the value received is in the list of possible values -> return that value

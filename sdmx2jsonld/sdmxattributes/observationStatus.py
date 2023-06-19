@@ -54,53 +54,12 @@ class ObsStatus(SDMXAttribute):
         #     rdfs:label "Observation Status"@en ;
         #     rdfs:comment """Information on the quality of a value or an unusual or missing value."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        # super().__init__(entity='AttributeProperty')
         super().__init__(entity_id='obsStatus',
                          label='Observation Status',
                          description='Information on the quality of a value or an unusual or missing value.',
                          concept_id='obsStatus',
                          identifier='obsStatus',
                          entity_range='xsd:string')
-        # self.data = {
-        #     "id": "urn:ngsi-ld:AttributeProperty:obsStatus",
-        #     "type": "AttributeProperty",
-        #     "dct:language": {
-        #         "type": "Property",
-        #         "value": ["en"]
-        #     },
-        #     "rdfs:label": {
-        #         "type": "Property",
-        #         "value": {
-        #             "en": "Observation Status",
-        #         }
-        #     },
-        #     "dct:description": {
-        #         "type": "Property",
-        #         "value": {
-        #             "en": "Information on the quality of a value or an unusual or missing value.",
-        #         }
-        #     },
-        #     "concept": {
-        #         "type": "Relationship",
-        #         "object": "urn:ngsi-ld:Concept:obsStatus"
-        #     },
-        #     "dct:identifier": {
-        #         "type": "Property",
-        #         "value": "obsStatus"
-        #     },
-        #     "rdfs:range": {
-        #         "type": "Property",
-        #         "value": "xsd:string"
-        #     },
-        #     "@context": {
-        #         "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-        #         "dcat": "http://www.w3.org/ns/dcat#",
-        #         "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-        #         "dct": "http://purl.org/dc/terms/",
-        #         "qb": "http://purl.org/linked-data/cube#",
-        #         "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-        #     }
-        # }
 
     def fix_value(self, value):
         # Need to check if the value received is in the list of possible values -> return that value

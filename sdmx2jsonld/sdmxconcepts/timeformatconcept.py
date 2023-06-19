@@ -30,36 +30,6 @@ class TimeFormatConcept(SDMXConcept):
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
         #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_FORMAT";
         #     skos:inScheme sdmx-concept:cog .
-        # super().__init__(entity='Concept')
         super().__init__(entity_id='timeFormat',
                          label='Time Format',
                          notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_FORMAT')
-        # self.data = {
-        #     "id": "urn:ngsi-ld:Concept:timeFormat",
-        #     "type": "Concept",
-        #     "dct:language": {
-        #         "type": "Property",
-        #         "value": ["en"]
-        #     },
-        #     "skos:inScheme": {
-        #         "type": "Relationship",
-        #         "object": "urn:ngsi-ld:ConceptSchema:cog"
-        #     },
-        #     "skos:prefLabel": {
-        #         "type": "Property",
-        #         "value": {
-        #             "en": "Time Format"
-        #         }
-        #     },
-        #     "skos:notation": {
-        #         "type": "Property",
-        #         "value": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_FORMAT"
-        #     },
-        #     "@context": {
-        #         "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-        #         "dcat": "http://www.w3.org/ns/dcat#",
-        #         "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-        #         "dct": "http://purl.org/dc/terms/",
-        #         "skos": "http://www.w3.org/2004/02/skos/core#"
-        #     }
-        # }

@@ -30,38 +30,6 @@ class RefAreaConcept(SDMXConcept):
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
         #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA";
         #   skos:inScheme sdmx-concept:cog .
-
-        # super().__init__(entity='Concept')
         super().__init__(entity_id='refArea',
                          label='Reference Area',
                          notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA')
-
-        # self.data = {
-        #     "id": "urn:ngsi-ld:Concept:refArea",
-        #     "type": "Concept",
-        #     "dct:language": {
-        #         "type": "Property",
-        #         "value": ["en"]
-        #     },
-        #     "skos:inScheme": {
-        #         "type": "Relationship",
-        #         "object": "urn:ngsi-ld:ConceptSchema:cog"
-        #     },
-        #     "skos:prefLabel": {
-        #         "type": "Property",
-        #         "value": {
-        #             "en": "Reference Area"
-        #         }
-        #     },
-        #     "skos:notation": {
-        #         "type": "Property",
-        #         "value": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA"
-        #     },
-        #     "@context": {
-        #         "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-        #         "dcat": "http://www.w3.org/ns/dcat#",
-        #         "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-        #         "dct": "http://purl.org/dc/terms/",
-        #         "skos": "http://www.w3.org/2004/02/skos/core#"
-        #     }
-        # }
