@@ -27,10 +27,14 @@ from sdmx2jsonld.transform.context import Context
 from sdmx2jsonld.sdmxdimensions.frequency import Frequency
 from sdmx2jsonld.sdmxdimensions.refarea import RefArea
 from sdmx2jsonld.sdmxdimensions.timeperiod import TimePeriod
+from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
+from sdmx2jsonld.sdmxattributes.confirmationStatus import ConfStatus
 from sdmx2jsonld.sdmxconcepts.freqconcept import FreqConcept
 from sdmx2jsonld.sdmxconcepts.cogconceptschema import CogConceptSchema
 from sdmx2jsonld.sdmxconcepts.timeperiodconcept import TimePeriodConcept
 from sdmx2jsonld.sdmxconcepts.refareaconcept import RefAreaConcept
+from sdmx2jsonld.sdmxconcepts.obsstatusconcept import ObsStatusConcept
+from sdmx2jsonld.sdmxconcepts.confstatusconcept import ConfStatusConcept
 
 logger = getLogger()
 
@@ -112,10 +116,22 @@ class Dataset(CommonClass):
             "timePeriod": TimePeriod()
         }
 
+        self.sdmx_attributes = {
+            "obsStatus": ObsStatus(),
+            "confStatus": ConfStatus()
+        }
+
+        self.sdmx_components = {
+            "DimensionProperty": self.sdmx_dimensions,
+            "AttributeProperty": self.sdmx_attributes
+        }
+
         self.sdmx_concepts = {
             "freq": FreqConcept(),
             "refArea": RefAreaConcept(),
-            "timePeriod": TimePeriodConcept()
+            "timePeriod": TimePeriodConcept(),
+            "obsStatus": ObsStatusConcept(),
+            "confStatus": ConfStatusConcept()
         }
 
         self.sdmx_concept_schemas = CogConceptSchema()
@@ -127,7 +143,7 @@ class Dataset(CommonClass):
 
         # TODO: These dimensions are not defined in the turtle file but defined in a prefix therefore at the moment
         # we create manually their corresponding DimensionProperty entity. Should we generated from checking the prefix
-        list_special_dimensions = ['freq', 'refArea', 'timePeriod']
+        list_special_components = ['freq', 'refArea', 'timePeriod', 'obsStatus', 'confStatus']
 
         type_component = [x for x in list_components if x in component][0]
         position = component.index(type_component) + 1
@@ -141,15 +157,16 @@ class Dataset(CommonClass):
             if new_id in self.components[type_component]['value'][key]['object']:
                 logger.warning(
                     f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
-            elif name in list_special_dimensions:
+            elif name in list_special_components:
                 # We need to create manually the description of these dimensions, concepts, and conceptschemas
                 logger.warning(
                     f"The component {name} is defined probably outside of the file, "
-                    f"creating manually the DimensionsProperty entity")
+                    f"creating manually the {entity} entity")
                 self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']
 
-                new_dimension = self.sdmx_dimensions[name]
+                new_component = self.sdmx_components[entity]
+                new_dimension = new_component[name]
                 new_concept = self.sdmx_concepts[name]
                 new_concept_schema = self.sdmx_concept_schemas
 
