@@ -60,15 +60,15 @@ class Property(CommonClass):
                 "object": str()
             },
             "qb:concept": {
-                "type": "Property",
-                "value": str()
+                "type": "Relationship",
+                "object": str()
             },
             "@context": dict()
         }
 
         self.keys = {k: k for k in self.data.keys()}
 
-    def add_data(self, id, data):
+    def add_data(self, property_id, data):
         # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the Dimension: rdfs:label
         position = data.index('rdfs:label') + 1
@@ -80,7 +80,7 @@ class Property(CommonClass):
         try:
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
-            logger.warning(f'The Property {id} has a '
+            logger.warning(f'The Property {property_id} has a '
                            f'rdfs:label without language tag: {description}')
 
             aux = len(description)
@@ -112,7 +112,7 @@ class Property(CommonClass):
             code_list = self.generate_id(entity="ConceptSchema", value=data[position][0])
             self.data['qb:codeList']['object'] = code_list
         except ValueError:
-            logger.warning(f'Property: {id} has not qb:codeList, deleting the key in the data')
+            logger.warning(f'Property: {property_id} has not qb:codeList, deleting the key in the data')
 
             # If we have not the property, we delete it from data
             self.data.pop('qb:codeList')
@@ -121,7 +121,7 @@ class Property(CommonClass):
         # TODO: the concept id need to check if it is a normal id or an url
         position = data.index('qb:concept') + 1
         concept = self.generate_id(entity="Concept", value=data[position][0])
-        self.data['qb:concept']['value'] = concept
+        self.data['qb:concept']['object'] = concept
 
         # Get the rest of the data
         data = get_rest_data(data=data,
@@ -141,7 +141,7 @@ class Property(CommonClass):
                              ])
 
         # add the new data to the dataset structure
-        [self.data.update({k: v}) for k, v in data.items()]
+        [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
         # Simplify Context and order keys
         a = Context()

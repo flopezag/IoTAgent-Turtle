@@ -14,7 +14,7 @@
 ##################################################################################
 
 # This DSD will be used for the DDI-CDI/NGSI-LD interoperability tests
-# It is a simple municipalitiy x sex x age group 3 dimensional cube
+# It is a simple municipality x sex x age group 3 dimensional cube
 
 isc:dsd1
     a             qb:DataStructureDefinition ;

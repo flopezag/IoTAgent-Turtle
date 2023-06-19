@@ -20,7 +20,7 @@
 # under the License.
 ##
 from unittest import TestCase
-from sdmx2jsonld.common.classprecedence import Precedence, ClassesPrecedencePropertyError, ClassesPrecedenceClassError
+from sdmx2jsonld.common.classprecedence import Precedence, ClassPrecedencePropertyError, ClassPrecedenceClassError
 
 
 class Test(TestCase):
@@ -78,28 +78,28 @@ class Test(TestCase):
                 different from this, therefore we should return an error)
                 2) "rdfs:Class", "owl:Class"
         """
-        with self.assertRaises(ClassesPrecedencePropertyError) as error:
+        with self.assertRaises(ClassPrecedencePropertyError) as error:
             _ = self.pre.precedence(["qb:DimensionProperty", "qb:AttributeProperty"])
 
         self.assertEqual(str(error.exception),
                          "['qb:DimensionProperty', 'qb:AttributeProperty'] -> Incompatible multiclass definition")
 
     def test_precedence_classes_with_attribute_and_measure_values(self):
-        with self.assertRaises(ClassesPrecedencePropertyError) as error:
+        with self.assertRaises(ClassPrecedencePropertyError) as error:
             _ = self.pre.precedence(["qb:AttributeProperty", "qb:MeasureProperty"])
 
         self.assertEqual(str(error.exception),
                          "['qb:AttributeProperty', 'qb:MeasureProperty'] -> Incompatible multiclass definition")
 
     def test_precedence_classes_with_dimension_and_measure_values(self):
-        with self.assertRaises(ClassesPrecedencePropertyError) as error:
+        with self.assertRaises(ClassPrecedencePropertyError) as error:
             _ = self.pre.precedence(["qb:DimensionProperty", "qb:MeasureProperty"])
 
         self.assertEqual(str(error.exception),
                          "['qb:DimensionProperty', 'qb:MeasureProperty'] -> Incompatible multiclass definition")
 
     def test_precedence_classes_with_class_values(self):
-        with self.assertRaises(ClassesPrecedenceClassError) as error:
+        with self.assertRaises(ClassPrecedenceClassError) as error:
             _ = self.pre.precedence(["rdfs:Class", "owl:Class"])
 
         self.assertEqual(str(error.exception), "['rdfs:Class', 'owl:Class'] -> Possible redundant Class definition")

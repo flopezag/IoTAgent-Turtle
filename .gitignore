@@ -130,8 +130,10 @@ dmypy.json
 
 # IDE
 .idea
+.vscode
 
 # Temporal generated JSON-LD documents
 *.jsonld
 output
 output/*.jsonld
+tests/test1.py

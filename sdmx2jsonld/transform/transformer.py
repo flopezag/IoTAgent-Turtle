@@ -24,6 +24,7 @@ from lark import Transformer, Tree, Token
 from sdmx2jsonld.transform.context import Context
 from sdmx2jsonld.transform.entitytype import EntityType
 from sdmx2jsonld.common.datatypeconversion import DataTypeConversion
+from sdmx2jsonld.transform.distribution import Distribution
 import re
 
 
@@ -115,8 +116,13 @@ class TreeToJson(Transformer):
     def get_catalogue(self):
         return self.entity_type.get_catalogue()
 
+    def get_observation(self):
+        if self.entity_type.observations.data['id'] != '':
+            return self.entity_type.get_observation()
+
     def get_dataset(self):
-        return self.entity_type.get_dataset()
+        if self.entity_type.dataset.data['id'] != '':
+            return self.entity_type.get_dataset()
 
     def get_dimensions(self):
         return self.entity_type.get_dimensions()
@@ -124,16 +130,17 @@ class TreeToJson(Transformer):
     def get_attributes(self):
         return self.entity_type.get_attributes()
 
-    def get_conceptSchemas(self):
-        return self.entity_type.get_conceptSchemas()
+    def get_concept_schemas(self):
+        return self.entity_type.get_concept_schemas()
 
-    def get_conceptLists(self):
-        return self.entity_type.get_conceptList()
+    def get_concept_lists(self):
+        return self.entity_type.get_concept_list()
 
     def save(self):
         self.entity_type.save('catalogue')
 
-        self.entity_type.save('dataset')
+        if self.entity_type.dataset.data['id'] != '':
+            self.entity_type.save('dataset')
 
         dimensions = self.entity_type.get_dimensions()
         [dimension.save() for dimension in dimensions]
@@ -141,9 +148,19 @@ class TreeToJson(Transformer):
         attributes = self.entity_type.get_attributes()
         [attribute.save() for attribute in attributes]
 
-        concept_schemas = self.entity_type.get_conceptSchemas()
+        concept_schemas = self.entity_type.get_concept_schemas()
         [x.save() for x in concept_schemas]
 
-        concept_lists = self.entity_type.get_conceptList()
+        concept_lists = self.entity_type.get_concept_list()
         [x.save() for x in concept_lists]
+
+        if len(self.entity_type.observations) != 0:
+            observations = self.entity_type.get_observation()
+            [observation.save() for observation in observations]
+
+            # If we have several observations, we need to generate the DCAT-AP:Distribution class
+            distribution = Distribution()
+            distribution.generate_data(catalogue=self.entity_type.catalogue)
+
+            distribution.save()
 

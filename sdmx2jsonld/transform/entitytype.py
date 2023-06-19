@@ -26,10 +26,11 @@ from sdmx2jsonld.transform.conceptschema import ConceptSchema
 from sdmx2jsonld.transform.concept import Concept
 from sdmx2jsonld.transform.attribute import Attribute
 from sdmx2jsonld.transform.catalogue import CatalogueDCATAP
+from sdmx2jsonld.transform.observation import Observation
 from logging import getLogger
 from datetime import datetime
 from sdmx2jsonld.common.regparser import RegParser
-from sdmx2jsonld.common.classprecedence import Precedence, ClassesPrecedencePropertyError, ClassesPrecedenceClassError
+from sdmx2jsonld.common.classprecedence import Precedence, ClassPrecedencePropertyError, ClassPrecedenceClassError
 
 logger = getLogger()
 
@@ -37,6 +38,8 @@ logger = getLogger()
 class EntityType:
     def __init__(self):
         self.entities = {
+            'qb:DataSet': 'Catalogue',
+            'qb:Observation': 'Observation',
             'qb:DataStructureDefinition': 'Dataset',
             'qb:ComponentSpecification': 'Component',
             'qb:AttributeProperty': 'Attribute',
@@ -57,8 +60,10 @@ class EntityType:
         self.context = dict()
         self.context_mapping = dict()
         self.catalogue = CatalogueDCATAP()
+        self.observations = list()
 
         self.pre = Precedence()
+        self.parser = RegParser()
 
     def __find_entity_type__(self, string):
         """
@@ -82,10 +87,10 @@ class EntityType:
                 # We have two options, a well-know object list to be found in the self.entities or
                 # the conceptList defined in the turtle file
                 data = self.entities[data]
-            except ClassesPrecedencePropertyError as error:
+            except ClassPrecedencePropertyError as error:
                 logger.error(str(error))
                 data = self.entities[data[0]]
-            except ClassesPrecedenceClassError as error:
+            except ClassPrecedenceClassError as error:
                 logger.warning(str(error))
                 data = self.entities['rdfs:Class']
             except KeyError:
@@ -112,7 +117,7 @@ class EntityType:
         data_type, new_string, is_new = self.__find_entity_type__(string=string)
 
         if is_new:
-            self.create_data(type=data_type, data=new_string, title=string[0])
+            self.create_data(entity_type=data_type, data=new_string, title=string[0])
         else:
             logger.info(f'Checking previous subjects to find if it was created previously')
             self.patch_data(datatype=data_type, data=new_string)
@@ -137,49 +142,74 @@ class EntityType:
         if datatype == 'Dataset':
             self.dataset.patch_data(data=flatten_data, language_map=language_map)
 
-    def create_data(self, type, data, title):
-        parser = RegParser()
+    def create_data(self, entity_type, data, title):
+        if entity_type == 'Component':
+            some_new_component, some_new_concept, some_new_concept_schema = \
+                self.dataset.add_components(context=self.context, component=data)
 
-        if type == 'Component':
-            self.dataset.add_components(context=self.context, component=data)
-        elif type == 'Dataset':
-            identifier = parser.obtain_id(title)
+            if some_new_component is not None:
+                if some_new_component.data['type'] == 'DimensionProperty':
+                    # we have found special sdmx_dimensions that we have to add to dimensions list
+                    self.dimensions.append(some_new_component)
+                elif some_new_component.data['type'] == 'AttributeProperty':
+                    # we have found special sdmx_attribute that we have to add to attributes list
+                    self.attributes.append(some_new_component)
+                else:
+                    # You should not be here, reporting error...
+                    logger.error(f'Unexpected entity type, id: {some_new_component.data["idf"]}    '
+                                 f'type: {some_new_component.data["type"]}')
+
+                self.conceptLists.append(some_new_concept)
+                #self.conceptListsIds[title] = concept_list.get_id()
+                # we need to check that the conceptSchema is not already defined in the structure
+                if some_new_concept_schema not in self.conceptSchemas:
+                    self.conceptSchemas.append(some_new_concept_schema)
+        elif entity_type == 'Catalogue':
+            identifier = self.parser.obtain_id(title)
+            self.catalogue.add_data(title=title, dataset_id=identifier, data=data)
+        elif entity_type == 'Observation':
+            observation = Observation()
+            identifier = self.parser.obtain_id(title)
+            observation.add_data(title=title, observation_id=identifier, data=data)
+            self.observations.append(observation)
+        elif entity_type == 'Dataset':
+            identifier = self.parser.obtain_id(title)
             self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)
             self.dataset.add_data(title=title, dataset_id=identifier, data=data)
 
             # Create the CatalogueDCAT-AP and assign the dataset id
             self.catalogue.add_dataset(dataset_id=self.dataset.data['id'])
-        elif type == 'Dimension':
+        elif entity_type == 'Dimension':
             dimension = Dimension()
             dimension.add_context(context=self.context, context_mapping=self.context_mapping)
-            dimension_id = parser.obtain_id(title)
-            dimension.add_data(id=dimension_id, data=data)
+            dimension_id = self.parser.obtain_id(title)
+            dimension.add_data(property_id=dimension_id, data=data)
             self.dimensions.append(dimension)
-        elif type == 'Attribute':
+        elif entity_type == 'Attribute':
             attribute = Attribute()
             attribute.add_context(context=self.context, context_mapping=self.context_mapping)
-            attribute_id = parser.obtain_id(title)
+            attribute_id = self.parser.obtain_id(title)
             attribute.add_data(attribute_id=attribute_id, data=data)
             self.attributes.append(attribute)
-        elif type == 'ConceptScheme':
+        elif entity_type == 'ConceptScheme':
             concept_schema = ConceptSchema()
             concept_schema.add_context(context=self.context, context_mapping=self.context_mapping)
-            concept_schema_id = parser.obtain_id(title)
+            concept_schema_id = self.parser.obtain_id(title)
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=data)
             self.conceptSchemas.append(concept_schema)
-        elif type == 'Class':
+        elif entity_type == 'Class':
             # We need the Concept because each of the Range description is of the type Concept
             concept_list = Concept()
             concept_list.add_context(context=self.context, context_mapping=self.context_mapping)
-            concept_list_id = parser.obtain_id(title)
+            concept_list_id = self.parser.obtain_id(title)
             concept_list.add_data(concept_id=concept_list_id, data=data)
             self.conceptLists.append(concept_list)
             self.conceptListsIds[title] = concept_list.get_id()
-        elif type == 'Range':
+        elif entity_type == 'Range':
             # TODO: Range is associated to a Concept and identified properly in the ConceptSchema
             data_range = Concept()
             data_range.add_context(context=self.context, context_mapping=self.context_mapping)
-            data_range_id = parser.obtain_id(title)
+            data_range_id = self.parser.obtain_id(title)
             data_range.add_data(concept_id=data_range_id, data=data)
             self.conceptLists.append(data_range)
             self.conceptListsIds[title] = data_range.get_id()
@@ -202,6 +232,9 @@ class EntityType:
     def get_catalogue(self):
         return self.catalogue.get()
 
+    def get_observation(self):
+        return self.observations
+
     def get_dataset(self):
         return self.dataset.get()
 
@@ -211,10 +244,10 @@ class EntityType:
     def get_attributes(self):
         return self.attributes
 
-    def get_conceptSchemas(self):
+    def get_concept_schemas(self):
         return self.conceptSchemas
 
-    def get_conceptList(self):
+    def get_concept_list(self):
         return self.conceptLists
 
     def set_context(self, context, mapping):
