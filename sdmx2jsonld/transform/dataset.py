@@ -24,17 +24,28 @@ from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
 from sdmx2jsonld.common.listmanagement import get_rest_data
 from sdmx2jsonld.transform.context import Context
+
 from sdmx2jsonld.sdmxdimensions.frequency import Frequency
 from sdmx2jsonld.sdmxdimensions.refarea import RefArea
 from sdmx2jsonld.sdmxdimensions.timeperiod import TimePeriod
+
 from sdmx2jsonld.sdmxattributes.observationStatus import ObsStatus
 from sdmx2jsonld.sdmxattributes.confirmationStatus import ConfStatus
+from sdmx2jsonld.sdmxattributes.timeFormat import TimeFormat
+from sdmx2jsonld.sdmxattributes.timePerCollect import TimePerCollect
+from sdmx2jsonld.sdmxattributes.decimals import Decimals
+from sdmx2jsonld.sdmxattributes.title import Title
+
 from sdmx2jsonld.sdmxconcepts.freqconcept import FreqConcept
 from sdmx2jsonld.sdmxconcepts.cogconceptschema import CogConceptSchema
 from sdmx2jsonld.sdmxconcepts.timeperiodconcept import TimePeriodConcept
 from sdmx2jsonld.sdmxconcepts.refareaconcept import RefAreaConcept
 from sdmx2jsonld.sdmxconcepts.obsstatusconcept import ObsStatusConcept
 from sdmx2jsonld.sdmxconcepts.confstatusconcept import ConfStatusConcept
+from sdmx2jsonld.sdmxconcepts.timeformatconcept import TimeFormatConcept
+from sdmx2jsonld.sdmxconcepts.timePerCollectConcept import TimePerCollectConcept
+from sdmx2jsonld.sdmxconcepts.decimals import DecimalsConcept
+from sdmx2jsonld.sdmxconcepts.titleConcept import TitleConcept
 
 logger = getLogger()
 
@@ -118,7 +129,11 @@ class Dataset(CommonClass):
 
         self.sdmx_attributes = {
             "obsStatus": ObsStatus(),
-            "confStatus": ConfStatus()
+            "confStatus": ConfStatus(),
+            "timeFormat": TimeFormat(),
+            "timePerCollect": TimePerCollect(),
+            "decimals": Decimals(),
+            "title": Title()
         }
 
         self.sdmx_components = {
@@ -131,7 +146,11 @@ class Dataset(CommonClass):
             "refArea": RefAreaConcept(),
             "timePeriod": TimePeriodConcept(),
             "obsStatus": ObsStatusConcept(),
-            "confStatus": ConfStatusConcept()
+            "confStatus": ConfStatusConcept(),
+            "timeFormat": TimeFormatConcept(),
+            "timePerCollect": TimePerCollectConcept(),
+            "decimals": DecimalsConcept(),
+            "title": TitleConcept()
         }
 
         self.sdmx_concept_schemas = CogConceptSchema()
@@ -143,7 +162,9 @@ class Dataset(CommonClass):
 
         # TODO: These dimensions are not defined in the turtle file but defined in a prefix therefore at the moment
         # we create manually their corresponding DimensionProperty entity. Should we generated from checking the prefix
-        list_special_components = ['freq', 'refArea', 'timePeriod', 'obsStatus', 'confStatus']
+        list_special_components = ['freq', 'refArea', 'timePeriod',
+                                   'obsStatus', 'confStatus', 'timeFormat',
+                                   'timePerCollect', 'decimals', 'title']
 
         type_component = [x for x in list_components if x in component][0]
         position = component.index(type_component) + 1

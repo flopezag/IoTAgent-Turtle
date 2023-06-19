@@ -22,21 +22,20 @@
 from sdmx2jsonld.sdmxconcepts.sdmxconcept import SDMXConcept
 
 
-class FreqConcept(SDMXConcept):
+class DecimalsConcept(SDMXConcept):
     def __init__(self):
-        # sdmx-concept:freq a sdmx:Concept, skos:Concept;
-        #   rdfs:label "Frequency"@en;
-        #   rdfs:comment """The time interval at which observations occur over a given time period."""@en;
-        #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>;
-        #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ";
-        #   skos:inScheme sdmx-concept:cog.
-        #super().__init__(entity='Concept')
-        super().__init__(entity_id='freq',
-                         label='Frequency',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ')
-
+        # sdmx-concept:decimals a sdmx:Concept, skos:Concept ;
+        #     rdfs:label "Decimals"@en ;
+        #     rdfs:comment """The number of digits of an observation to the right of a decimal point."""@en ;
+        #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+        #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].DECIMALS";
+        #     skos:inScheme sdmx-concept:cog .
+        # super().__init__(entity='Concept')
+        super().__init__(entity_id='decimals',
+                         label='Decimals',
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].DECIMALS')
         # self.data = {
-        #     "id": "urn:ngsi-ld:Concept:freq",
+        #     "id": "urn:ngsi-ld:Concept:decimals",
         #     "type": "Concept",
         #     "dct:language": {
         #         "type": "Property",
@@ -49,12 +48,12 @@ class FreqConcept(SDMXConcept):
         #     "skos:prefLabel": {
         #         "type": "Property",
         #         "value": {
-        #             "en": "Frequency"
+        #             "en": "Decimals"
         #         }
         #     },
         #     "skos:notation": {
         #         "type": "Property",
-        #         "value": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ"
+        #         "value": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].DECIMALS"
         #     },
         #     "@context": {
         #         "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",

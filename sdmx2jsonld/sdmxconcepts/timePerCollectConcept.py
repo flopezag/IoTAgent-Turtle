@@ -22,21 +22,24 @@
 from sdmx2jsonld.sdmxconcepts.sdmxconcept import SDMXConcept
 
 
-class FreqConcept(SDMXConcept):
+class TimePerCollectConcept(SDMXConcept):
     def __init__(self):
-        # sdmx-concept:freq a sdmx:Concept, skos:Concept;
-        #   rdfs:label "Frequency"@en;
-        #   rdfs:comment """The time interval at which observations occur over a given time period."""@en;
-        #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>;
-        #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ";
-        #   skos:inScheme sdmx-concept:cog.
-        #super().__init__(entity='Concept')
-        super().__init__(entity_id='freq',
-                         label='Frequency',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ')
-
+        # sdmx-concept:timePerCollect a sdmx:Concept, skos:Concept ;
+        #     rdfs:label "Time Period - collection"@en ;
+        #     rdfs:comment """Dates or periods during which the observations have been collected
+        #     (such as middle, average or end of period) to compile the indicator
+        #     for the target reference period."""@en ;
+        #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+        #     skos:notation
+        #     "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PER_COLLECT";
+        #     skos:broader sdmx-concept:timePeriod;
+        #     skos:inScheme sdmx-concept:cog .
+        # super().__init__(entity='Concept')
+        super().__init__(entity_id='timePerCollect',
+                         label='Time Period - collection',
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PER_COLLECT')
         # self.data = {
-        #     "id": "urn:ngsi-ld:Concept:freq",
+        #     "id": "urn:ngsi-ld:Concept:timePerCollect",
         #     "type": "Concept",
         #     "dct:language": {
         #         "type": "Property",
@@ -49,12 +52,13 @@ class FreqConcept(SDMXConcept):
         #     "skos:prefLabel": {
         #         "type": "Property",
         #         "value": {
-        #             "en": "Frequency"
+        #             "en": "Time Period - collection"
         #         }
         #     },
         #     "skos:notation": {
         #         "type": "Property",
-        #         "value": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ"
+        #         "value":
+        #             "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PER_COLLECT"
         #     },
         #     "@context": {
         #         "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",

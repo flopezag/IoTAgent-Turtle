@@ -19,10 +19,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 ##
-from sdmx2jsonld.common.commonclass import CommonClass
+from sdmx2jsonld.sdmxconcepts.sdmxconcept import SDMXConcept
 
 
-class RefAreaConcept(CommonClass):
+class RefAreaConcept(SDMXConcept):
     def __init__(self):
         # sdmx-concept:refArea a sdmx:Concept, skos:Concept ;
         #    rdfs:label "Reference Area"@en ;
@@ -31,34 +31,37 @@ class RefAreaConcept(CommonClass):
         #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA";
         #   skos:inScheme sdmx-concept:cog .
 
-        super().__init__(entity='Concept')
+        # super().__init__(entity='Concept')
+        super().__init__(entity_id='refArea',
+                         label='Reference Area',
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA')
 
-        self.data = {
-            "id": "urn:ngsi-ld:Concept:refArea",
-            "type": "Concept",
-            "dct:language": {
-                "type": "Property",
-                "value": ["en"]
-            },
-            "skos:inScheme": {
-                "type": "Relationship",
-                "object": "urn:ngsi-ld:ConceptSchema:cog"
-            },
-            "skos:prefLabel": {
-                "type": "Property",
-                "value": {
-                    "en": "Reference Area"
-                }
-            },
-            "skos:notation": {
-                "type": "Property",
-                "value": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA"
-            },
-            "@context": {
-                "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-                "dcat": "http://www.w3.org/ns/dcat#",
-                "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-                "dct": "http://purl.org/dc/terms/",
-                "skos": "http://www.w3.org/2004/02/skos/core#"
-            }
-        }
+        # self.data = {
+        #     "id": "urn:ngsi-ld:Concept:refArea",
+        #     "type": "Concept",
+        #     "dct:language": {
+        #         "type": "Property",
+        #         "value": ["en"]
+        #     },
+        #     "skos:inScheme": {
+        #         "type": "Relationship",
+        #         "object": "urn:ngsi-ld:ConceptSchema:cog"
+        #     },
+        #     "skos:prefLabel": {
+        #         "type": "Property",
+        #         "value": {
+        #             "en": "Reference Area"
+        #         }
+        #     },
+        #     "skos:notation": {
+        #         "type": "Property",
+        #         "value": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA"
+        #     },
+        #     "@context": {
+        #         "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
+        #         "dcat": "http://www.w3.org/ns/dcat#",
+        #         "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
+        #         "dct": "http://purl.org/dc/terms/",
+        #         "skos": "http://www.w3.org/2004/02/skos/core#"
+        #     }
+        # }

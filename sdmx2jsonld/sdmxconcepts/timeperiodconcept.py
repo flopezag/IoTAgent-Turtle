@@ -19,10 +19,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 ##
-from sdmx2jsonld.common.commonclass import CommonClass
+from sdmx2jsonld.sdmxconcepts.sdmxconcept import SDMXConcept
 
 
-class TimePeriodConcept(CommonClass):
+class TimePeriodConcept(SDMXConcept):
     def __init__(self):
         # sdmx-concept:timePeriod a sdmx:Concept, skos:Concept;
         #   rdfs:label "Time Period"@en;
@@ -30,7 +30,10 @@ class TimePeriodConcept(CommonClass):
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>;
         #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD";
         #   skos:inScheme sdmx-concept:cog.
-        super().__init__(entity='Concept')
+        #super().__init__(entity='Concept')
+        super().__init__(entity_id='timePeriod',
+                         label='Time Period',
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD')
 
         self.data = {
             "id": "urn:ngsi-ld:Concept:timePeriod",
