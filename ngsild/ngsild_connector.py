@@ -1,27 +1,7 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-##
-# Copyright 2022 FIWARE Foundation, e.V.
-#
-# This file is part of IoTAgent-SDMX (RDF Turtle)
-#
-# All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may
-# not use this file except in compliance with the License. You may obtain
-# a copy of the License at
-#
-#         http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
-##
 from pathlib import Path
 import json
 from requests import post, exceptions
+
 
 class NGSILDConnector:
     def __init__(self, path=None):
@@ -39,11 +19,27 @@ class NGSILDConnector:
         return url
 
     def send_data_array(self, json_object):
+        return_info = []
         d = json.loads(json_object)
         d = d if type(d) is list else [d]
 
         for elem in d:
-            rc, r = c.send_data(json.dumps(elem))
+            try:
+                rc, r = self.send_data(json.dumps(elem))
+                return_info.append({"id": elem['id'],
+                                   "status_code": rc,
+                                   "reason": r})
+            except TypeError as e:
+                return_info.append({"id": "UNK",
+                                    "status_code": 500,
+                                    "reason": e.args[0]})
+            except Exception as e:
+                return_info.append({"id": "UNK",
+                                    "status_code": 500,
+                                    "reason": e.message})
+
+        return return_info
+
 
     def send_data(self, json_object):
         # Send the data to a FIWARE Context Broker instance
@@ -64,7 +60,7 @@ class NGSILDConnector:
             print("LOCATION: ", r.headers['Location'])
 
         # Let exceptions raise.... They can be controlled somewhere else.
-        return response_status_code, resp
+        return response_status_code, r.reason
 
 
 from sdmx2jsonld.transform.parser import Parser
