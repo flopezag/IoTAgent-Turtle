@@ -147,7 +147,6 @@ class Property(CommonClass):
         # Simplify Context and order keys
         a = Context()
         a.set_data(data=self.data)
-        # a.new_analysis()
         a.order_context()
         self.data = a.get_data()
 

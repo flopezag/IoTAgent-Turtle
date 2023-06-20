@@ -35,11 +35,11 @@ class Concept(CommonClass):
         self.data = {
             "id": str(),
             "type": "Concept",
-            "dct:language": {
+            "language": {
                 "type": "Property",
                 "value": list()
             },
-            "skos:inScheme": {
+            "inScheme": {
                 "type": "Relationship",
                 "object": str()
             },
@@ -57,13 +57,14 @@ class Concept(CommonClass):
             #     "LanguageMap": dict()
             # },
             #################################################
-            "skos:prefLabel": {
+            "prefLabel": {
                 "type": "Property",
                 "value": dict()
             },
 
-
-            "@context": dict()
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
         }
 
         self.concept_id = str()
@@ -111,10 +112,10 @@ class Concept(CommonClass):
         #     self.data['skos:prefLabel']['LanguageMap'][languages[i]] = descriptions[i]
         ###############################################################################
         for i in range(0, len(languages)):
-            self.data['skos:prefLabel']['value'][languages[i]] = descriptions[i]
+            self.data['prefLabel']['value'][languages[i]] = descriptions[i]
 
         # Complete the information of the language with the previous information
-        key = self.keys['dct:language']
+        key = self.keys['language']
         self.data[key]['value'] = languages
 
         # Add the id
@@ -130,11 +131,10 @@ class Concept(CommonClass):
         self.need_add_notation(data=data)
 
         # Simplify Context and order keys
-        #a = Context()
-        #a.set_data(data=self.data)
-        #a.new_analysis()
-        #a.order_context()
-        #self.data = a.get_data()
+        a = Context()
+        a.set_data(data=self.data)
+        a.order_context()
+        self.data = a.get_data()
 
     def get(self):
         return self.data
@@ -171,16 +171,16 @@ class Concept(CommonClass):
         parser = RegParser()
         concept_schema = data[position][0]
         concept_schema = "urn:ngsi-ld:ConceptSchema:" + parser.obtain_id(concept_schema)
-        if self.data['skos:inScheme']['type'] == 'Relationship':
-            self.data['skos:inScheme']['object'] = concept_schema
+        if self.data['inScheme']['type'] == 'Relationship':
+            self.data['inScheme']['object'] = concept_schema
         else:
-            self.data['skos:inScheme']['value'] = concept_schema
+            self.data['inScheme']['value'] = concept_schema
 
     def need_add_notation(self, data):
         try:
             position = data.index('skos:notation') + 1
 
-            self.data['skos:notation'] = {
+            self.data['notation'] = {
                     'type': 'Property',
                     'value': data[position][0][0].replace("\"", "")
             }
