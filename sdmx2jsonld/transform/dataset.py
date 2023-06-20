@@ -64,6 +64,14 @@ class Dataset(CommonClass):
     def __init__(self):
         super().__init__(entity='Dataset')
 
+        # TODO: These dimensions are not defined in the turtle file but defined in a prefix therefore at the moment
+        # we create manually their corresponding DimensionProperty entity. Should we generated from checking the prefix
+        self.list_special_components = ['freq', 'refArea', 'timePeriod',
+                                        'obsStatus', 'confStatus', 'timeFormat',
+                                        'timePerCollect', 'decimals', 'title',
+                                        'unitMult', 'compilingOrg', 'dataComp',
+                                        'currency', 'dissOrg']
+
         self.data = {
             "id": str(),
             "type": "Dataset",
@@ -180,17 +188,22 @@ class Dataset(CommonClass):
         # qb:attribute, qb:dimension, or qb:measure
         list_components = ['qb:attribute', 'qb:dimension', 'qb:measure']
 
-        # TODO: These dimensions are not defined in the turtle file but defined in a prefix therefore at the moment
-        # we create manually their corresponding DimensionProperty entity. Should we generated from checking the prefix
-        list_special_components = ['freq', 'refArea', 'timePeriod',
-                                   'obsStatus', 'confStatus', 'timeFormat',
-                                   'timePerCollect', 'decimals', 'title',
-                                   'unitMult', 'compilingOrg', 'dataComp',
-                                   'currency', 'dissOrg']
-
         type_component = [x for x in list_components if x in component][0]
         position = component.index(type_component) + 1
 
+        if type_component == "qb:measure":
+            logger.info(f'The qb:measure "{component[position][0]}" is not manage in statDCAT-AP')
+            new_component, new_concept, new_concept_schema = None, None, None
+        else:
+            new_component, new_concept, new_concept_schema = self.manage_components(type_component=type_component,
+                                                                                    component=component,
+                                                                                    position=position,
+                                                                                    context=context)
+
+        return new_component, new_concept, new_concept_schema
+
+    def manage_components(self, type_component, component, position, context):
+        new_component, new_concept, new_concept_schema = None, None, None
         try:
             entity = self.components[type_component]['entity']
             name, new_id = self.generate_id(entity=entity, value=component[position][0], update_id=False)
@@ -200,7 +213,7 @@ class Dataset(CommonClass):
             if new_id in self.components[type_component]['value'][key]['object']:
                 logger.warning(
                     f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
-            elif name in list_special_components:
+            elif name in self.list_special_components:
                 # We need to create manually the description of these dimensions, concepts, and conceptschemas
                 logger.warning(
                     f"The component {name} is defined probably outside of the file, "
@@ -208,12 +221,9 @@ class Dataset(CommonClass):
                 self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']
 
-                new_component = self.sdmx_components[entity]
-                new_dimension = new_component[name]
+                new_component = self.sdmx_components[entity][name]
                 new_concept = self.sdmx_concepts[name]
                 new_concept_schema = self.sdmx_concept_schemas
-
-                return new_dimension, new_concept, new_concept_schema
             else:
                 self.components[type_component]['value'][key]['object'].append(new_id)
                 self.data = self.data | self.components[type_component]['value']
@@ -231,7 +241,7 @@ class Dataset(CommonClass):
         a.order_context()
         self.data = a.get_data()
 
-        return None, None, None
+        return new_component, new_concept, new_concept_schema
 
     def get(self):
         return self.data

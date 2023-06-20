@@ -213,15 +213,8 @@ class EntityType:
             data_range.add_data(concept_id=data_range_id, data=data)
             self.conceptLists.append(data_range)
             self.conceptListsIds[title] = data_range.get_id()
-
-            # for i in range(0, len(self.conceptSchemas)):
-            #    concept_schema = self.conceptSchemas[i].data
-            #    has_top_concept_values = concept_schema['skos:hasTopConcept']['value']
-            #
-            #    out = [data_range.data['skos:notation']
-            #           if x == data_range.data['id'] else x for x in has_top_concept_values]
-            #
-            #    self.conceptSchemas[i].data['skos:hasTopConcept']['value'] = out
+        else:
+            logger.error(f'Entity type "{entity_type}" not processed.')
 
     def __get_subject__(self, title):
         if self.dataset.get()['dct:title'] == title:
