@@ -35,6 +35,11 @@ from sdmx2jsonld.sdmxattributes.timeFormat import TimeFormat
 from sdmx2jsonld.sdmxattributes.timePerCollect import TimePerCollect
 from sdmx2jsonld.sdmxattributes.decimals import Decimals
 from sdmx2jsonld.sdmxattributes.title import Title
+from sdmx2jsonld.sdmxattributes.unitmult import UnitMult
+from sdmx2jsonld.sdmxattributes.compilingorg import CompilingOrg
+from sdmx2jsonld.sdmxattributes.dataComp import DataComp
+from sdmx2jsonld.sdmxattributes.currency import Currency
+from sdmx2jsonld.sdmxattributes.dissorg import DissOrg
 
 from sdmx2jsonld.sdmxconcepts.freqconcept import FreqConcept
 from sdmx2jsonld.sdmxconcepts.cogconceptschema import CogConceptSchema
@@ -46,6 +51,11 @@ from sdmx2jsonld.sdmxconcepts.timeformatconcept import TimeFormatConcept
 from sdmx2jsonld.sdmxconcepts.timePerCollectConcept import TimePerCollectConcept
 from sdmx2jsonld.sdmxconcepts.decimals import DecimalsConcept
 from sdmx2jsonld.sdmxconcepts.titleConcept import TitleConcept
+from sdmx2jsonld.sdmxconcepts.unitmultconcept import UnitMultConcept
+from sdmx2jsonld.sdmxconcepts.compilingorgconcept import CompilingOrgConcept
+from sdmx2jsonld.sdmxconcepts.datacompconcept import DataCompConcept
+from sdmx2jsonld.sdmxconcepts.currencyconcept import CurrencyConcept
+from sdmx2jsonld.sdmxconcepts.dissorgconcept import DissOrgConcept
 
 logger = getLogger()
 
@@ -133,7 +143,12 @@ class Dataset(CommonClass):
             "timeFormat": TimeFormat(),
             "timePerCollect": TimePerCollect(),
             "decimals": Decimals(),
-            "title": Title()
+            "title": Title(),
+            "unitMult": UnitMult(),
+            "compilingOrg": CompilingOrg(),
+            "dataComp": DataComp(),
+            "dissOrg": DissOrg(),
+            "currency": Currency()
         }
 
         self.sdmx_components = {
@@ -150,7 +165,12 @@ class Dataset(CommonClass):
             "timeFormat": TimeFormatConcept(),
             "timePerCollect": TimePerCollectConcept(),
             "decimals": DecimalsConcept(),
-            "title": TitleConcept()
+            "title": TitleConcept(),
+            "unitMult": UnitMultConcept(),
+            "compilingOrg": CompilingOrgConcept(),
+            "dataComp": DataCompConcept(),
+            "dissOrg": DissOrgConcept(),
+            "currency": CurrencyConcept()
         }
 
         self.sdmx_concept_schemas = CogConceptSchema()
@@ -164,7 +184,9 @@ class Dataset(CommonClass):
         # we create manually their corresponding DimensionProperty entity. Should we generated from checking the prefix
         list_special_components = ['freq', 'refArea', 'timePeriod',
                                    'obsStatus', 'confStatus', 'timeFormat',
-                                   'timePerCollect', 'decimals', 'title']
+                                   'timePerCollect', 'decimals', 'title',
+                                   'unitMult', 'compilingOrg', 'dataComp',
+                                   'currency', 'dissOrg']
 
         type_component = [x for x in list_components if x in component][0]
         position = component.index(type_component) + 1
