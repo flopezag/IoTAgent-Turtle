@@ -34,9 +34,11 @@ class NGSILDConnector:
                                     "status_code": 500,
                                     "reason": e.args[0]})
             except Exception as e:
-                return_info.append({"id": "UNK",
-                                    "status_code": 500,
-                                    "reason": e.message})
+                raise e
+                # reason = getattr(e, 'message', str(e))
+                # return_info.append({"id": "UNK",
+                #                     "status_code": 500,
+                #                    "reason": reason})
 
         return return_info
 

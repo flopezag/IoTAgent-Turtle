@@ -175,9 +175,9 @@ async def parse(request: Request, file: UploadFile, response: Response):
             request.app.logger.warning('Server interrupted by user')
             raise
         except Exception as e:
-            message = "Unknown error sending data to the Context Broker"
-            request.app.logger.error(e.message)
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(message))
+            r = getattr(e, 'message', str(e))
+            request.app.logger.error(r)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(r))
         else:
             request.app.logger.info(f'Content sent to the Context Broker')
             request.app.logger.debug(f'Status Code: {response.status_code}, Response:\n{resp}')
