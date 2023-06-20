@@ -2,8 +2,7 @@ FROM alpine/git as git-clone
 
 ARG PROJECT=flopezag
 ARG COMPONENT=IoTAgent-Turtle
-ARG VERSION=integration-cb-httpserver
-# ARG VERSION=development
+ARG VERSION=develop
 ARG INSTALLATION_PATH=/opt/$COMPONENT
 
 RUN mkdir -p $INSTALLATION_PATH
@@ -16,7 +15,6 @@ FROM python:3.11-alpine as pip-requirements
 ARG PROJECT=flopezag
 ARG COMPONENT=IoTAgent-Turtle
 ARG VERSION=integration-cb-httpserver
-# ARG VERSION=development
 ARG INSTALLATION_PATH=/opt/$COMPONENT
 
 RUN mkdir -p $INSTALLATION_PATH
@@ -28,8 +26,6 @@ FROM python:3.11-alpine as final
 
 ARG PROJECT=flopezag
 ARG COMPONENT=IoTAgent-Turtle
-ARG VERSION=integration-cb-httpserver
-# ARG VERSION=development
 ARG INSTALLATION_PATH=/opt/$COMPONENT
 
 ENV PORT=${IOTA_PORT:-5000}
@@ -42,8 +38,7 @@ COPY --from=pip-requirements $INSTALLATION_PATH /usr/local
 COPY config.json $INSTALLATION_PATH/common/config.json
 WORKDIR $INSTALLATION_PATH
 
-#CMD ["python", "agent.py", "server", "--host", "0.0.0.0", "--port", $PORT]
-# EXPOSE ${PORT}
+EXPOSE ${PORT}
 ENTRYPOINT /usr/local/bin/python agent.py server --host 0.0.0.0 --port ${PORT}
 
 expose $PORT
