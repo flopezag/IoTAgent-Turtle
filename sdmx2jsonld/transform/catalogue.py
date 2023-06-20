@@ -22,7 +22,7 @@
 
 from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
-from sdmx2jsonld.common.listmanagement import get_rest_data
+from sdmx2jsonld.common.listmanagement import get_rest_data, get_property_value
 from sdmx2jsonld.transform.context import Context
 from random import getrandbits
 
@@ -37,12 +37,12 @@ class Catalogue(CommonClass):
             "id": str(),
             "type": "Catalogue",
 
-            "qb:dataset": {
+            "dataset": {
                 "type": "Relationship",
                 "object": str()
             },
 
-            "dct:language": {
+            "language": {
                 "type": "Property",
                 "value": list()
             },
@@ -57,18 +57,18 @@ class Catalogue(CommonClass):
             #     "LanguageMap": dict()
             # },
             #################################################
-            "dct:description": {
+            "description": {
                 "type": "Property",
                 "value": dict()
             },
 
-            "dct:publisher": {
+            "publisher": {
                 "type": "Property",
                 "value": str()
             },
 
 
-            "dct:title": {
+            "title": {
                 "type": "Property",
                 "value": list()
             },
@@ -93,16 +93,14 @@ class Catalogue(CommonClass):
         self.data['id'] = "urn:ngsi-ld:Catalogue:" + hash1
 
         # Add dataset id
-
-        self.data['qb:dataset']['object'] = dataset_id
-
+        self.data['dataset']['object'] = dataset_id
 
     def add_data(self, title, dataset_id, data):
         # We need to complete the data corresponding to the Catalogue: rdfs:label
         self.__complete_label__(title=title, data=data)
 
         # Add the title
-        key = self.keys['dct:title']
+        key = self.keys['title']
         self.data[key]['value'] = title
 
         # Add the id
@@ -111,11 +109,17 @@ class Catalogue(CommonClass):
         # Add the publisher
         key = self.get_key(requested_key='dcterms:publisher')
         position = data.index(key) + 1
-        self.data['dct:publisher']['value'] = data[position][0]
+        self.data['publisher']['value'] = data[position][0]
 
-        # Get the rest of the data, qb:structure has the same value of qb:dataset so we decide to
+        # Check if we have 'issued' in the original, then we need to create the releaseDate property
+        index, key, value = get_property_value(data=data, property_name='issued')
+        if index != -1:
+            # We found an 'issued' data
+            self.data.update(self.__generate_property__(key='releaseDate', value=value[0][0]))
+
+        # Get the rest of the data, qb:structure has the same value of qb:dataset, so we decide to
         # use only qb:dataset in CatalogueDCAT-AP
-        data = get_rest_data(data=data, not_allowed_keys=['label', 'publisher', 'structure'])
+        data = get_rest_data(data=data, not_allowed_keys=['label', 'publisher', 'structure', 'issued', 'title'])
 
         # add the new data to the dataset structure
         self.patch_data(data, False)
@@ -165,11 +169,11 @@ class Catalogue(CommonClass):
             #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
             ###############################################################################
             for i in range(0, len(languages)):
-                key = self.keys['dct:description']
+                key = self.keys['description']
                 self.data[key]['value'][languages[i]] = descriptions[i]
 
             # Complete the information of the language with the previous information
-            key = self.keys['dct:language']
+            key = self.keys['language']
             self.data[key]['value'] = languages
         except ValueError:
             logger.info(f'Dataset without rdfs:label detail: {title}')

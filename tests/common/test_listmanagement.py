@@ -1,5 +1,5 @@
 from unittest import TestCase
-from sdmx2jsonld.common.listmanagement import get_rest_data, flatten_value, extract_prefix
+from sdmx2jsonld.common.listmanagement import get_rest_data, flatten_value, extract_prefix, get_property_value
 from sdmx2jsonld.exceptions.exceptions import ClassExtractPrefixError
 
 class TestRegToParser(TestCase):
@@ -56,3 +56,83 @@ class TestRegToParser(TestCase):
         expected_res = 'a'
         got_res = extract_prefix(data)
         assert(got_res == expected_res)
+
+    def test_get_property_data_from_array_property_without_prefix(self):
+        data = ['a',
+                ['qb:DataSet'],
+                'rdfs:label',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']],
+                'dcterms:issued',
+                [['2022-04-01T06:00:00+00:00']],
+                'dcterms:publisher', ['http://id.insee.fr/organisations/insee'],
+                'dcterms:title',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']],
+                'qb:structure',
+                ['http://bauhaus/structuresDeDonnees/structure/dsd3001'],
+                'sdmx-attribute:title',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']]
+                ]
+        expected = [['"GDP and main components (current prices)"', '@en'],
+                    ['"PIB et principales composantes (prix courants)"', '@fr']]
+
+        index, key, obtained = get_property_value(data=data, property_name='title')
+
+        self.assertEqual(index, 8)
+        self.assertEqual(key, 'dcterms:title')
+        self.assertEqual(expected, obtained)
+
+    def test_get_property_data_from_array_property_with_prefix(self):
+        data = ['a',
+                ['qb:DataSet'],
+                'rdfs:label',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']],
+                'dcterms:issued',
+                [['2022-04-01T06:00:00+00:00']],
+                'dcterms:publisher', ['http://id.insee.fr/organisations/insee'],
+                'dcterms:title',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']],
+                'qb:structure',
+                ['http://bauhaus/structuresDeDonnees/structure/dsd3001'],
+                'sdmx-attribute:title',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']]
+                ]
+        expected = [['"GDP and main components (current prices)"', '@en'],
+                    ['"PIB et principales composantes (prix courants)"', '@fr']]
+
+        index, key, obtained = get_property_value(data=data, property_name='dcterms:title')
+
+        self.assertEqual(index, 8)
+        self.assertEqual(key, 'dcterms:title')
+        self.assertEqual(expected, obtained)
+
+    def test_get_property_data_from_array_invalid_property(self):
+        data = ['a',
+                ['qb:DataSet'],
+                'rdfs:label',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']],
+                'dcterms:issued',
+                [['2022-04-01T06:00:00+00:00']],
+                'dcterms:publisher', ['http://id.insee.fr/organisations/insee'],
+                'dcterms:title',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']],
+                'qb:structure',
+                ['http://bauhaus/structuresDeDonnees/structure/dsd3001'],
+                'sdmx-attribute:title',
+                [['"GDP and main components (current prices)"', '@en'],
+                 ['"PIB et principales composantes (prix courants)"', '@fr']]
+                ]
+        expected = ''
+
+        index, key, obtained = get_property_value(data=data, property_name='any')
+
+        self.assertEqual(index, -1)
+        self.assertEqual(key, '')
+        self.assertEqual(expected, obtained)

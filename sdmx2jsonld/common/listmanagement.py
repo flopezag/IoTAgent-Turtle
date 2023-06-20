@@ -107,3 +107,22 @@ def extract_prefix(attribute):
             raise ClassExtractPrefixError(data=attribute, message=f"Unexpected number of prefixes: '{attribute}'")
 
     return result
+
+
+def get_property_value(data, property_name):
+    # At the moment, we only find the first occurs of the property
+    i = 0
+    key = ''
+    found = -1
+    for i in range(0, len(data)):
+        key = data[i]
+        if isinstance(key, str):
+            found = key.find(property_name)
+            if found != -1:
+                # We found the key
+                break
+
+    if found != -1:
+        return i, key, data[i+1]
+    else:
+        return -1, '', ''

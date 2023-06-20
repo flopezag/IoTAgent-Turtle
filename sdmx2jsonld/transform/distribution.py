@@ -81,10 +81,10 @@ class Distribution(CommonClass):
         self.data['id'] += hash1
 
         # Title is extracted from the dcterms:title from the Catalogue
-        self.data['Title'] = catalogue.data['dcterms:title']['value']
+        self.data['Title'] = catalogue.data['title']['value']
 
         # language es obtained from language from the Catalogue
-        self.data['language'] = catalogue.data['dct:language']['value']
+        self.data['language'] = catalogue.data['language']['value']
 
         # accessURL is generated from the configuration file.
         config_path = Path.cwd().joinpath('common/config.json')
