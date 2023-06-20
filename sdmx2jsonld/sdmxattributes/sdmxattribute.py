@@ -30,17 +30,17 @@ class SDMXAttribute(CommonClass):
         self.data = {
             "id": f"urn:ngsi-ld:AttributeProperty:{entity_id}",
             "type": "AttributeProperty",
-            "dct:language": {
+            "language": {
                 "type": "Property",
                 "value": ["en"]
             },
-            "rdfs:label": {
+            "label": {
                 "type": "Property",
                 "value": {
                     "en": label,
                 }
             },
-            "dct:description": {
+            "description": {
                 "type": "Property",
                 "value": {
                     "en": description,
@@ -50,20 +50,15 @@ class SDMXAttribute(CommonClass):
                 "type": "Relationship",
                 "object": f"urn:ngsi-ld:Concept:{concept_id}"
             },
-            "dct:identifier": {
+            "identifier": {
                 "type": "Property",
                 "value": identifier
             },
-            "rdfs:range": {
+            "range": {
                 "type": "Property",
                 "value": entity_range
             },
-            "@context": {
-                "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-                "dcat": "http://www.w3.org/ns/dcat#",
-                "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-                "dct": "http://purl.org/dc/terms/",
-                "qb": "http://purl.org/linked-data/cube#",
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-            }
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
         }

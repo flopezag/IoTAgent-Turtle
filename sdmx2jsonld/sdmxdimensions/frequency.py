@@ -36,17 +36,17 @@ class Frequency(CommonClass):
         self.data = {
             "id": "urn:ngsi-ld:DimensionProperty:freq",
             "type": "DimensionProperty",
-            "dct:language": {
+            "language": {
                 "type": "Property",
                 "value": ["en"]
             },
-            "rdfs:label": {
+            "label": {
                 "type": "Property",
                 "value": {
                     "en": "Frequency",
                 }
             },
-            "dct:description": {
+            "description": {
                 "type": "Property",
                 "value": {
                     "en": "The time interval at which observations occur over a given time period.",
@@ -56,22 +56,17 @@ class Frequency(CommonClass):
                 "type": "Relationship",
                 "object": "urn:ngsi-ld:Concept:freq"
             },
-            "dct:identifier": {
+            "identifier": {
                 "type": "Property",
                 "value": "freq"
             },
-            "rdfs:range": {
+            "range": {
                 "type": "Property",
                 "value": "xsd:string"
             },
-            "@context": {
-                "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-                "dcat": "http://www.w3.org/ns/dcat#",
-                "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-                "dct": "http://purl.org/dc/terms/",
-                "qb": "http://purl.org/linked-data/cube#",
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-            }
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
         }
 
     @staticmethod

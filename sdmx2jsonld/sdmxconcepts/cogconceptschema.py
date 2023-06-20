@@ -32,21 +32,17 @@ class CogConceptSchema(CommonClass):
         self.data = {
             "id": "urn:ngsi-ld:ConceptSchema:cog",
             "type": "ConceptScheme",
-            "dct:language": {
+            "language": {
                 "type": "Property",
                 "value": ["en"]
             },
-            "skos:prefLabel": {
+            "prefLabel": {
                 "type": "Property",
                 "value": {
                     "en": "Content Oriented Guidelines concept scheme"
                 }
             },
-            "@context": {
-                "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-                "dcat": "http://www.w3.org/ns/dcat#",
-                "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-                "dct": "http://purl.org/dc/terms/",
-                "skos": "http://www.w3.org/2004/02/skos/core#"
-            }
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
         }
