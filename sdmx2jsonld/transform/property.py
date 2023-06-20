@@ -35,7 +35,7 @@ class Property(CommonClass):
         self.data = {
             "id": str(),
             "type": "",
-            "dct:language": {
+            "language": {
                 "type": "Property",
                 "value": list()
             },
@@ -44,26 +44,27 @@ class Property(CommonClass):
             # TODO: New ETSI CIM NGSI-LD specification 1.4.2
             # Pending to implement in the Context Broker
             #################################################
-            # "rdfs:label": {
+            # "label": {
             #     "type": "LanguageProperty",
             #     "LanguageMap": dict()
             # },
             #################################################
-            "rdfs:label": {
+            "label": {
                 "type": "Property",
                 "value": dict()
             },
 
-
-            "qb:codeList": {
+            "codeList": {
                 "type": "Relationship",
                 "object": str()
             },
-            "qb:concept": {
+            "concept": {
                 "type": "Relationship",
                 "object": str()
             },
-            "@context": dict()
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
         }
 
         self.keys = {k: k for k in self.data.keys()}
@@ -96,13 +97,13 @@ class Property(CommonClass):
         # Pending to implement in the Context Broker
         ###############################################################################
         # for i in range(0, len(languages)):
-        #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
+        #     self.data['label']['LanguageMap'][languages[i]] = descriptions[i]
         ###############################################################################
         for i in range(0, len(languages)):
-            self.data['rdfs:label']['value'][languages[i]] = descriptions[i]
+            self.data['label']['value'][languages[i]] = descriptions[i]
 
         # Complete the information of the language with the previous information
-        key = self.keys['dct:language']
+        key = self.keys['language']
         self.data[key]['value'] = languages
 
         # qb:codeList, this attribute might not be presented, so we need to check it.
@@ -110,18 +111,18 @@ class Property(CommonClass):
         try:
             position = data.index('qb:codeList') + 1
             code_list = self.generate_id(entity="ConceptSchema", value=data[position][0])
-            self.data['qb:codeList']['object'] = code_list
+            self.data['codeList']['object'] = code_list
         except ValueError:
             logger.warning(f'Property: {property_id} has not qb:codeList, deleting the key in the data')
 
             # If we have not the property, we delete it from data
-            self.data.pop('qb:codeList')
+            self.data.pop('codeList')
 
         # qb:concept
         # TODO: the concept id need to check if it is a normal id or an url
         position = data.index('qb:concept') + 1
         concept = self.generate_id(entity="Concept", value=data[position][0])
-        self.data['qb:concept']['object'] = concept
+        self.data['concept']['object'] = concept
 
         # Get the rest of the data
         data = get_rest_data(data=data,
@@ -146,7 +147,7 @@ class Property(CommonClass):
         # Simplify Context and order keys
         a = Context()
         a.set_data(data=self.data)
-        a.new_analysis()
+        # a.new_analysis()
         a.order_context()
         self.data = a.get_data()
 

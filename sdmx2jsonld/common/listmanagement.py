@@ -20,6 +20,7 @@
 # under the License.
 ##
 from logging import getLogger
+from sdmx2jsonld.exceptions.exceptions import ClassExtractPrefixError
 
 logger = getLogger()
 
@@ -86,5 +87,23 @@ def get_rest_data(data, not_allowed_keys=None, further_process_keys=None):
         filter(lambda x: filter_key_with_prefix(x, not_allowed_keys, further_process_keys), list(aux.keys())))
 
     new_data = {k: aux[k] for k in new_keys}
+    corrected_dict = {k.replace(k, extract_prefix(k)): v for k, v in new_data.items()}
 
-    return new_data
+    return corrected_dict
+
+
+def extract_prefix(attribute):
+    result = None
+    if attribute is None or len(attribute) == 0:
+        raise ClassExtractPrefixError(data=attribute, message=f"Unexpected data received: '{attribute}'")
+    else:
+        data = attribute.split(':')
+
+        if len(data) == 1:
+            result = data[0]
+        elif len(data) == 2:
+            result = data[1]
+        else:
+            raise ClassExtractPrefixError(data=attribute, message=f"Unexpected number of prefixes: '{attribute}'")
+
+    return result

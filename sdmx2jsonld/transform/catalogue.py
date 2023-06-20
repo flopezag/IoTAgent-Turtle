@@ -29,13 +29,13 @@ from random import getrandbits
 logger = getLogger()
 
 
-class CatalogueDCATAP(CommonClass):
+class Catalogue(CommonClass):
     def __init__(self):
-        super().__init__(entity='CatalogueDCAT-AP')
+        super().__init__(entity='Catalogue')
 
         self.data = {
             "id": str(),
-            "type": "CatalogueDCAT-AP",
+            "type": "Catalogue",
 
             "qb:dataset": {
                 "type": "Relationship",
@@ -74,8 +74,7 @@ class CatalogueDCATAP(CommonClass):
             },
 
             "@context": [
-                "https://raw.githubusercontent.com/SEMICeu/DCAT-AP/master/releases/1.1/dcat-ap_1.1.jsonld",
-                "https://raw.githubusercontent.com/smart-data-models/dataModel.DCAT-AP/master/context.jsonld"
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
             ]
 
         }
@@ -91,7 +90,7 @@ class CatalogueDCATAP(CommonClass):
         hash1 = "%032x" % random_bits
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + hash1
+        self.data['id'] = "urn:ngsi-ld:Catalogue:" + hash1
 
         # Add dataset id
 
@@ -107,7 +106,7 @@ class CatalogueDCATAP(CommonClass):
         self.data[key]['value'] = title
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + dataset_id
+        self.data['id'] = "urn:ngsi-ld:Catalogue:" + dataset_id
 
         # Add the publisher
         key = self.get_key(requested_key='dcterms:publisher')

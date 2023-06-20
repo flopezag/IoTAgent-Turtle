@@ -67,6 +67,7 @@ class Concept(CommonClass):
         }
 
         self.concept_id = str()
+        self.keys = {k: k for k in self.data.keys()}
 
     def add_data(self, concept_id, data):
         # TODO: We have to control that data include the indexes that we want to search
@@ -129,11 +130,11 @@ class Concept(CommonClass):
         self.need_add_notation(data=data)
 
         # Simplify Context and order keys
-        a = Context()
-        a.set_data(data=self.data)
-        a.new_analysis()
-        a.order_context()
-        self.data = a.get_data()
+        #a = Context()
+        #a.set_data(data=self.data)
+        #a.new_analysis()
+        #a.order_context()
+        #self.data = a.get_data()
 
     def get(self):
         return self.data

@@ -232,14 +232,14 @@ class Dataset(CommonClass):
 
         # Simplify Context and order keys. It is possible that we call add_component before the dataset has been created
         # therefore we need to add the corresponding context to the dataset
-        if len(self.data['@context']) == 0:
-            self.data['@context'] = context['@context']
-
-        a = Context()
-        a.set_data(data=self.data)
-        a.new_analysis()
-        a.order_context()
-        self.data = a.get_data()
+        # if len(self.data['@context']) == 0:
+        #     self.data['@context'] = context['@context']
+        #
+        # a = Context()
+        # a.set_data(data=self.data)
+        # a.new_analysis()
+        # a.order_context()
+        # self.data = a.get_data()
 
         return new_component, new_concept, new_concept_schema
 

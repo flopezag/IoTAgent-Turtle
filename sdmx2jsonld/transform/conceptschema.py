@@ -63,6 +63,9 @@ class ConceptSchema(CommonClass):
             "@context": dict()
         }
 
+        self.keys = {k: k for k in self.data.keys()}
+
+
     def add_data(self, concept_schema_id, data):
         # TODO: We have to control that data include the indexes that we want to search
         # We need to complete the data corresponding to the ConceptSchema: skos:prefLabel
@@ -124,11 +127,11 @@ class ConceptSchema(CommonClass):
         }
 
         # Simplify Context and order keys
-        a = Context()
-        a.set_data(data=self.data)
-        a.new_analysis()
-        a.order_context()
-        self.data = a.get_data()
+        # a = Context()
+        # a.set_data(data=self.data)
+        # a.new_analysis()
+        # a.order_context()
+        # self.data = a.get_data()
 
     def get(self):
         return self.data

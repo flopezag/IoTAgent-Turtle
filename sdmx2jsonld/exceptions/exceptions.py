@@ -80,3 +80,16 @@ class ClassFreqError(ClassSDMXAttributeError):
 
     def __init__(self, data, message="Decimals value is not the expected"):
         super().__init__(data=data, message=message)
+
+
+class ClassExtractPrefixError(ClassSDMXAttributeError):
+    """Raised when the input value is None or Empty or includes several prefixes"""
+    """Exception raised for errors in the input data.
+
+    Attributes:
+        data -- input data which caused the error
+        message -- explanation of the error
+    """
+
+    def __init__(self, data, message="Value is not the expected"):
+        super().__init__(data=data, message=message)
