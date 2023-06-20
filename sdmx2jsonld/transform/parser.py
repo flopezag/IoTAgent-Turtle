@@ -88,21 +88,23 @@ class Parser:
 
             catalogue = transform.get_catalogue()
             pprint(catalogue)
-            self.__check_pprint__(transform.get_dataset())
+            ds = transform.get_dataset()
+            if ds is not None:
+                self.__check_pprint__(transform.get_dataset())
             [pprint(x.get()) for x in transform.get_dimensions()]
             [pprint(x.get()) for x in transform.get_attributes()]
             [pprint(x.get()) for x in transform.get_concept_schemas()]
             [pprint(x.get()) for x in transform.get_concept_lists()]
 
-            observations = transform.get_observation()
+            observations = transform.entity_type.get_observation()
             if len(observations) != 0:
                 [pprint(x.get()) for x in observations]
 
                 # If we have several observations, we need to generate the DCAT-AP:Distribution class
                 distribution = Distribution()
-                distribution.generate_data(catalogue=catalogue)
+                distribution.generate_data(catalogue=transform.entity_type.catalogue)
 
-                pprint(distribution)
+                pprint(distribution.get())
 
     def parsing_string(self, content: StringIO):
         transform = TreeToJson()
@@ -115,24 +117,35 @@ class Parser:
 
         # Serializing json payload
         result = list()
+
         catalogue = transform.get_catalogue()
         result.append(catalogue)
-        result.append(transform.get_dataset())
-        [result.append(x.get()) for x in transform.get_dimensions()]
-        [result.append(x.get()) for x in transform.get_attributes()]
-        [result.append(x.get()) for x in transform.get_concept_schemas()]
-        [result.append(x.get()) for x in transform.get_concept_lists()]
-        [result.append(x.get()) for x in transform.get_observation()]
 
-        observations = transform.get_observation()
+        ds = transform.get_dataset()
+        if ds is not None:
+            result.append(ds)
+
+        dimensions = transform.get_dimensions()
+        [result.append(x.get()) for x in dimensions]
+
+        attr = transform.get_attributes()
+        [result.append(x.get()) for x in transform.get_attributes()]
+
+        [result.append(x.get()) for x in transform.get_concept_schemas()]
+
+        [result.append(x.get()) for x in transform.get_concept_lists()]
+        # jicg - [result.append(x.get()) for x in transform.get_observation()]
+
+        observations = transform.entity_type.get_observation()
+        # jicg - observations = transform.get_observation()
         if len(observations) != 0:
             [result.append(x.get()) for x in observations]
 
             # If we have several observations, we need to generate the DCAT-AP:Distribution class
             distribution = Distribution()
-            distribution.generate_data(catalogue=catalogue)
-
-            result.append(distribution)
+            # jicg. distribution.generate_data(catalogue=catalogue)
+            distribution.generate_data(catalogue=transform.entity_type.catalogue)
+            result.append(distribution.get())
 
         json_object = dumps(result, indent=4, ensure_ascii=False)
 
