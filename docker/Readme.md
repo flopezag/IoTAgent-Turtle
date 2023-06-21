@@ -28,7 +28,7 @@ Everything will install in /proc/IotAgent-turtle inside the container. The defau
 ```
 
 ## Use
-Let's suppose the image is named **iotagent-turtle** and we want to expose port 5000 in order to work. We can also image that we want to remove the container when it finishes, we can do it this way:
+Let's suppose the image is named **iotagent-turtle** and we want to expose port 5000 in order to work. We can also imagine that we want to remove the container when it finishes, we can do it this way:
 ```
 docker run --rm -p 5000:5000 --name io  iotagent-turtle
 ```
