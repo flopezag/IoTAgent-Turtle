@@ -28,12 +28,12 @@ Everything will install in /proc/IotAgent-turtle inside the container. The defau
 ```
 
 ## Use
-Let's suppose the image is named **io** and we want to expose port 5000 in order to work. We can also image that we want to remove the container when it finishes, we can do this way:
+Let's suppose the image is named **iotagent-turtle** and we want to expose port 5000 in order to work. We can also image that we want to remove the container when it finishes, we can do it this way:
 ```
 docker run --rm -p 5000:5000 --name io  iotagent-turtle
 ```
 
-However, we might have Orion-ld somewhere else. So if we cant to connect our context broker somewhere, we can use this command:
+However, we might have Orion-ld somewhere else. Therefore, we can provide the IP address of the host "orion-ld" where our Context Broker is listening this way:
 ```
 docker run --rm -p 5000:5000 --name io --add-host=orion-ld:192.168.1.206  iotagent-turtle
 ```
