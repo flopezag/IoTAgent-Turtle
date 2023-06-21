@@ -60,7 +60,7 @@ class Precedence:
         classes_values = list(map(lambda x: self.get_value(x), data))
 
         # We need to check if all element of the list are the value 250 because could not be possible to have at
-        # the same time a DimensionProperty and AttributeProperty, this is an ERROR than we need to report.
+        # the same time a DimensionProperty and AttributeProperty, this is an ERROR therefore we need to report it.
         result = all(element == 250 for element in classes_values) and len(data) > 1
         if result is True:
             raise ClassPrecedencePropertyError(data)
