@@ -21,10 +21,10 @@
 ##
 from re import search
 from sdmx2jsonld.exceptions.exceptions import ClassFreqError
-from sdmx2jsonld.common.commonclass import CommonClass
+from sdmx2jsonld.sdmxdimensions.sdmxdimension import SDMXDimension
 
 
-class TimePeriod(CommonClass):
+class TimePeriod(SDMXDimension):
     def __init__(self):
         # sdmx-dimension:timePeriod a qb:DimensionProperty, rdf:Property;
         #   rdfs:range rdfs:Resource;
@@ -32,42 +32,12 @@ class TimePeriod(CommonClass):
         #   rdfs:label "Time Period"@en;
         #   rdfs:comment "The period of time or point in time to which the measured observation refers."@en;
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity='DimensionProperty')
-        self.data = {
-            "id": "urn:ngsi-ld:DimensionProperty:timePeriod",
-            "type": "DimensionProperty",
-            "language": {
-                "type": "Property",
-                "value": ["en"]
-            },
-            "label": {
-                "type": "Property",
-                "value": {
-                    "en": "Time Period",
-                }
-            },
-            "description": {
-                "type": "Property",
-                "value": {
-                    "en": "The period of time or point in time to which the measured observation refers.",
-                }
-            },
-            "concept": {
-                "type": "Relationship",
-                "object": "urn:ngsi-ld:Concept:timePeriod"
-            },
-            "identifier": {
-                "type": "Property",
-                "value": "timePeriod"
-            },
-            "range": {
-                "type": "Property",
-                "value": "xsd:string"
-            },
-            "@context": [
-                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
-            ]
-        }
+        super().__init__(entity_id='timePeriod',
+                         label='Time Period',
+                         description='The period of time or point in time to which the measured observation refers.',
+                         concept_id='timePeriod',
+                         identifier='timePeriod',
+                         entity_range='xsd:string')
 
     @staticmethod
     def fix_value(value):

@@ -21,10 +21,10 @@
 ##
 from re import search
 from sdmx2jsonld.exceptions.exceptions import ClassFreqError
-from sdmx2jsonld.common.commonclass import CommonClass
+from sdmx2jsonld.sdmxdimensions.sdmxdimension import SDMXDimension
 
 
-class Frequency(CommonClass):
+class Frequency(SDMXDimension):
     def __init__(self):
         # sdmx-dimension:freq a qb:DimensionProperty, rdf:Property;
         #    rdfs:range rdfs:Resource;
@@ -32,42 +32,12 @@ class Frequency(CommonClass):
         #    rdfs:label "Frequency"@en;
         #    rdfs:comment """The time interval at which observations occur over a given time period."""@en;
         #    rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity='DimensionProperty')
-        self.data = {
-            "id": "urn:ngsi-ld:DimensionProperty:freq",
-            "type": "DimensionProperty",
-            "language": {
-                "type": "Property",
-                "value": ["en"]
-            },
-            "label": {
-                "type": "Property",
-                "value": {
-                    "en": "Frequency",
-                }
-            },
-            "description": {
-                "type": "Property",
-                "value": {
-                    "en": "The time interval at which observations occur over a given time period.",
-                }
-            },
-            "concept": {
-                "type": "Relationship",
-                "object": "urn:ngsi-ld:Concept:freq"
-            },
-            "identifier": {
-                "type": "Property",
-                "value": "freq"
-            },
-            "range": {
-                "type": "Property",
-                "value": "xsd:string"
-            },
-            "@context": [
-                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
-            ]
-        }
+        super().__init__(entity_id='freq',
+                         label='Frequency',
+                         description='The time interval at which observations occur over a given time period.',
+                         concept_id='freq',
+                         identifier='freq',
+                         entity_range='xsd:string')
 
     @staticmethod
     def fix_value(value):

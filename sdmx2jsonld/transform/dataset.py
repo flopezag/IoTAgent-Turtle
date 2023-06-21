@@ -57,6 +57,8 @@ from sdmx2jsonld.sdmxconcepts.datacompconcept import DataCompConcept
 from sdmx2jsonld.sdmxconcepts.currencyconcept import CurrencyConcept
 from sdmx2jsonld.sdmxconcepts.dissorgconcept import DissOrgConcept
 
+from sdmx2jsonld.cube.measuretype import MeasureType
+
 logger = getLogger()
 
 
@@ -70,7 +72,7 @@ class Dataset(CommonClass):
                                         'obsStatus', 'confStatus', 'timeFormat',
                                         'timePerCollect', 'decimals', 'title',
                                         'unitMult', 'compilingOrg', 'dataComp',
-                                        'currency', 'dissOrg']
+                                        'currency', 'dissOrg', 'measureType']
 
         self.data = {
             "id": str(),
@@ -147,7 +149,8 @@ class Dataset(CommonClass):
         self.sdmx_dimensions = {
             "freq": Frequency(),
             "refArea": RefArea(),
-            "timePeriod": TimePeriod()
+            "timePeriod": TimePeriod(),
+            "measureType": MeasureType()
         }
 
         self.sdmx_attributes = {
@@ -183,7 +186,8 @@ class Dataset(CommonClass):
             "compilingOrg": CompilingOrgConcept(),
             "dataComp": DataCompConcept(),
             "dissOrg": DissOrgConcept(),
-            "currency": CurrencyConcept()
+            "currency": CurrencyConcept(),
+            "measureType": None
         }
 
         self.sdmx_concept_schemas = CogConceptSchema()

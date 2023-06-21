@@ -154,7 +154,8 @@ class EntityType:
                     logger.error(f'Unexpected entity type, id: {some_new_component.data["idf"]}    '
                                  f'type: {some_new_component.data["type"]}')
 
-                self.conceptLists.append(some_new_concept)
+                if some_new_concept is not None:
+                    self.conceptLists.append(some_new_concept)
 
                 # we need to check that the conceptSchema is not already defined in the structure
                 if some_new_concept_schema not in self.conceptSchemas:
