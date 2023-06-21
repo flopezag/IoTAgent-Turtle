@@ -23,6 +23,7 @@
 from pathlib import Path
 import json
 from requests import post, exceptions
+from fastapi import status
 
 
 class NGSILDConnector:
@@ -53,7 +54,7 @@ class NGSILDConnector:
                                    "reason": r})
             except TypeError as e:
                 return_info.append({"id": "UNK",
-                                    "status_code": 422,
+                                    "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY,
                                     "reason": e.args[0]})
             except Exception as e:
                 raise e
@@ -80,7 +81,7 @@ class NGSILDConnector:
         # resp = json.loads(r.text)
         response_status_code = r.status_code
 
-        if response_status_code == 201:
+        if response_status_code == status.HTTP_201_CREATED:
             print("LOCATION: ", r.headers['Location'])
 
         # Let exceptions raise.... They can be controlled somewhere else.
