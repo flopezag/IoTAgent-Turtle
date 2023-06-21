@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 ##
-# Copyright 2022 FIWARE Foundation, e.V.
+# Copyright 2023 FIWARE Foundation, e.V.
 #
 # This file is part of IoTAgent-SDMX (RDF Turtle)
 #
@@ -18,10 +18,12 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-##
+#
+
 from pathlib import Path
 import json
-from requests import post
+from requests import post, exceptions
+from fastapi import status
 from sdmx2jsonld.transform.parser import Parser
 from io import StringIO
 
@@ -43,11 +45,28 @@ class NGSILDConnector:
         return url
 
     def send_data_array(self, json_object):
+        return_info = []
         d = json.loads(json_object)
         d = d if type(d) is list else [d]
 
         for elem in d:
-            _, _ = c.send_data(json.dumps(elem))
+            try:
+                rc, r = self.send_data(json.dumps(elem))
+                return_info.append({"id": elem['id'],
+                                   "status_code": rc,
+                                   "reason": r})
+            except TypeError as e:
+                return_info.append({"id": "UNK",
+                                    "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    "reason": e.args[0]})
+            except Exception as e:
+                raise e
+                # reason = getattr(e, 'message', str(e))
+                # return_info.append({"id": "UNK",
+                #                     "status_code": 500,
+                #                    "reason": reason})
+
+        return return_info
 
     def send_data(self, json_object):
         # Send the data to a FIWARE Context Broker instance
@@ -64,11 +83,11 @@ class NGSILDConnector:
         # resp = json.loads(r.text)
         response_status_code = response.status_code
 
-        if response_status_code == 201:
-            print("LOCATION: ", response.headers['Location'])
+        if response_status_code == status.HTTP_201_CREATED:
+            print("LOCATION: ", r.headers['Location'])
 
         # Let exceptions raise.... They can be controlled somewhere else.
-        return response_status_code, resp
+        return response_status_code, r.reason
 
 
 if __name__ == "__main__":

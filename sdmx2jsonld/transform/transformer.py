@@ -121,6 +121,7 @@ class TreeToJson(Transformer):
     def get_dataset(self):
         if self.entity_type.dataset.data['id'] != '':
             return self.entity_type.get_dataset()
+        return None
 
     def get_dimensions(self):
         return self.entity_type.get_dimensions()
