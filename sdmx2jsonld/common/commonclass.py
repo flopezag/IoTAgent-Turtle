@@ -91,6 +91,7 @@ class CommonClass:
         else:
             return aux, new_aux
 
+
     def __generate_property__(self, key, value):
         result = {
             key: {

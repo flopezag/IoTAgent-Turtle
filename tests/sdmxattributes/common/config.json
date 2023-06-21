@@ -1,5 +1,5 @@
 {
-  "broker": "http://orion-ld:1026",
+  "broker": "http://127.0.0.1:1026",
   "logger": {
     "path": "./logs/access.log",
     "level": "debug",
