@@ -1,7 +1,7 @@
 # Docker for server
 
 ## build
-The docker is easyly build using the following command - By default it will build the docker for the **develop** branch:
+The docker is easyly build using the following command - By default it builds the docker for the **develop** branch:
 
 ```
  docker build . -t iotagent-turtle 
@@ -39,14 +39,14 @@ docker run --rm -p 5000:5000 --name io --add-host=orion-ld:192.168.1.206  iotage
 ```
 
 ### Overriding config.json
-We could create our own config.json and override the one in the docker by default
+We could create our own config.json and the default configuration file in the docker:
 ```
 docker run --rm -p 5000:5000 --name io -v our-local-config.json:/opt/IoTAgent-turtle/common/config.json iotagent-turtle
 ```
 
 ### As docker file
 
-We can consider writing a docker-compose.yaml file as the following one to start everything (orion-ld, the name of our orion server is named according to our config.json file:
+We can consider writing a docker-compose.yaml file as the following one to start everything (orion-ld, the name of our orion server is named according to our config.json file (see "broker" key):
 
 ```
 version: "3.8"
