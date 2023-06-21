@@ -34,4 +34,5 @@ class UnitMultConcept(SDMXConcept):
         #     skos:inScheme sdmx-concept:cog .
         super().__init__(entity_id='unitMult',
                          label='Unit Multiplier',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].UNIT_MULT')
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
+                                  'CROSS_DOMAIN_CONCEPTS[1.0].UNIT_MULT')

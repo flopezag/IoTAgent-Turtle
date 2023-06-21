@@ -25,7 +25,7 @@ from sdmx2jsonld.sdmxattributes.sdmxattribute import SDMXAttribute
 
 
 class ObsStatus(SDMXAttribute):
-    status: list() = [
+    status: list = [
         "A",
         "B",
         "D",

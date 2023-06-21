@@ -130,9 +130,9 @@ class Concept(CommonClass):
         # skos:notation
         self.need_add_notation(data=data)
 
-        # Simplify Context and order keys
+        # Order the keys in the final json-ld
         a = Context()
-        a.set_data(data=self.data)
+        a.set_data(new_data=self.data)
         a.order_context()
         self.data = a.get_data()
 

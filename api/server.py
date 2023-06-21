@@ -43,8 +43,8 @@ logger = getLogger(__name__)
 def create_app() -> FastAPI:
     app = FastAPI(title='IoTAgent-Turtle', debug=False)
     logging_config_path = Path.cwd().joinpath('common/config.json')
-    logger = CustomizeLogger.make_logger(logging_config_path)
-    app.logger = logger
+    customize_logger = CustomizeLogger.make_logger(logging_config_path)
+    app.logger = customize_logger
 
     return app
 
@@ -58,12 +58,11 @@ async def set_secure_headers(request, call_next):
     server = Server().set("Secure")
 
     csp = (
-        ContentSecurityPolicy()
-            .default_src("'none'")
-            .base_uri("'self'")
-            .connect_src("'self'" "api.spam.com")
-            .frame_src("'none'")
-            .img_src("'self'", "static.spam.com")
+        ContentSecurityPolicy().default_src("'none'")
+                               .base_uri("'self'")
+                               .connect_src("'self'" "api.spam.com")
+                               .frame_src("'none'")
+                               .img_src("'self'", "static.spam.com")
     )
 
     hsts = StrictTransportSecurity().include_subdomains().preload().max_age(2592000)
@@ -152,7 +151,6 @@ async def parse(request: Request, file: UploadFile, response: Response):
         }
 
         url = get_url()
-        resp = "..."
 
         try:
             request.app.logger.debug(f'Sending data:\n{json_object}')
@@ -200,7 +198,7 @@ def get_uptime():
 
 def get_url():
     config_path = Path.cwd().joinpath('common/config.json')
-    config = dict()
+
     with open(config_path) as config_file:
         config = load(config_file)
 

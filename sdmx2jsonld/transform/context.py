@@ -57,6 +57,7 @@ class Context:
         value = aux[0][1]
 
         found = False
+        k = ''
 
         # check if the value of the new_context is in one of the values of the previous context
         for k, v in self.context['@context'].items():
@@ -150,8 +151,8 @@ class Context:
     def get_data(self):
         return self.data
 
-    def set_data(self, data):
-        self.data = data
+    def set_data(self, new_data):
+        self.data = new_data
 
 
 if __name__ == '__main__':
@@ -176,7 +177,7 @@ if __name__ == '__main__':
             'dc:modified': '2022-01-15T10:00:00+00:00',
             'other_thing': 'foo'}
 
-    a.set_data(data=data)
+    a.set_data(new_data=data)
     a.new_analysis()
     print(a.get_data())
     a.order_context()

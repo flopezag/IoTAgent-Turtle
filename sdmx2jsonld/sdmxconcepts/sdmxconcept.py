@@ -23,30 +23,30 @@ from sdmx2jsonld.common.commonclass import CommonClass
 
 
 class SDMXConcept(CommonClass):
-        def __init__(self, entity_id, label, notation):
-            super().__init__(entity='Concept')
-            self.data = {
-                "id": f"urn:ngsi-ld:Concept:{entity_id}",
-                "type": "Concept",
-                "language": {
-                    "type": "Property",
-                    "value": ["en"]
-                },
-                "inScheme": {
-                    "type": "Relationship",
-                    "object": "urn:ngsi-ld:ConceptSchema:cog"
-                },
-                "prefLabel": {
-                    "type": "Property",
-                    "value": {
-                        "en": label
-                    }
-                },
-                "notation": {
-                    "type": "Property",
-                    "value": notation
-                },
-                "@context": [
-                    "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
-                ]
-            }
+    def __init__(self, entity_id, label, notation):
+        super().__init__(entity='Concept')
+        self.data = {
+            "id": f"urn:ngsi-ld:Concept:{entity_id}",
+            "type": "Concept",
+            "language": {
+                "type": "Property",
+                "value": ["en"]
+            },
+            "inScheme": {
+                "type": "Relationship",
+                "object": "urn:ngsi-ld:ConceptSchema:cog"
+            },
+            "prefLabel": {
+                "type": "Property",
+                "value": {
+                    "en": label
+                }
+            },
+            "notation": {
+                "type": "Property",
+                "value": notation
+            },
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
+        }

@@ -32,4 +32,5 @@ class FreqConcept(SDMXConcept):
         #   skos:inScheme sdmx-concept:cog.
         super().__init__(entity_id='freq',
                          label='Frequency',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].FREQ')
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
+                                  'CROSS_DOMAIN_CONCEPTS[1.0].FREQ')

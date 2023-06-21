@@ -126,7 +126,7 @@ class Catalogue(CommonClass):
 
         # Order Context keys
         a = Context()
-        a.set_data(data=self.data)
+        a.set_data(new_data=self.data)
         a.order_context()
         self.data = a.get_data()
 

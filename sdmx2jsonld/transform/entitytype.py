@@ -69,8 +69,6 @@ class EntityType:
         """
         Find the index position of the 'a' SDMX key and return the following data with the corresponding EntityType
         """
-        is_new = bool()
-
         # Index maybe 0 in case of ComponentSpecification or 1 in case of DataStructureDefinition
         index = len(string) - 1
         string1 = string[index]
@@ -80,6 +78,7 @@ class EntityType:
         # created.
         try:
             position = string1.index('a') + 1
+            data = ''
 
             try:
                 data = self.pre.precedence(string1[position])
@@ -110,10 +109,6 @@ class EntityType:
         return data, string1, is_new
 
     def transform(self, string):
-        #if len(self.context) == 0:
-        #    raise AssertionError("Context should be passed before to the EntityType Class, "
-        #                         "call EntityType.set_context() before, {'__file__': this_file}))")
-
         data_type, new_string, is_new = self.__find_entity_type__(string=string)
 
         if is_new:
@@ -145,7 +140,7 @@ class EntityType:
     def create_data(self, entity_type, data, title):
         if entity_type == 'Component':
             some_new_component, some_new_concept, some_new_concept_schema = \
-                self.dataset.add_components(context=self.context, component=data)
+                self.dataset.add_components(component=data)
 
             if some_new_component is not None:
                 if some_new_component.data['type'] == 'DimensionProperty':
@@ -160,7 +155,7 @@ class EntityType:
                                  f'type: {some_new_component.data["type"]}')
 
                 self.conceptLists.append(some_new_concept)
-                #self.conceptListsIds[title] = concept_list.get_id()
+
                 # we need to check that the conceptSchema is not already defined in the structure
                 if some_new_concept_schema not in self.conceptSchemas:
                     self.conceptSchemas.append(some_new_concept_schema)
@@ -174,33 +169,28 @@ class EntityType:
             self.observations.append(observation)
         elif entity_type == 'Dataset':
             identifier = self.parser.obtain_id(title)
-            #self.dataset.add_context(context=self.context, context_mapping=self.context_mapping)
             self.dataset.add_data(title=title, dataset_id=identifier, data=data)
 
             # Create the CatalogueDCAT-AP and assign the dataset id
             self.catalogue.add_dataset(dataset_id=self.dataset.data['id'])
         elif entity_type == 'Dimension':
             dimension = Dimension()
-            #dimension.add_context(context=self.context, context_mapping=self.context_mapping)
             dimension_id = self.parser.obtain_id(title)
             dimension.add_data(property_id=dimension_id, data=data)
             self.dimensions.append(dimension)
         elif entity_type == 'Attribute':
             attribute = Attribute()
-            #attribute.add_context(context=self.context, context_mapping=self.context_mapping)
             attribute_id = self.parser.obtain_id(title)
             attribute.add_data(attribute_id=attribute_id, data=data)
             self.attributes.append(attribute)
         elif entity_type == 'ConceptScheme':
             concept_schema = ConceptSchema()
-            #concept_schema.add_context(context=self.context, context_mapping=self.context_mapping)
             concept_schema_id = self.parser.obtain_id(title)
             concept_schema.add_data(concept_schema_id=concept_schema_id, data=data)
             self.conceptSchemas.append(concept_schema)
         elif entity_type == 'Class':
             # We need the Concept because each of the Range description is of the type Concept
             concept_list = Concept()
-            #concept_list.add_context(context=self.context, context_mapping=self.context_mapping)
             concept_list_id = self.parser.obtain_id(title)
             concept_list.add_data(concept_id=concept_list_id, data=data)
             self.conceptLists.append(concept_list)
@@ -208,7 +198,6 @@ class EntityType:
         elif entity_type == 'Range':
             # TODO: Range is associated to a Concept and identified properly in the ConceptSchema
             data_range = Concept()
-            #data_range.add_context(context=self.context, context_mapping=self.context_mapping)
             data_range_id = self.parser.obtain_id(title)
             data_range.add_data(concept_id=data_range_id, data=data)
             self.conceptLists.append(data_range)

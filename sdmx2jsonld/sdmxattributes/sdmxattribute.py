@@ -19,8 +19,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 ##
-from re import search
-from sdmx2jsonld.exceptions.exceptions import ClassConfStatusError
 from sdmx2jsonld.common.commonclass import CommonClass
 
 

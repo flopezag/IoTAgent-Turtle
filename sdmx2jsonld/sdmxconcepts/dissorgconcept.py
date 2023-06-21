@@ -28,9 +28,10 @@ class DissOrgConcept(SDMXConcept):
         #     rdfs:label "Data Dissemination Agency"@en ;
         #     rdfs:comment """The organisation disseminating the data."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
-        #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG";
+        #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:
+        #     CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG";
         #     skos:inScheme sdmx-concept:cog .
         super().__init__(entity_id='dissOrg',
                          label='Data Dissemination Agency',
-                         notation=
-                         'urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG')
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
+                                  'CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG')

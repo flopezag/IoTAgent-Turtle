@@ -189,7 +189,6 @@ class Observation(CommonClass):
             m = search('(.*):(.*)', requested_key)
 
             if m is not None:
-                prefix = m.group(1)
                 subfix = m.group(2)
 
                 try:

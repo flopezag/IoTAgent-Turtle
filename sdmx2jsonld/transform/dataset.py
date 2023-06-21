@@ -75,9 +75,12 @@ class Dataset(CommonClass):
         self.data = {
             "id": str(),
             "type": "Dataset",
-            "dct:title": str(),
-            "dct:identifier": str(),
-            "dct:language": {
+            "title": {
+                "type": "Property",
+                "value": str()
+            },
+            "identifier": str(),
+            "language": {
                 "type": "Property",
                 "value": list()
             },
@@ -92,21 +95,23 @@ class Dataset(CommonClass):
             #     "LanguageMap": dict()
             # },
             #################################################
-            "dct:description": {
+            "description": {
                 "type": "Property",
                 "value": dict()
             },
 
 
-            "@context": dict()
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
         }
 
         self.components = {
             'qb:attribute': {
                 'entity': 'AttributeProperty',
-                'key': 'stat:attribute',
+                'key': 'attribute',
                 'value': {
-                    "stat:attribute": {
+                    "attribute": {
                         "type": "Relationship",
                         "object": list()
                     }
@@ -114,19 +119,19 @@ class Dataset(CommonClass):
             },
             'qb:dimension': {
                 'entity': 'DimensionProperty',
-                'key': 'stat:dimension',
+                'key': 'dimension',
                 'value': {
-                    "stat:dimension": {
+                    "dimension": {
                         "type": "Relationship",
                         "object": list()
                     }
                 }
             },
             'qb:measure': {
-                'entity': 'Measure',
-                'key': 'stat:statUnitMeasure',
+                'entity': 'statUnitMeasure',
+                'key': 'statUnitMeasure',
                 'value': {
-                    "stat:statUnitMeasure": {
+                    "statUnitMeasure": {
                         "type": "Relationship",
                         "object": list()
                     }
@@ -183,7 +188,7 @@ class Dataset(CommonClass):
 
         self.sdmx_concept_schemas = CogConceptSchema()
 
-    def add_components(self, context, component):
+    def add_components(self, component):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
         list_components = ['qb:attribute', 'qb:dimension', 'qb:measure']
@@ -197,12 +202,11 @@ class Dataset(CommonClass):
         else:
             new_component, new_concept, new_concept_schema = self.manage_components(type_component=type_component,
                                                                                     component=component,
-                                                                                    position=position,
-                                                                                    context=context)
+                                                                                    position=position)
 
         return new_component, new_concept, new_concept_schema
 
-    def manage_components(self, type_component, component, position, context):
+    def manage_components(self, type_component, component, position):
         new_component, new_concept, new_concept_schema = None, None, None
         try:
             entity = self.components[type_component]['entity']
@@ -230,16 +234,11 @@ class Dataset(CommonClass):
         except ValueError:
             logger.error(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
-        # Simplify Context and order keys. It is possible that we call add_component before the dataset has been created
-        # therefore we need to add the corresponding context to the dataset
-        # if len(self.data['@context']) == 0:
-        #     self.data['@context'] = context['@context']
-        #
-        # a = Context()
-        # a.set_data(data=self.data)
-        # a.new_analysis()
-        # a.order_context()
-        # self.data = a.get_data()
+        # Order the keys in the final json-ld
+        a = Context()
+        a.set_data(new_data=self.data)
+        a.order_context()
+        self.data = a.get_data()
 
         return new_component, new_concept, new_concept_schema
 
@@ -251,8 +250,8 @@ class Dataset(CommonClass):
         self.__complete_label__(title=title, data=data)
 
         # Add the title
-        key = self.keys['dct:title']
-        self.data[key] = title
+        key = self.keys['title']
+        self.data[key]['value'] = title
 
         # Add the id
         self.data['id'] = "urn:ngsi-ld:Dataset:" + dataset_id
@@ -314,11 +313,11 @@ class Dataset(CommonClass):
             #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
             ###############################################################################
             for i in range(0, len(languages)):
-                key = self.keys['dct:description']
+                key = self.keys['description']
                 self.data[key]['value'][languages[i]] = descriptions[i]
 
             # Complete the information of the language with the previous information
-            key = self.keys['dct:language']
+            key = self.keys['language']
             self.data[key]['value'] = languages
         except ValueError:
             logger.info(f'DataStructureDefinition without rdfs:label detail: {title}')

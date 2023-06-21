@@ -144,9 +144,9 @@ class Property(CommonClass):
         # add the new data to the dataset structure
         [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
-        # Simplify Context and order keys
+        # Order the keys in the final json-ld
         a = Context()
-        a.set_data(data=self.data)
+        a.set_data(new_data=self.data)
         a.order_context()
         self.data = a.get_data()
 

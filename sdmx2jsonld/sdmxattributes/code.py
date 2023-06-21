@@ -24,9 +24,9 @@ from sdmx2jsonld.exceptions.exceptions import ClassCode
 
 
 class Code:
-    status: list()
-    type: str()
-    data_range: list()
+    status: list
+    type: str
+    data_range: range
 
     def __init__(self, typecode):
         self.typecode = typecode

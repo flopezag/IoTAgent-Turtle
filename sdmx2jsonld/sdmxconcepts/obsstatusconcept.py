@@ -28,8 +28,10 @@ class ObsStatusConcept(SDMXConcept):
         #     rdfs:label "Observation Status"@en ;
         #     rdfs:comment """Information on the quality of a value or an unusual or missing value."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
-        #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].OBS_STATUS";
+        #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:
+        #     CROSS_DOMAIN_CONCEPTS[1.0].OBS_STATUS";
         #     skos:inScheme sdmx-concept:cog .
         super().__init__(entity_id='obsStatus',
                          label='Observation Status',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].OBS_STATUS')
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
+                                  'CROSS_DOMAIN_CONCEPTS[1.0].OBS_STATUS')

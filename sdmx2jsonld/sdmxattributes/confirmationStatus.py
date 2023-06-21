@@ -25,7 +25,7 @@ from sdmx2jsonld.sdmxattributes.sdmxattribute import SDMXAttribute
 
 
 class ConfStatus(SDMXAttribute):
-    status: list() = [
+    status: list = [
         "F",
         "N",
         "C",
@@ -49,7 +49,8 @@ class ConfStatus(SDMXAttribute):
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
         super().__init__(entity_id='confStatus',
                          label='Confidentiality - status',
-                         description='Information about the confidentiality status of the object to which this attribute is attached.',
+                         description='Information about the confidentiality status of the object '
+                                     'to which this attribute is attached.',
                          concept_id='confStatus',
                          identifier='confStatus',
                          entity_range='xsd:string')

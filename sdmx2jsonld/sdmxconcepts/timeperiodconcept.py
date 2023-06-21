@@ -28,8 +28,10 @@ class TimePeriodConcept(SDMXConcept):
         #   rdfs:label "Time Period"@en;
         #   rdfs:comment """The period of time or point in time to which the measured observation refers."""@en;
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>;
-        #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD";
+        #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:
+        #   CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD";
         #   skos:inScheme sdmx-concept:cog.
         super().__init__(entity_id='timePeriod',
                          label='Time Period',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD')
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
+                                  'CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD')

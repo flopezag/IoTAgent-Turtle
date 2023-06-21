@@ -32,4 +32,5 @@ class RefAreaConcept(SDMXConcept):
         #   skos:inScheme sdmx-concept:cog .
         super().__init__(entity_id='refArea',
                          label='Reference Area',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA')
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
+                                  'CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA')
