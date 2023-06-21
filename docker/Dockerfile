@@ -24,20 +24,19 @@ RUN pip install --root-user-action=ignore --prefix=$INSTALLATION_PATH -r /requir
 FROM python:3.11-alpine as final
 
 LABEL "maintainer"="FIWARE Foundation e.V."
-LABEL "description"="An Internet of Things Agent for the RDF DataQube Turtle format. This IoT Agent is designed to be a bridge between ISOXML/ADAPT and the ETSI NGSI-LD interface of a FIWARE Context Broker."
-LABEL "name"="iotagent-turtle"
-LABEL "summary"="IoT Agent for the DataQube representation in RDF Turtle format used in statistical environments"
+LABEL "description"="An Internet of Things Agent for the RDF Turtle of SDMX DataQube format. This IoT Agent is designed to be a bridge between SDMX statistical metadata representation in RDF Turtle and ETSI NGSI-LD in JSON-LD format representation to be integrated with FIWARE components."
 
+LABEL "name"="iotagent-turtle"
+LABEL "summary"="IoT Agent for the DataQube (SDMX) representation in RDF Turtle format used in statistical environments."
 LABEL "org.opencontainers.image.authors"="fernando.lopez@fiware.org"
-LABEL "org.opencontainers.image.documentation"=""
+LABEL "org.opencontainers.image.documentation"="https://github.com/flopezag/IoTAgent-Turtle/tree/master/doc"
 LABEL "org.opencontainers.image.vendor"="FIWARE Foundation e.V."
 LABEL "org.opencontainers.image.licenses"="Apache2.0"
 LABEL "org.opencontainers.image.title"="iotagent-turtle"
-LABEL "org.opencontainers.image.description"="An Internet of Things Agent for the RDF DataQube Turtle format. This IoT Agent is designed to be a bridge between ISOXML/ADAPT and the ETSI NGSI-LD interface of a FIWARE Context Broker."
+LABEL "org.opencontainers.image.description"="An Internet of Things Agent for the RDF Turtle of SDMX DataQube format. This IoT Agent is designed to be a bridge between SDMX statistical metadata representation in RDF Turtle and ETSI NGSI-LD in JSON-LD format representation to be integrated with FIWARE components."
 LABEL "org.opencontainers.image.source"="https://github.com/flopezag/IoTAgent-Turtle"
 LABEL "org.opencontainers.image.version"="0.1.0"
-LABEL "org.python.version"="python:3.9"
-
+LABEL "org.python.version"="python:3.11"
 
 ARG PROJECT=flopezag
 ARG COMPONENT=IoTAgent-Turtle

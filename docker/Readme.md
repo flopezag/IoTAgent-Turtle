@@ -1,7 +1,7 @@
 # Docker for server
 
 ## build
-The docker is easyly build using the following command - By default it builds the docker for the **develop** branch:
+The docker is easily built using the following command - By default, it builds the docker for the **develop** branch:
 
 ```
  docker build . -t iotagent-turtle 
@@ -46,7 +46,7 @@ docker run --rm -p 5000:5000 --name io -v our-local-config.json:/opt/IoTAgent-tu
 
 ### As docker file
 
-We can consider writing a docker-compose.yaml file as the following one to start everything (orion-ld, the name of our orion server is named according to our config.json file (see "broker" key):
+We can consider writing a docker-compose.yaml file as the following one to start everything (orion-ld, the name of our orion server is named according to our config.json file -- see "broker" key):
 
 ```
 version: "3.8"

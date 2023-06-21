@@ -57,3 +57,4 @@ class TestCommonClass(TestCase):
         assert(data['@context'] == context['@context'])
 
     # TODO - Add tests with cclass.generate_id using update_id with a False value
+
