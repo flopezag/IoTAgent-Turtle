@@ -41,4 +41,3 @@ WORKDIR $INSTALLATION_PATH
 EXPOSE ${PORT}
 ENTRYPOINT /usr/local/bin/python agent.py server --host 0.0.0.0 --port ${PORT}
 
-expose $PORT
