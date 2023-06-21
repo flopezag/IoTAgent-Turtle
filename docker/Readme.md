@@ -9,7 +9,7 @@ The docker is easyly build using the following command - By default it will buil
 
 If we want to build other branch, we could define the branch we want to use this way:
 ```
- docker build . -t iotagent-turtle --build-arg VERSION=integration-cb-httpserver
+ docker build . -t iotagent-turtle --build-arg BRANCH=integration-cb-httpserver
 ```
 
 Everything will install in /proc/IotAgent-turtle inside the container. The default config file will be the following one:
