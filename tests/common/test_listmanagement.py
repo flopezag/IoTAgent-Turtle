@@ -10,7 +10,7 @@ class TestRegToParser(TestCase):
         data = ['a', ['qb:AttributeProperty'], 'rdfs:label', [['"SDMX attribute COMMENT_OBS"', '@en'], ['"Attribut SDMX "', '@fr']], 'dct:created', [['2022-01-15T06:00:00+00:00']], 'dct:identifier', [['"a3003"']], 'dct:modified', [['2022-01-15T06:30:00+00:00']], 'qb:concept', ['http://bauhaus/concepts/definition/c4303'], 'insee:disseminationStatus', ['http://id.insee.fr/codes/base/statutDiffusion/Prive'], 'insee:validationState', [['"Unpublished"']], 'rdfs:range', ['xsd:string'], 'skos:notation', [['"COMMENT_OBS"']]]
         not_allowed_keys = ['sliceKey', 'component', 'disseminationStatus', 'validationState', 'notation', 'label', 'codeList', 'concept']
         further_process_keys = ['component', 'label']
-        expected_res = {'dct:created': '2022-01-15T06:00:00+00:00', 'dct:identifier': 'a3003', 'dct:modified': '2022-01-15T06:30:00+00:00', 'rdfs:range': 'xsd:string'}
+        expected_res = {'created': '2022-01-15T06:00:00+00:00', 'identifier': 'a3003', 'modified': '2022-01-15T06:30:00+00:00', 'range': 'xsd:string'}
         res = get_rest_data(data, not_allowed_keys, further_process_keys)
         assert(expected_res == res)
 
