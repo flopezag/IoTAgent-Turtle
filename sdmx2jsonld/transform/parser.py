@@ -67,6 +67,8 @@ class Parser:
             data = f.read()
 
         data = turtle_terse(rdf_content=data)
+        with open("./logs/final.ttl", "w") as outfile:
+            outfile.write(data)
 
         try:
             tree = self.parser.parse(data)
@@ -128,7 +130,6 @@ class Parser:
         dimensions = transform.get_dimensions()
         [result.append(x.get()) for x in dimensions]
 
-        attr = transform.get_attributes()
         [result.append(x.get()) for x in transform.get_attributes()]
 
         [result.append(x.get()) for x in transform.get_concept_schemas()]
