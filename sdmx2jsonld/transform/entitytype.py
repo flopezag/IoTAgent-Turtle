@@ -151,7 +151,7 @@ class EntityType:
                     self.attributes.append(some_new_component)
                 else:
                     # You should not be here, reporting error...
-                    logger.error(f'Unexpected entity type, id: {some_new_component.data["idf"]}    '
+                    logger.error(f'Unexpected entity type, id: {some_new_component.data["id"]}    '
                                  f'type: {some_new_component.data["type"]}')
 
                 if some_new_concept is not None:
