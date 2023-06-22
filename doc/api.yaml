@@ -103,7 +103,6 @@ components:
         reason:
           type: string
           example: "Conflict"
-          description: Return reason for an entity sent to the Context Broker for creation. Likely values are "Created", "Bad Request", "Conflict", "Unprocessable entity" depending and acordingly to the previous status_code value.
     HttpOtherErrorsResponseInfo:
       type: object
       description: Return status from CB to a given entity creation request
