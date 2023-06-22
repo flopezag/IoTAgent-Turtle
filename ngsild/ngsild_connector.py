@@ -26,10 +26,13 @@ from requests import post, exceptions
 from fastapi import status
 from sdmx2jsonld.transform.parser import Parser
 from io import StringIO
+from logging import getLogger
+
 
 
 class NGSILDConnector:
     def __init__(self, path=None):
+        self.logger = getLogger(__name__)
         if path is None:
             config_path = Path.cwd().joinpath('common/config.json')
         else:
@@ -51,7 +54,7 @@ class NGSILDConnector:
 
         for elem in d:
             try:
-                rc, r = self.send_data(json.dumps(elem))
+                rc, r = self.send_data(json.dumps(elem, indent=4))
                 return_info.append({"id": elem['id'],
                                    "status_code": rc,
                                    "reason": r})
@@ -84,7 +87,9 @@ class NGSILDConnector:
         response_status_code = response.status_code
 
         if response_status_code == status.HTTP_201_CREATED:
-            print("LOCATION: ", response.headers['Location'])
+            self.logger.debug(f"LOCATION: {response.headers['Location']}")
+        if response_status_code == status.HTTP_400_BAD_REQUEST:
+            self.logger.info(f" Parser error: {response.reason}\n{json_object}")
 
         # Let exceptions raise.... They can be controlled somewhere else.
         return response_status_code, response.reason
