@@ -84,10 +84,10 @@ class NGSILDConnector:
         response_status_code = response.status_code
 
         if response_status_code == status.HTTP_201_CREATED:
-            print("LOCATION: ", r.headers['Location'])
+            print("LOCATION: ", response.headers['Location'])
 
         # Let exceptions raise.... They can be controlled somewhere else.
-        return response_status_code, r.reason
+        return response_status_code, response.reason
 
 
 if __name__ == "__main__":
