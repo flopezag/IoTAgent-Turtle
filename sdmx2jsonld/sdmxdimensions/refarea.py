@@ -19,10 +19,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 ##
-from sdmx2jsonld.common.commonclass import CommonClass
+from sdmx2jsonld.sdmxdimensions.sdmxdimension import SDMXDimension
 
 
-class RefArea(CommonClass):
+class RefArea(SDMXDimension):
     def __init__(self):
         # sdmx-dimension:refArea a qb:DimensionProperty, rdf:Property;
         #   rdfs:range rdfs:Resource;
@@ -30,44 +30,10 @@ class RefArea(CommonClass):
         #   rdfs:label "Reference Area"@en;
         #   rdfs:comment "The country or geographic area to which the measured statistical phenomenon relates."@en;
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity='DimensionProperty')
-        self.data = {
-            "id": "urn:ngsi-ld:DimensionProperty:refArea",
-            "type": "DimensionProperty",
-            "dct:language": {
-                "type": "Property",
-                "value": ["en"]
-            },
-            "rdfs:label": {
-                "type": "Property",
-                "value": {
-                    "en": "Reference Area",
-                }
-            },
-            "dct:description": {
-                "type": "Property",
-                "value": {
-                    "en": "The country or geographic area to which the measured statistical phenomenon relates.",
-                }
-            },
-            "concept": {
-                "type": "Relationship",
-                "object": "urn:ngsi-ld:Concept:refArea"
-            },
-            "dct:identifier": {
-                "type": "Property",
-                "value": "refArea"
-            },
-            "rdfs:range": {
-                "type": "Property",
-                "value": "xsd:string"
-            },
-            "@context": {
-                "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-                "dcat": "http://www.w3.org/ns/dcat#",
-                "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-                "dct": "http://purl.org/dc/terms/",
-                "qb": "http://purl.org/linked-data/cube#",
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-            }
-        }
+        super().__init__(entity_id='refArea',
+                         label='Reference Area',
+                         description='The country or geographic area to which the measured statistical '
+                                     'phenomenon relates.',
+                         concept_id='refArea',
+                         identifier='refArea',
+                         entity_range='xsd:string')

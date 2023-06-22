@@ -60,13 +60,13 @@ class Precedence:
         classes_values = list(map(lambda x: self.get_value(x), data))
 
         # We need to check if all element of the list are the value 250 because could not be possible to have at
-        # the same time a DimensionProperty and AttributeProperty, this is an ERROR and we need to report.
+        # the same time a DimensionProperty and AttributeProperty, this is an ERROR therefore we need to report it.
         result = all(element == 250 for element in classes_values) and len(data) > 1
         if result is True:
             raise ClassPrecedencePropertyError(data)
 
         # In case that we have several values identical of type Class, we need to report a WARNING message because maybe
-        # it is not needed multitype in that case.
+        # it is not needed multi-type in that case.
         result = all(element == 20 for element in classes_values) and len(data) > 1
         if result is True:
             raise ClassPrecedenceClassError(data)

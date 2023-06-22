@@ -35,11 +35,11 @@ class ConceptSchema(CommonClass):
         self.data = {
             "id": str(),
             "type": "ConceptScheme",
-            "dct:language": {
+            "language": {
                 "type": "Property",
                 "value": list()
             },
-            "skos:hasTopConcept": {
+            "hasTopConcept": {
                 "type": "Relationship",
                 "object": list()
             },
@@ -54,14 +54,18 @@ class ConceptSchema(CommonClass):
             #     "LanguageMap": dict()
             # },
             #################################################
-            "skos:prefLabel": {
+            "prefLabel": {
                 "type": "Property",
                 "value": dict()
             },
 
 
-            "@context": dict()
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
         }
+
+        self.keys = {k: k for k in self.data.keys()}
 
     def add_data(self, concept_schema_id, data):
         # TODO: We have to control that data include the indexes that we want to search
@@ -95,10 +99,10 @@ class ConceptSchema(CommonClass):
         #     self.data['skos:prefLabel']['LanguageMap'][languages[i]] = descriptions[i]
         ###############################################################################
         for i in range(0, len(languages)):
-            self.data['skos:prefLabel']['value'][languages[i]] = descriptions[i]
+            self.data['prefLabel']['value'][languages[i]] = descriptions[i]
 
         # Complete the information of the language with the previous information
-        key = self.keys['dct:language']
+        key = self.keys['language']
         self.data[key]['value'] = languages
 
         # Add the id
@@ -108,25 +112,24 @@ class ConceptSchema(CommonClass):
         # skos:hasTopConcept, this is a list of ids
         position = data.index('skos:hasTopConcept') + 1
         result = list(map(lambda x: self.generate_id(value=x, entity='Concept'), data[position]))
-        self.data['skos:hasTopConcept']['object'] = result
+        self.data['hasTopConcept']['object'] = result
 
         # Get the rest of data, dct:created and dct:modified properties
         position = data.index('dct:created') + 1
-        self.data['dct:created'] = {
+        self.data['created'] = {
             "type": "Property",
             "value": flatten_value(data[position])
         }
 
         position = data.index('dct:modified') + 1
-        self.data['dct:modified'] = {
+        self.data['modified'] = {
             "type": "Property",
             "value": flatten_value(data[position])
         }
 
-        # Simplify Context and order keys
+        # Order the keys in the final json-ld
         a = Context()
-        a.set_data(data=self.data)
-        a.new_analysis()
+        a.set_data(new_data=self.data)
         a.order_context()
         self.data = a.get_data()
 

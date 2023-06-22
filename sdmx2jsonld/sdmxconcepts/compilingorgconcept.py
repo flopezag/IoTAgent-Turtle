@@ -22,19 +22,16 @@
 from sdmx2jsonld.sdmxconcepts.sdmxconcept import SDMXConcept
 
 
-class TimePerCollectConcept(SDMXConcept):
+class CompilingOrgConcept(SDMXConcept):
     def __init__(self):
-        # sdmx-concept:timePerCollect a sdmx:Concept, skos:Concept ;
-        #     rdfs:label "Time Period - collection"@en ;
-        #     rdfs:comment """Dates or periods during which the observations have been collected
-        #     (such as middle, average or end of period) to compile the indicator
-        #     for the target reference period."""@en ;
+        # sdmx-concept:compilingOrg a sdmx:Concept, skos:Concept ;
+        #     rdfs:label "Compiling agency"@en ;
+        #     rdfs:comment """The organisation compiling the data being reported."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
         #     skos:notation
-        #     "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PER_COLLECT";
-        #     skos:broader sdmx-concept:timePeriod;
+        #     "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].COMPILING_ORG";
         #     skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='timePerCollect',
-                         label='Time Period - collection',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].TIME_PER_COLLECT')
+        super().__init__(entity_id='compilingOrg',
+                         label='Compiling agency',
+                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept='
+                                  'SDMX:CROSS_DOMAIN_CONCEPTS[1.0].COMPILING_ORG')

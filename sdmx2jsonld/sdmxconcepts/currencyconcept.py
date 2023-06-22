@@ -22,15 +22,16 @@
 from sdmx2jsonld.sdmxconcepts.sdmxconcept import SDMXConcept
 
 
-class RefAreaConcept(SDMXConcept):
+class CurrencyConcept(SDMXConcept):
     def __init__(self):
-        # sdmx-concept:refArea a sdmx:Concept, skos:Concept ;
-        #    rdfs:label "Reference Area"@en ;
-        #   rdfs:comment """The country or geographic area to which the measured statistical phenomenon relates."""@en ;
-        #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
-        #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA";
-        #   skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='refArea',
-                         label='Reference Area',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA')
+        # sdmx-concept:currency a sdmx:Concept, skos:Concept ;
+        #     rdfs:label "Currency"@en ;
+        #     rdfs:comment """Monetary denomination of the object being measured."""@en ;
+        #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+        #     skos:notation
+        #     "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].CURRENCY";
+        #     skos:inScheme sdmx-concept:cog .
+        super().__init__(entity_id='currency',
+                         label='Currency',
+                         notation=
+                         'urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].CURRENCY')

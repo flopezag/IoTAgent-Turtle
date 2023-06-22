@@ -22,12 +22,12 @@
 from sdmx2jsonld.common.commonclass import CommonClass
 
 
-class SDMXAttribute(CommonClass):
-    def __init__(self, entity_id, label, description, concept_id, identifier, entity_range):
-        super().__init__(entity='AttributeProperty')
+class SDMXDimension(CommonClass):
+    def __init__(self, entity_id, identifier, entity_range, label=None, description=None, concept_id=None):
+        super().__init__(entity='DimensionProperty')
         self.data = {
-            "id": f"urn:ngsi-ld:AttributeProperty:{entity_id}",
-            "type": "AttributeProperty",
+            "id": f"urn:ngsi-ld:DimensionProperty:{entity_id}",
+            "type": "DimensionProperty",
             "language": {
                 "type": "Property",
                 "value": ["en"]
@@ -60,3 +60,13 @@ class SDMXAttribute(CommonClass):
                 "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
             ]
         }
+
+        # We need to check if some of the parameters are None, in that case we have to pop the key from data
+        if label is None:
+            self.data.pop('label')
+
+        if description is None:
+            self.data.pop('description')
+
+        if concept_id is None:
+            self.data.pop('concept')

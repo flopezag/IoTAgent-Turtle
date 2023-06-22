@@ -26,6 +26,7 @@ from dateutil import parser
 import pytz
 from sdmx2jsonld.common.tzinfos import whois_timezone_info
 
+
 class DataTypeConversion:
     def __init__(self):
         self.types = {

@@ -22,27 +22,27 @@
 
 from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
-from sdmx2jsonld.common.listmanagement import get_rest_data
+from sdmx2jsonld.common.listmanagement import get_rest_data, get_property_value
 from sdmx2jsonld.transform.context import Context
 from random import getrandbits
 
 logger = getLogger()
 
 
-class CatalogueDCATAP(CommonClass):
+class Catalogue(CommonClass):
     def __init__(self):
-        super().__init__(entity='CatalogueDCAT-AP')
+        super().__init__(entity='Catalogue')
 
         self.data = {
             "id": str(),
-            "type": "CatalogueDCAT-AP",
+            "type": "Catalogue",
 
-            "qb:dataset": {
+            "dataset": {
                 "type": "Relationship",
                 "object": str()
             },
 
-            "dct:language": {
+            "language": {
                 "type": "Property",
                 "value": list()
             },
@@ -57,25 +57,24 @@ class CatalogueDCATAP(CommonClass):
             #     "LanguageMap": dict()
             # },
             #################################################
-            "dct:description": {
+            "description": {
                 "type": "Property",
                 "value": dict()
             },
 
-            "dct:publisher": {
+            "publisher": {
                 "type": "Property",
                 "value": str()
             },
 
 
-            "dct:title": {
+            "title": {
                 "type": "Property",
                 "value": list()
             },
 
             "@context": [
-                "https://raw.githubusercontent.com/SEMICeu/DCAT-AP/master/releases/1.1/dcat-ap_1.1.jsonld",
-                "https://raw.githubusercontent.com/smart-data-models/dataModel.DCAT-AP/master/context.jsonld"
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
             ]
 
         }
@@ -91,39 +90,43 @@ class CatalogueDCATAP(CommonClass):
         hash1 = "%032x" % random_bits
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + hash1
+        self.data['id'] = "urn:ngsi-ld:Catalogue:" + hash1
 
         # Add dataset id
-
-        self.data['qb:dataset']['object'] = dataset_id
-
+        self.data['dataset']['object'] = dataset_id
 
     def add_data(self, title, dataset_id, data):
         # We need to complete the data corresponding to the Catalogue: rdfs:label
         self.__complete_label__(title=title, data=data)
 
         # Add the title
-        key = self.keys['dct:title']
+        key = self.keys['title']
         self.data[key]['value'] = title
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:CatalogueDCAT-AP:" + dataset_id
+        self.data['id'] = "urn:ngsi-ld:Catalogue:" + dataset_id
 
         # Add the publisher
         key = self.get_key(requested_key='dcterms:publisher')
         position = data.index(key) + 1
-        self.data['dct:publisher']['value'] = data[position][0]
+        self.data['publisher']['value'] = data[position][0]
 
-        # Get the rest of the data, qb:structure has the same value of qb:dataset so we decide to
+        # Check if we have 'issued' in the original, then we need to create the releaseDate property
+        index, key, value = get_property_value(data=data, property_name='issued')
+        if index != -1:
+            # We found an 'issued' data
+            self.data.update(self.__generate_property__(key='releaseDate', value=value[0][0]))
+
+        # Get the rest of the data, qb:structure has the same value of qb:dataset, so we decide to
         # use only qb:dataset in CatalogueDCAT-AP
-        data = get_rest_data(data=data, not_allowed_keys=['label', 'publisher', 'structure'])
+        data = get_rest_data(data=data, not_allowed_keys=['label', 'publisher', 'structure', 'issued', 'title'])
 
         # add the new data to the dataset structure
         self.patch_data(data, False)
 
         # Order Context keys
         a = Context()
-        a.set_data(data=self.data)
+        a.set_data(new_data=self.data)
         a.order_context()
         self.data = a.get_data()
 
@@ -166,11 +169,11 @@ class CatalogueDCATAP(CommonClass):
             #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
             ###############################################################################
             for i in range(0, len(languages)):
-                key = self.keys['dct:description']
+                key = self.keys['description']
                 self.data[key]['value'][languages[i]] = descriptions[i]
 
             # Complete the information of the language with the previous information
-            key = self.keys['dct:language']
+            key = self.keys['language']
             self.data[key]['value'] = languages
         except ValueError:
             logger.info(f'Dataset without rdfs:label detail: {title}')

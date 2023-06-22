@@ -32,16 +32,13 @@ class Distribution(CommonClass):
     def __init__(self):
         super().__init__(entity="Distribution")
         self.data = {
-            "id": "urn:ngsi-ld:DistributionDCAT-AP:",
+            "id": "urn:ngsi-ld:Distribution:",
+            "type": "Distribution",
             "accessUrl": {
                 "type": "Property",
                 "value": [
                     "/ngsi-ld/v1/entities?type=https://smartdatamodels.org/dataModel.SDMX/Observation"
                 ]
-            },
-            "availability": {
-                "type": "Property",
-                "value": "STABLE"
             },
             "description": {
                 "type": "Property",
@@ -51,12 +48,6 @@ class Distribution(CommonClass):
                 "type": "Property",
                 "value": "JSON_LD"
             },
-            "accessService": {
-                "type": "Property",
-                "value": [
-                    "Orion-LD"
-                ]
-            },
             "language": {
                 "type": "Property",
                 "value": list()
@@ -65,12 +56,12 @@ class Distribution(CommonClass):
                 "type": "Property",
                 "value": "Completed"
             },
-            "Title": {
+            "title": {
                 "type": "Property",
                 "value": list()
             },
             "@context": [
-                "https://raw.githubusercontent.com/smart-data-models/dataModel.DCAT-AP/master/context.jsonld"
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
             ]
         }
 
@@ -81,10 +72,10 @@ class Distribution(CommonClass):
         self.data['id'] += hash1
 
         # Title is extracted from the dcterms:title from the Catalogue
-        self.data['Title'] = catalogue.data['dcterms:title']['value']
+        self.data['title']['value'] = catalogue.data['title']['value']
 
         # language es obtained from language from the Catalogue
-        self.data['language'] = catalogue.data['dct:language']['value']
+        self.data['language'] = catalogue.data['language']['value']
 
         # accessURL is generated from the configuration file.
         config_path = Path.cwd().joinpath('common/config.json')

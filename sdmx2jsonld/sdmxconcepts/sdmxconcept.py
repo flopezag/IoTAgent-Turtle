@@ -23,34 +23,30 @@ from sdmx2jsonld.common.commonclass import CommonClass
 
 
 class SDMXConcept(CommonClass):
-        def __init__(self, entity_id, label, notation):
-            super().__init__(entity='Concept')
-            self.data = {
-                "id": f"urn:ngsi-ld:Concept:{entity_id}",
-                "type": "Concept",
-                "dct:language": {
-                    "type": "Property",
-                    "value": ["en"]
-                },
-                "skos:inScheme": {
-                    "type": "Relationship",
-                    "object": "urn:ngsi-ld:ConceptSchema:cog"
-                },
-                "skos:prefLabel": {
-                    "type": "Property",
-                    "value": {
-                        "en": label
-                    }
-                },
-                "skos:notation": {
-                    "type": "Property",
-                    "value": notation
-                },
-                "@context": {
-                    "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld",
-                    "dcat": "http://www.w3.org/ns/dcat#",
-                    "stat": "http://data.europa.eu/(xyz)/statdcat-ap/",
-                    "dct": "http://purl.org/dc/terms/",
-                    "skos": "http://www.w3.org/2004/02/skos/core#"
+    def __init__(self, entity_id, label, notation):
+        super().__init__(entity='Concept')
+        self.data = {
+            "id": f"urn:ngsi-ld:Concept:{entity_id}",
+            "type": "Concept",
+            "language": {
+                "type": "Property",
+                "value": ["en"]
+            },
+            "inScheme": {
+                "type": "Relationship",
+                "object": "urn:ngsi-ld:ConceptSchema:cog"
+            },
+            "prefLabel": {
+                "type": "Property",
+                "value": {
+                    "en": label
                 }
-            }
+            },
+            "notation": {
+                "type": "Property",
+                "value": notation
+            },
+            "@context": [
+                "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
+            ]
+        }

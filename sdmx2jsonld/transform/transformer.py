@@ -20,7 +20,7 @@
 # under the License.
 ##
 
-from lark import Transformer, Tree, Token
+from lark import Transformer
 from sdmx2jsonld.transform.context import Context
 from sdmx2jsonld.transform.entitytype import EntityType
 from sdmx2jsonld.common.datatypeconversion import DataTypeConversion
@@ -35,7 +35,6 @@ class TreeToJson(Transformer):
         self.entity_type = EntityType()
 
         # Regex to check valid URL
-        # regex = "<http[s]?:\/\/(.*)>"
         regex = "http[s]?:\/\/(.*)"
 
         # Compile the Regex
@@ -47,7 +46,6 @@ class TreeToJson(Transformer):
         self.context.add_context(context)
 
     def triples(self, triple):
-        self.entity_type.set_context(context=self.get_context(), mapping=self.get_context_mapping())
         self.entity_type.transform(string=triple)
         return triple
 
@@ -94,8 +92,8 @@ class TreeToJson(Transformer):
     def verb(self, verb):
         return str(verb[0])
 
-    def object(self, object):
-        return object[0]
+    def object(self, my_object):
+        return my_object[0]
 
     def literal(self, literal):
         return literal[0]
@@ -164,4 +162,3 @@ class TreeToJson(Transformer):
             distribution.generate_data(catalogue=self.entity_type.catalogue)
 
             distribution.save()
-

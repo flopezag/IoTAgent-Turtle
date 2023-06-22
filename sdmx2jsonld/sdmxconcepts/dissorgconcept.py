@@ -22,15 +22,16 @@
 from sdmx2jsonld.sdmxconcepts.sdmxconcept import SDMXConcept
 
 
-class RefAreaConcept(SDMXConcept):
+class DissOrgConcept(SDMXConcept):
     def __init__(self):
-        # sdmx-concept:refArea a sdmx:Concept, skos:Concept ;
-        #    rdfs:label "Reference Area"@en ;
-        #   rdfs:comment """The country or geographic area to which the measured statistical phenomenon relates."""@en ;
-        #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
-        #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA";
-        #   skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='refArea',
-                         label='Reference Area',
+        # sdmx-concept:dissOrg a sdmx:Concept, skos:Concept ;
+        #     rdfs:label "Data Dissemination Agency"@en ;
+        #     rdfs:comment """The organisation disseminating the data."""@en ;
+        #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+        #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:
+        #     CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG";
+        #     skos:inScheme sdmx-concept:cog .
+        super().__init__(entity_id='dissOrg',
+                         label='Data Dissemination Agency',
                          notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].REF_AREA')
+                                  'CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG')
