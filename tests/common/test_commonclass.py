@@ -31,7 +31,7 @@ class TestCommonClass(TestCase):
 
     def test_instance_class(self):
         cclass = CommonClass("test.common.entity")
-        urnid = cclass.generate_id("https://string-to-parse-ur/entity_id")
+        urnid = cclass.generate_id("https://string-to-parse-ur/entity_id", update_id=True)
         assert (urnid == "urn:ngsi-ld:test.common.entity:entity_id")
         # urnid = cclass.generate_id("")
         # print(urnid)
@@ -42,7 +42,7 @@ class TestCommonClass(TestCase):
                        "alternateName": "https://smartdatamodels.org/alternateName",
                        "status": "ngsi-ld:status"}
         cclass = CommonClass("test.common.entity")
-        urnid = cclass.generate_id("https://string-to-parse-ur/entity_id")
+        urnid = cclass.generate_id("https://string-to-parse-ur/entity_id", update_id=True)
         assert(urnid == "urn:ngsi-ld:test.common.entity:entity_id")
 
         cclass.add_context(context, context_map)
@@ -55,3 +55,6 @@ class TestCommonClass(TestCase):
             data = json.load(f)
         assert(data['id'] == urnid)
         assert(data['@context'] == context['@context'])
+
+    # TODO - Add tests with cclass.generate_id using update_id with a False value
+

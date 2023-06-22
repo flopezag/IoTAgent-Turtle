@@ -35,6 +35,7 @@ from requests import post, exceptions
 from json import load, loads
 from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 from io import StringIO
+from ngsild.ngsild_connector import NGSILDConnector
 
 initial_uptime = datetime.now()
 logger = getLogger(__name__)
@@ -147,18 +148,17 @@ async def parse(request: Request, file: UploadFile, response: Response):
         # Send the data to a FIWARE Context Broker instance
         headers = {
             'Content-Type': 'application/ld+json',
-            'Accept': 'application/ld+json'
+            # 'Accept': 'application/ld+json'
         }
 
         url = get_url()
 
         try:
             request.app.logger.debug(f'Sending data:\n{json_object}')
-
-            r = post(url=url, headers=headers, data=json_object, timeout=5)
-
-            resp = loads(r.text)
-            response.status_code = r.status_code
+            cb = NGSILDConnector()
+            resp = cb.send_data_array(json_object)
+            # resp = loads(r.text)
+            # response.status_code = r.status_code
         except exceptions.Timeout as err:
             request.app.logger.error('Timeout requesting FIWARE Context Broker')
             raise HTTPException(status_code=status.HTTP_408_REQUEST_TIMEOUT, detail=str(err))
@@ -172,10 +172,10 @@ async def parse(request: Request, file: UploadFile, response: Response):
         except KeyboardInterrupt:
             request.app.logger.warning('Server interrupted by user')
             raise
-        except Exception:
-            message = "Unknown error sending data to the Context Broker"
-            request.app.logger.error(message)
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(message))
+        except Exception as e:
+            r = getattr(e, 'message', str(e))
+            request.app.logger.error(r)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(r))
         else:
             request.app.logger.info(f'Content sent to the Context Broker')
             request.app.logger.debug(f'Status Code: {response.status_code}, Response:\n{resp}')
