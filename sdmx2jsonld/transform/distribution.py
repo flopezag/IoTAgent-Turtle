@@ -21,9 +21,9 @@
 ##
 from logging import getLogger
 from sdmx2jsonld.common.commonclass import CommonClass
-from pathlib import Path
 from json import load
 from random import getrandbits
+from os.path import dirname, join
 
 logger = getLogger()
 
@@ -78,7 +78,8 @@ class Distribution(CommonClass):
         self.data['language']['value'] = catalogue.data['language']['value']
 
         # accessURL is generated from the configuration file.
-        config_path = Path.cwd().joinpath('common/config.json')
+        config_path = dirname(dirname(dirname(__file__)))
+        config_path = join(join(config_path, 'common'), 'config.json')
         with open(config_path) as config_file:
             config = load(config_file)
 

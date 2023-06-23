@@ -137,3 +137,6 @@ dmypy.json
 output
 output/*.jsonld
 tests/test1.py
+
+# logs folder
+logs

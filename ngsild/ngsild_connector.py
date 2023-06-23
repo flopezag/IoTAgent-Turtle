@@ -100,7 +100,7 @@ if __name__ == "__main__":
     print(c.get_url())
 
     parser = Parser()
-    with open("../examples/structures-tourism.ttl", "r") as rf:
+    with open("../tests/files/structures-tourism.ttl", "r") as rf:
         rdf_data = rf.read()
 
     r = parser.parsing(StringIO(rdf_data), out=False)
