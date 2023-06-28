@@ -62,7 +62,12 @@ class TestCommonClass(TestCase):
                 rdf_data = rf.read()
 
             # Parsing the RDF
-            _ = self.parser.parsing(content=StringIO(rdf_data), out=False)
+            try:
+                _ = self.parser.parsing(content=StringIO(rdf_data), out=False)
+            except Exception as e:
+                assert False, f"\nThe parser was not completed," \
+                              f"\n   file: {a}" \
+                              f"\n   exception:\n {e.message}"
 
             print("Parsing completed...\n")
 
@@ -79,7 +84,12 @@ class TestCommonClass(TestCase):
                 rdf_data = rf.read()
 
             # Parsing the RDF
-            _ = self.parser.parsing(content=rdf_data, out=True)
+            try:
+                _ = self.parser.parsing(content=rdf_data, out=True)
+            except Exception as e:
+                assert False, f"\nThe parser was not completed," \
+                              f"\n   file: {a}" \
+                              f"\n   exception:\n {e.message}"
 
             print("Parsing completed...\n")
 
@@ -96,7 +106,12 @@ class TestCommonClass(TestCase):
                 rdf_data = rf.read()
 
             # Parsing the RDF
-            _ = self.parser.parsing(content=rdf_data, out=False)
+            try:
+                _ = self.parser.parsing(content=rdf_data, out=False)
+            except Exception as e:
+                assert False, f"\nThe parser was not completed," \
+                              f"\n   file: {a}" \
+                              f"\n   exception:\n {e.message}"
 
             print("Parsing completed...\n")
 
