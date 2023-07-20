@@ -18,7 +18,7 @@ repository = "https://github.com/flopezag/IoTAgent-Turtle"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-lark = "1.1.6"
+lark = "1.1.7"
 secure = "0.3.0"
 docopt = "0.6.2"
 schema = "0.7.5"
