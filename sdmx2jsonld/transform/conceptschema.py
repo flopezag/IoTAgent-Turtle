@@ -115,17 +115,23 @@ class ConceptSchema(CommonClass):
         self.data['hasTopConcept']['object'] = result
 
         # Get the rest of data, dct:created and dct:modified properties
-        position = data.index('dct:created') + 1
-        self.data['created'] = {
-            "type": "Property",
-            "value": flatten_value(data[position])
-        }
+        try:
+            position = data.index('dct:created') + 1
+            self.data['created'] = {
+                "type": "Property",
+                "value": flatten_value(data[position])
+            }
+        except ValueError:
+            logger.warning(f'dct:created is not present in the Concept Schema: {concept_schema_id}')
 
-        position = data.index('dct:modified') + 1
-        self.data['modified'] = {
-            "type": "Property",
-            "value": flatten_value(data[position])
-        }
+        try:
+            position = data.index('dct:modified') + 1
+            self.data['modified'] = {
+                "type": "Property",
+                "value": flatten_value(data[position])
+            }
+        except ValueError:
+            logger.warning(f'dct:modified is not present in the Concept Schema: {concept_schema_id}')
 
         # Order the keys in the final json-ld
         a = Context()
