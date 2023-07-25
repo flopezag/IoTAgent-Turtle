@@ -33,8 +33,7 @@ class DataComp(SDMXAttribute):
         super().__init__(
             entity_id="dataComp",
             label="Data Compilation",
-            description="Operations performed on data to derive new information according to a "
-            "given set of rules.",
+            description="Operations performed on data to derive new information according to a " "given set of rules.",
             concept_id="dataComp",
             identifier="dataComp",
             entity_range="xsd:string",

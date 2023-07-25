@@ -35,6 +35,5 @@ class DataCompConcept(SDMXConcept):
         super().__init__(
             entity_id="dataComp",
             label="Data Compilation",
-            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept="
-            "SDMX:CROSS_DOMAIN_CONCEPTS[1.0].DATA_COMP",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=" "SDMX:CROSS_DOMAIN_CONCEPTS[1.0].DATA_COMP",
         )

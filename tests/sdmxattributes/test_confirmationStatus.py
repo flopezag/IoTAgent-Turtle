@@ -33,18 +33,14 @@ class TestConfStatus(TestCase):
         expected = "F"
         obtained = self.conversion.fix_value(value=value)
         assert obtained == expected, (
-            f"\nconfStatus was not the expected,"
-            f"\n    got     : {obtained}"
-            f"\n    expected: {expected}"
+            f"\nconfStatus was not the expected," f"\n    got     : {obtained}" f"\n    expected: {expected}"
         )
 
         value = "f"
         expected = "F"
         obtained = self.conversion.fix_value(value=value)
         assert obtained == expected, (
-            f"\nconfStatus was not the expected,"
-            f"\n    got     : {obtained}"
-            f"\n    expected: {expected}"
+            f"\nconfStatus was not the expected," f"\n    got     : {obtained}" f"\n    expected: {expected}"
         )
 
     def test_fix_value_data_in_predefined_values_with_prefix(self):
@@ -52,18 +48,14 @@ class TestConfStatus(TestCase):
         expected = "A"
         obtained = self.conversion.fix_value(value=value)
         assert obtained == expected, (
-            f"\nconfStatus was not the expected,"
-            f"\n    got     : {obtained}"
-            f"\n    expected: {expected}"
+            f"\nconfStatus was not the expected," f"\n    got     : {obtained}" f"\n    expected: {expected}"
         )
 
         value = "confstatus-a"
         expected = "A"
         obtained = self.conversion.fix_value(value=value)
         assert obtained == expected, (
-            f"\nconfStatus was not the expected,"
-            f"\n    got     : {obtained}"
-            f"\n    expected: {expected}"
+            f"\nconfStatus was not the expected," f"\n    got     : {obtained}" f"\n    expected: {expected}"
         )
 
     def test_fix_value_data_with_valid_prefix_but_not_expected_value(self):

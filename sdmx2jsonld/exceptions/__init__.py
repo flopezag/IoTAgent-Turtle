@@ -26,9 +26,7 @@ from lark.exceptions import UnexpectedToken as LarkUnexpectedToken
 
 class UnexpectedEOF(LarkUnexpectedEOF):
     def __init__(self, expected, state=None, terminals_by_name=None):
-        super(LarkUnexpectedEOF, self).__init__(
-            expected=expected, state=state, terminals_by_name=terminals_by_name
-        )
+        super(LarkUnexpectedEOF, self).__init__(expected=expected, state=state, terminals_by_name=terminals_by_name)
 
 
 class UnexpectedInput(LarkUnexpectedInput):

@@ -34,6 +34,5 @@ class TimePeriodConcept(SDMXConcept):
         super().__init__(
             entity_id="timePeriod",
             label="Time Period",
-            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
-            "CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:" "CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD",
         )

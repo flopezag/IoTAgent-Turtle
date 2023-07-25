@@ -37,9 +37,7 @@ class Test(TestCase):
         """
         obtained = self.pre.precedence(["qb:DataStructureDefinition"])
         expected = "qb:DataStructureDefinition"
-        assert (
-            obtained == expected
-        ), f"'qb:DataStructureDefinition' expected, got: '{obtained}'"
+        assert obtained == expected, f"'qb:DataStructureDefinition' expected, got: '{obtained}'"
 
         obtained = self.pre.precedence(["skos:Concept"])
         expected = "skos:Concept"
@@ -51,15 +49,11 @@ class Test(TestCase):
 
         obtained = self.pre.precedence(["qb:DimensionProperty"])
         expected = "qb:DimensionProperty"
-        assert (
-            obtained == expected
-        ), f"'qb:DimensionProperty' expected, got: '{obtained}'"
+        assert obtained == expected, f"'qb:DimensionProperty' expected, got: '{obtained}'"
 
         obtained = self.pre.precedence(["qb:AttributeProperty"])
         expected = "qb:AttributeProperty"
-        assert (
-            obtained == expected
-        ), f"'qb:AttributeProperty' expected, got: '{obtained}'"
+        assert obtained == expected, f"'qb:AttributeProperty' expected, got: '{obtained}'"
 
         obtained = self.pre.precedence(["skos:ConceptScheme"])
         expected = "skos:ConceptScheme"
@@ -71,9 +65,7 @@ class Test(TestCase):
 
         obtained = self.pre.precedence(["qb:ComponentSpecification"])
         expected = "qb:ComponentSpecification"
-        assert (
-            obtained == expected
-        ), f"'qb:ComponentSpecification' expected, got: '{obtained}'"
+        assert obtained == expected, f"'qb:ComponentSpecification' expected, got: '{obtained}'"
 
         obtained = self.pre.precedence(["qb:MeasureProperty"])
         expected = "qb:MeasureProperty"
@@ -128,38 +120,26 @@ class Test(TestCase):
     def test_attribute_and_coded_property(self):
         obtained = self.pre.precedence(["qb:AttributeProperty", "qb:CodedProperty"])
         expected = "qb:AttributeProperty"
-        assert (
-            obtained == expected
-        ), f"'qb:AttributeProperty' expected, got: '{obtained}'"
+        assert obtained == expected, f"'qb:AttributeProperty' expected, got: '{obtained}'"
 
         obtained = self.pre.precedence(["qb:CodedProperty", "qb:AttributeProperty"])
         expected = "qb:AttributeProperty"
-        assert (
-            obtained == expected
-        ), f"'qb:AttributeProperty' expected, got: '{obtained}'"
+        assert obtained == expected, f"'qb:AttributeProperty' expected, got: '{obtained}'"
 
     def test_coded_and_dimension_property(self):
         obtained = self.pre.precedence(["qb:CodedProperty", "qb:DimensionProperty"])
         expected = "qb:DimensionProperty"
-        assert (
-            obtained == expected
-        ), f"'qb:DimensionProperty' expected, got: '{obtained}'"
+        assert obtained == expected, f"'qb:DimensionProperty' expected, got: '{obtained}'"
 
         obtained = self.pre.precedence(["qb:DimensionProperty", "qb:CodedProperty"])
         expected = "qb:DimensionProperty"
-        assert (
-            obtained == expected
-        ), f"'qb:DimensionProperty' expected, got: '{obtained}'"
+        assert obtained == expected, f"'qb:DimensionProperty' expected, got: '{obtained}'"
 
     def test_concept_and_other_property(self):
-        obtained = self.pre.precedence(
-            ["skos:Concept", "<http://bauhaus/codes/concept/AjustementSaisonnier>"]
-        )
+        obtained = self.pre.precedence(["skos:Concept", "<http://bauhaus/codes/concept/AjustementSaisonnier>"])
         expected = "skos:Concept"
         assert obtained == expected, f"'skos:Concept' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(
-            ["<http://bauhaus/codes/concept/HebergementNombresEtoiles>", "skos:Concept"]
-        )
+        obtained = self.pre.precedence(["<http://bauhaus/codes/concept/HebergementNombresEtoiles>", "skos:Concept"])
         expected = "skos:Concept"
         assert obtained == expected, f"'skos:Concept' expected, got: '{obtained}'"

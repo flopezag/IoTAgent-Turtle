@@ -63,9 +63,7 @@ class Code:
                     try:
                         number = int(value)
                     except ValueError:
-                        raise ClassCode(
-                            data=value, message=f"Data is not a valid value"
-                        )
+                        raise ClassCode(data=value, message=f"Data is not a valid value")
 
         if number not in self.data_range:
             raise ClassCode(

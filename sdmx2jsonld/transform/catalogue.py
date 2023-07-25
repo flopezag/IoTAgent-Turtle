@@ -91,9 +91,7 @@ class Catalogue(CommonClass):
         index, key, value = get_property_value(data=data, property_name="issued")
         if index != -1:
             # We found an 'issued' data
-            self.data.update(
-                self.__generate_property__(key="releaseDate", value=value[0][0])
-            )
+            self.data.update(self.__generate_property__(key="releaseDate", value=value[0][0]))
 
         # Get the rest of the data, qb:structure has the same value of qb:dataset, so we decide to
         # use only qb:dataset in CatalogueDCAT-AP
@@ -117,10 +115,7 @@ class Catalogue(CommonClass):
         else:
             # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
-            [
-                self.data.update(self.__generate_property__(key=k, value=v))
-                for k, v in data.items()
-            ]
+            [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
     def __complete_label__(self, title, data):
         try:
@@ -134,16 +129,11 @@ class Catalogue(CommonClass):
             try:
                 languages = [x[1].replace("@", "").lower() for x in description]
             except IndexError:
-                logger.warning(
-                    f"The Catalogue {title} has a "
-                    f"rdfs:label without language tag: {description}"
-                )
+                logger.warning(f"The Catalogue {title} has a " f"rdfs:label without language tag: {description}")
 
                 aux = len(description)
                 if aux != 1:
-                    logger.error(
-                        f"Catalogue: there is more than 1 description ({aux}), values: {description}"
-                    )
+                    logger.error(f"Catalogue: there is more than 1 description ({aux}), values: {description}")
                 else:
                     # There is no language tag, we use by default 'en'
                     languages = ["en"]

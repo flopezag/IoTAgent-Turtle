@@ -42,9 +42,7 @@ def filter_key_with_prefix(prefix_key, not_allowed_keys, further_process_keys):
                 logger.warning(f"The property {aux[1]} is not supported in statDCAT-AP")
             else:
                 # These are the identified keys managed in a different way
-                logger.info(
-                    f"The property {aux[1]} is manage afterwards in Dataset Class or in Property Class"
-                )
+                logger.info(f"The property {aux[1]} is manage afterwards in Dataset Class or in Property Class")
 
             return False
     else:
@@ -101,9 +99,7 @@ def get_rest_data(data, not_allowed_keys=None, further_process_keys=None):
 def extract_prefix(attribute):
     result = None
     if attribute is None or len(attribute) == 0:
-        raise ClassExtractPrefixError(
-            data=attribute, message=f"Unexpected data received: '{attribute}'"
-        )
+        raise ClassExtractPrefixError(data=attribute, message=f"Unexpected data received: '{attribute}'")
     else:
         data = attribute.split(":")
 
@@ -112,9 +108,7 @@ def extract_prefix(attribute):
         elif len(data) == 2:
             result = data[1]
         else:
-            raise ClassExtractPrefixError(
-                data=attribute, message=f"Unexpected number of prefixes: '{attribute}'"
-            )
+            raise ClassExtractPrefixError(data=attribute, message=f"Unexpected number of prefixes: '{attribute}'")
 
     return result
 

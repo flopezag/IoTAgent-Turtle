@@ -23,9 +23,7 @@ from sdmx2jsonld.common.commonclass import CommonClass
 
 
 class SDMXAttribute(CommonClass):
-    def __init__(
-        self, entity_id, label, description, concept_id, identifier, entity_range
-    ):
+    def __init__(self, entity_id, label, description, concept_id, identifier, entity_range):
         super().__init__(entity="AttributeProperty")
         self.data = {
             "id": f"urn:ngsi-ld:AttributeProperty:{entity_id}",

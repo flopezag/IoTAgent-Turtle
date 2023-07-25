@@ -67,16 +67,11 @@ class Property(CommonClass):
         try:
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
-            logger.warning(
-                f"The Property {property_id} has a "
-                f"rdfs:label without language tag: {description}"
-            )
+            logger.warning(f"The Property {property_id} has a " f"rdfs:label without language tag: {description}")
 
             aux = len(description)
             if aux != 1:
-                logger.error(
-                    f"Property: there is more than 1 description ({aux}), values: {description}"
-                )
+                logger.error(f"Property: there is more than 1 description ({aux}), values: {description}")
             else:
                 # There is no language tag, we use by default 'en'
                 languages = ["en"]
@@ -100,14 +95,10 @@ class Property(CommonClass):
         # TODO: We need to control that the codeList id extracted here are the same that we analyse afterwards.
         try:
             position = data.index("qb:codeList") + 1
-            code_list = self.generate_id(
-                entity="ConceptSchema", value=data[position][0]
-            )
+            code_list = self.generate_id(entity="ConceptSchema", value=data[position][0])
             self.data["codeList"]["object"] = code_list
         except ValueError:
-            logger.warning(
-                f"Property: {property_id} has not qb:codeList, deleting the key in the data"
-            )
+            logger.warning(f"Property: {property_id} has not qb:codeList, deleting the key in the data")
 
             # If we have not the property, we delete it from data
             self.data.pop("codeList")
@@ -135,10 +126,7 @@ class Property(CommonClass):
         )
 
         # add the new data to the dataset structure
-        [
-            self.data.update(self.__generate_property__(key=k, value=v))
-            for k, v in data.items()
-        ]
+        [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
         # Order the keys in the final json-ld
         a = Context()

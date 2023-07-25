@@ -120,19 +120,13 @@ async def parse(request: Request, file: UploadFile, response: Response):
     if splitext(file.filename)[1] != ".ttl":  # type: ignore[type-var]
         resp = {"message": "Allowed file type is only ttl"}
         response.status_code = status.HTTP_400_BAD_REQUEST
-        request.app.logger.error(
-            f'POST /parse 400 Bad Request, file: "{file.filename}"'
-        )
+        request.app.logger.error(f'POST /parse 400 Bad Request, file: "{file.filename}"')
     else:
         try:
             content = await file.read()
         except Exception as e:
-            request.app.logger.error(
-                f'POST /parse 500 Problem reading file: "{file.filename}"'
-            )
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-            )
+            request.app.logger.error(f'POST /parse 500 Problem reading file: "{file.filename}"')
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         else:
             request.app.logger.info("File successfully read")
 
@@ -146,26 +140,16 @@ async def parse(request: Request, file: UploadFile, response: Response):
             json_object = my_parser.parsing(content=StringIO(content))  # type: ignore[arg-type]
         except UnexpectedToken as e:
             request.app.logger.error(e)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-            )
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         except UnexpectedInput as e:
             request.app.logger.error(e)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-            )
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         except UnexpectedEOF as e:
             request.app.logger.error(e)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-            )
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         except Exception as e:
-            request.app.logger.error(
-                f'POST /parse 500 Problem parsing file: "{file.filename}"'
-            )
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-            )
+            request.app.logger.error(f'POST /parse 500 Problem parsing file: "{file.filename}"')
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         else:
             request.app.logger.info(f"File successfully parsed")
 
@@ -185,15 +169,11 @@ async def parse(request: Request, file: UploadFile, response: Response):
             # response.status_code = r.status_code
         except exceptions.Timeout as err:
             request.app.logger.error("Timeout requesting FIWARE Context Broker")
-            raise HTTPException(
-                status_code=status.HTTP_408_REQUEST_TIMEOUT, detail=str(err)
-            )
+            raise HTTPException(status_code=status.HTTP_408_REQUEST_TIMEOUT, detail=str(err))
         except exceptions.ConnectionError as err:
             message = f"There was a problem connecting to the FIWARE Context Broker. URL: {url}"
             request.app.logger.error(message)
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(err)
-            )
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(err))
         except exceptions.HTTPError as e:
             request.app.logger.error(f"Call to FIWARE Context Broker failed: {e}")
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
@@ -203,14 +183,10 @@ async def parse(request: Request, file: UploadFile, response: Response):
         except Exception as e:
             r = getattr(e, "message", str(e))
             request.app.logger.error(r)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(r)
-            )
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(r))
         else:
             request.app.logger.info(f"Content sent to the Context Broker")
-            request.app.logger.debug(
-                f"Status Code: {response.status_code}, Response:\n{resp}"
-            )
+            request.app.logger.debug(f"Status Code: {response.status_code}, Response:\n{resp}")
 
     return resp
 

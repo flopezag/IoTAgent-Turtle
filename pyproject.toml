@@ -30,6 +30,9 @@ requests = "2.31.0"
 rdflib = "6.3.2"
 python-dateutil = "2.8.2"
 
+[tool.black]
+line-length = 120
+
 [tool.poetry.dev-dependencies]
 pytest = "7.4.0"
 tox = "4.6.4"
@@ -46,3 +49,47 @@ build-backend = "poetry.core.masonry.api"
 files = ["cli/command.py", "sdmx2jsonld/transform/parser.py"]
 search = '__version__ = "{current_version}"'
 replace = '__version__ = "{new_version}"'
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--tb=auto -ra --showlocals"
+
+[tool.coverage]
+html.show_contexts = true
+html.skip_covered = false
+paths.source = [
+    "api",
+    "cli",
+    "common",
+    "ngsild",
+    "sdmx2jsonld",
+    "tests",
+]
+report.fail_under = 88
+run.parallel = true
+run.plugins = ["covdefaults"]
+
+[tool.mypy]
+python_version = "3.11"
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = [
+    "api",
+    "cli",
+    "common",
+    "ngsild",
+    "sdmx2jsonld",
+    "tests",
+]
+ignore_missing_imports = true
+warn_unused_ignores = true
+
+[tool.towncrier]
+name = "tox"
+filename = "docs/changelog.rst"
+directory = "docs/changelog"
+title_format = false
+issue_format = ":issue:`{issue}`"
+template = "docs/changelog/template.jinja2"
+# possible types, all default: feature, bugfix, doc, removal, misc

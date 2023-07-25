@@ -190,9 +190,7 @@ class TestRegToParser(TestCase):
             ['"PIB et principales composantes (prix courants)"', "@fr"],
         ]
 
-        index, key, obtained = get_property_value(
-            data=data, property_name="dcterms:title"
-        )
+        index, key, obtained = get_property_value(data=data, property_name="dcterms:title")
 
         self.assertEqual(index, 8)
         self.assertEqual(key, "dcterms:title")

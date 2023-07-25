@@ -72,11 +72,7 @@ class DataTypeConversion:
                 raise Exception(f"Invalid format received: {type(value)}")
 
             result = self.correct_datatype_format(result)
-            result = (
-                datetime.strptime(value, result)
-                .replace(tzinfo=timezone.utc)
-                .isoformat()
-            )
+            result = datetime.strptime(value, result).replace(tzinfo=timezone.utc).isoformat()
 
             return result
 

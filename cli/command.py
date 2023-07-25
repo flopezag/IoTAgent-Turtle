@@ -65,9 +65,7 @@ def parse_cli() -> dict:
     schema = Schema(
         {
             "--help": bool,
-            "--input": Or(
-                None, Use(open, error="--input FILE, FILE should be readable")
-            ),
+            "--input": Or(None, Use(open, error="--input FILE, FILE should be readable")),
             "--output": bool,
             "--port": Or(
                 None,

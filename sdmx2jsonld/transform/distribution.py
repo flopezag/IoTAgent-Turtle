@@ -36,9 +36,7 @@ class Distribution(CommonClass):
             "type": "Distribution",
             "accessUrl": {
                 "type": "Property",
-                "value": [
-                    "/ngsi-ld/v1/entities?type=https://smartdatamodels.org/dataModel.SDMX/Observation"
-                ],
+                "value": ["/ngsi-ld/v1/entities?type=https://smartdatamodels.org/dataModel.SDMX/Observation"],
             },
             "description": {
                 "type": "Property",
@@ -71,6 +69,4 @@ class Distribution(CommonClass):
         with open(config_path) as config_file:
             config = load(config_file)
 
-        self.data["accessUrl"]["value"][0] = (
-            config["broker"] + self.data["accessUrl"]["value"][0]
-        )
+        self.data["accessUrl"]["value"][0] = config["broker"] + self.data["accessUrl"]["value"][0]

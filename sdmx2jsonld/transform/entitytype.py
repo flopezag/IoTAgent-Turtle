@@ -105,9 +105,7 @@ class EntityType:
 
             is_new = True
         except ValueError:
-            logger.info(
-                f"Not a definition triples {string}, need to find the proper structure"
-            )
+            logger.info(f"Not a definition triples {string}, need to find the proper structure")
             is_new = False
             data = self.__get_subject__(title=string[0])
             string1 = string[1:]
@@ -120,9 +118,7 @@ class EntityType:
         if is_new:
             self.create_data(entity_type=data_type, data=new_string, title=string[0])
         else:
-            logger.info(
-                f"Checking previous subjects to find if it was created previously"
-            )
+            logger.info(f"Checking previous subjects to find if it was created previously")
             self.patch_data(datatype=data_type, data=new_string)
 
     def patch_data(self, datatype, data):
@@ -137,10 +133,7 @@ class EntityType:
         flatten_data = [item for sublist in data for item in sublist]
 
         if flatten_data[0] != "rdfs:label":
-            flatten_data = {
-                flatten_data[i]: flatten_value(flatten_data[i + 1])
-                for i in range(0, len(flatten_data), 2)
-            }
+            flatten_data = {flatten_data[i]: flatten_value(flatten_data[i + 1]) for i in range(0, len(flatten_data), 2)}
             language_map = False
         else:
             language_map = True

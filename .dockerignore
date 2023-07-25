@@ -1,5 +1,5 @@
 .venv/
-doc/
+docs/
 examples/
 test/
 *.jsonld

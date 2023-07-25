@@ -38,9 +38,7 @@ class Context:
 
         # By default, the context should include the smart data models context
         self.context["@context"].update(
-            {
-                "sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld"
-            }
+            {"sdmp": "https://smart-data-models.github.io/dataModel.STAT-DCAT-AP/context.jsonld"}
         )
 
         # statDCAT-AP contexts
@@ -48,9 +46,7 @@ class Context:
 
         self.context["@context"].update({"dct": "http://purl.org/dc/terms/"})
 
-        self.context["@context"].update(
-            {"stat": "http://data.europa.eu/(xyz)/statdcat-ap/"}
-        )
+        self.context["@context"].update({"stat": "http://data.europa.eu/(xyz)/statdcat-ap/"})
 
     def add_context(self, context):
         aux = list(context.items())

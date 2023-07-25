@@ -32,9 +32,7 @@ class TestCommonClass(TestCase):
 
     def test_instance_class(self):
         cclass = CommonClass("test.common.entity")
-        urnid = cclass.generate_id(
-            "https://string-to-parse-ur/entity_id", update_id=True
-        )
+        urnid = cclass.generate_id("https://string-to-parse-ur/entity_id", update_id=True)
         assert urnid == "urn:ngsi-ld:test.common.entity:entity_id"
         # urnid = cclass.generate_id("")
         # print(urnid)
@@ -49,9 +47,7 @@ class TestCommonClass(TestCase):
             "status": "ngsi-ld:status",
         }
         cclass = CommonClass("test.common.entity")
-        urnid = cclass.generate_id(
-            "https://string-to-parse-ur/entity_id", update_id=True
-        )
+        urnid = cclass.generate_id("https://string-to-parse-ur/entity_id", update_id=True)
         assert urnid == "urn:ngsi-ld:test.common.entity:entity_id"
 
         cclass.add_context(context, context_map)
@@ -60,9 +56,7 @@ class TestCommonClass(TestCase):
         os.chdir("/tmp/commonclass")
         cclass.save()
 
-        with open(
-            "/tmp/commonclass/output/test.common.entity_entity_id.jsonld", "r"
-        ) as f:
+        with open("/tmp/commonclass/output/test.common.entity_entity_id.jsonld", "r") as f:
             data = json.load(f)
         assert data["id"] == urnid
         assert data["@context"] == context["@context"]

@@ -127,14 +127,10 @@ class Test(TestCase):
         """
         Check if we can get a correct datetime value from a string, case 1
         """
-        obtained = self.conversion.convert(
-            '"2022-01-15T08:00:00.000 UTC"', "xsd:dateTime"
-        )
+        obtained = self.conversion.convert('"2022-01-15T08:00:00.000 UTC"', "xsd:dateTime")
         expected = "2022-01-15T08:00:00+00:00"
         assert obtained == expected, (
-            f"\n\nDateTime was not the expected,"
-            f"\n    got     : {obtained}"
-            f"\n    expected: {expected}"
+            f"\n\nDateTime was not the expected," f"\n    got     : {obtained}" f"\n    expected: {expected}"
         )
 
     def test_int_string_conversion(self):

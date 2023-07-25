@@ -121,29 +121,15 @@ class Dataset(CommonClass):
             "qb:measure": {
                 "entity": "statUnitMeasure",
                 "key": "statUnitMeasure",
-                "value": {
-                    "statUnitMeasure": {"type": "Relationship", "object": list()}
-                },
+                "value": {"statUnitMeasure": {"type": "Relationship", "object": list()}},
             },
         }
 
         self.keys = (
             {k: k for k in self.data.keys()}
-            | {
-                self.components["qb:attribute"]["key"]: self.components["qb:attribute"][
-                    "key"
-                ]
-            }
-            | {
-                self.components["qb:dimension"]["key"]: self.components["qb:dimension"][
-                    "key"
-                ]
-            }
-            | {
-                self.components["qb:measure"]["key"]: self.components["qb:measure"][
-                    "key"
-                ]
-            }
+            | {self.components["qb:attribute"]["key"]: self.components["qb:attribute"]["key"]}
+            | {self.components["qb:dimension"]["key"]: self.components["qb:dimension"]["key"]}
+            | {self.components["qb:measure"]["key"]: self.components["qb:measure"]["key"]}
         )
 
         self.sdmx_dimensions = {
@@ -201,9 +187,7 @@ class Dataset(CommonClass):
         position = component.index(type_component) + 1
 
         if type_component == "qb:measure":
-            logger.info(
-                f'The qb:measure "{component[position][0]}" is not manage in statDCAT-AP'
-            )
+            logger.info(f'The qb:measure "{component[position][0]}" is not manage in statDCAT-AP')
             new_component, new_concept, new_concept_schema = None, None, None
         else:
             new_component, new_concept, new_concept_schema = self.manage_components(
@@ -216,16 +200,12 @@ class Dataset(CommonClass):
         new_component, new_concept, new_concept_schema = None, None, None
         try:
             entity = self.components[type_component]["entity"]
-            name, new_id = self.generate_id(
-                entity=entity, value=component[position][0], update_id=False
-            )
+            name, new_id = self.generate_id(entity=entity, value=component[position][0], update_id=False)
             key = self.components[type_component]["key"]
 
             # It is possible that the original file contains already the description
             if new_id in self.components[type_component]["value"][key]["object"]:
-                logger.warning(
-                    f"The component {new_id} is duplicated and already defined in the {self.data['id']}"
-                )
+                logger.warning(f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
             elif name in self.list_special_components:
                 # We need to create manually the description of these dimensions, concepts, and conceptschemas
                 logger.warning(
@@ -242,9 +222,7 @@ class Dataset(CommonClass):
                 self.components[type_component]["value"][key]["object"].append(new_id)
                 self.data = self.data | self.components[type_component]["value"]
         except ValueError:
-            logger.error(
-                f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}"
-            )
+            logger.error(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
 
         # Order the keys in the final json-ld
         a = Context()
@@ -291,10 +269,7 @@ class Dataset(CommonClass):
         else:
             # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
-            [
-                self.data.update(self.__generate_property__(key=k, value=v))
-                for k, v in data.items()
-            ]
+            [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
 
     def __complete_label__(self, title, data):
         try:
@@ -308,16 +283,11 @@ class Dataset(CommonClass):
             try:
                 languages = [x[1].replace("@", "").lower() for x in description]
             except IndexError:
-                logger.warning(
-                    f"The Dataset {title} has a "
-                    f"rdfs:label without language tag: {description}"
-                )
+                logger.warning(f"The Dataset {title} has a " f"rdfs:label without language tag: {description}")
 
                 aux = len(description)
                 if aux != 1:
-                    logger.error(
-                        f"Dataset: there is more than 1 description ({aux}), values: {description}"
-                    )
+                    logger.error(f"Dataset: there is more than 1 description ({aux}), values: {description}")
                 else:
                     # There is no language tag, we use by default 'en'
                     languages = ["en"]

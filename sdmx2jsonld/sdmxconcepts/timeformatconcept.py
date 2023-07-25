@@ -34,6 +34,5 @@ class TimeFormatConcept(SDMXConcept):
         super().__init__(
             entity_id="timeFormat",
             label="Time Format",
-            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
-            "CROSS_DOMAIN_CONCEPTS[1.0].TIME_FORMAT",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:" "CROSS_DOMAIN_CONCEPTS[1.0].TIME_FORMAT",
         )

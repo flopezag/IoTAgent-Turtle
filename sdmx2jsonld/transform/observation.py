@@ -51,9 +51,7 @@ class Observation(CommonClass):
             "timePeriod": {"type": "Property", "value": str()},
             "obsValue": {"type": "Property", "value": float()},
             "dimensions": {"type": "Property", "value": list()},
-            "@context": [
-                "https://raw.githubusercontent.com/smart-data-models/dataModel.SDMX/master/context.jsonld"
-            ],
+            "@context": ["https://raw.githubusercontent.com/smart-data-models/dataModel.SDMX/master/context.jsonld"],
         }
 
         self.concept_id = str()
@@ -65,9 +63,7 @@ class Observation(CommonClass):
         # and an observation
 
         # Add the confStatus
-        key = self.__assign_property__(
-            requested_key="sdmx-attribute:confStatus", data=data
-        )
+        key = self.__assign_property__(requested_key="sdmx-attribute:confStatus", data=data)
         self.data[key]["value"] = ConfStatus().fix_value(value=self.data[key]["value"])
 
         # Add the id
@@ -78,26 +74,16 @@ class Observation(CommonClass):
         self.data["title"]["value"] = title
 
         # Add the decimals
-        key = self.__assign_property__(
-            requested_key="sdmx-attribute:decimals", data=data
-        )
-        self.data[key]["value"] = Code(typecode=key).fix_value(
-            value=self.data[key]["value"]
-        )
+        key = self.__assign_property__(requested_key="sdmx-attribute:decimals", data=data)
+        self.data[key]["value"] = Code(typecode=key).fix_value(value=self.data[key]["value"])
 
         # Add obsStatus
-        key = self.__assign_property__(
-            requested_key="sdmx-attribute:obsStatus", data=data
-        )
+        key = self.__assign_property__(requested_key="sdmx-attribute:obsStatus", data=data)
         self.data[key]["value"] = ObsStatus().fix_value(value=self.data[key]["value"])
 
         # Add unitMult
-        key = self.__assign_property__(
-            requested_key="sdmx-attribute:unitMult", data=data
-        )
-        self.data[key]["value"] = Code(typecode=key).fix_value(
-            value=self.data[key]["value"]
-        )
+        key = self.__assign_property__(requested_key="sdmx-attribute:unitMult", data=data)
+        self.data[key]["value"] = Code(typecode=key).fix_value(value=self.data[key]["value"])
 
         # Add freq "pattern": "^_[OUZ]|[SQBNI]|OA|OM|[AMWDH]_*[0-9]*$"
         # TODO: Add verification of coded data following the pattern
@@ -109,18 +95,14 @@ class Observation(CommonClass):
         _ = self.__assign_property__(requested_key="sdmx-dimension:refArea", data=data)
 
         # Add timePeriod
-        _ = self.__assign_property__(
-            requested_key="sdmx-dimension:timePeriod", data=data
-        )
+        _ = self.__assign_property__(requested_key="sdmx-dimension:timePeriod", data=data)
 
         # Add obsValue
         _ = self.__assign_property__(requested_key="sdmx-measure:obsValue", data=data)
 
         # Add dataset
         parser = RegParser()
-        key = self.__assign_property__(
-            requested_key="qb:dataSet", data=data, key_property="object"
-        )
+        key = self.__assign_property__(requested_key="qb:dataSet", data=data, key_property="object")
         identifier = parser.obtain_id(self.data[key]["object"])
         self.data[key]["object"] = "urn:ngsi-ld:CatalogueDCAT-AP:" + identifier
 
@@ -137,26 +119,16 @@ class Observation(CommonClass):
         parser = RegParser()
 
         # We need to get the list of available dimension keys
-        dimension_keys = [
-            a for a in data if self.regexpDimension.match(a.__str__()) is not None
-        ]
+        dimension_keys = [a for a in data if self.regexpDimension.match(a.__str__()) is not None]
 
         # We need to get the list of values for these keys, if there is an url, it is considered a
         values = [self.get_data(data[data.index(a) + 1]) for a in dimension_keys]
-        values = [
-            parser.obtain_id(a, prefix_string="urn:ngsi-ld:Concept:") for a in values
-        ]
+        values = [parser.obtain_id(a, prefix_string="urn:ngsi-ld:Concept:") for a in values]
 
         # Get the list of Entity IDs
-        entity_ids = [
-            "urn:ngsi-ld:DimensionProperty:" + b.split("ns1:", 1)[1]
-            for b in dimension_keys
-        ]
+        entity_ids = ["urn:ngsi-ld:DimensionProperty:" + b.split("ns1:", 1)[1] for b in dimension_keys]
 
-        result = [
-            create_data(key=entity_ids[i], value=values[i])
-            for i in range(0, len(values))
-        ]
+        result = [create_data(key=entity_ids[i], value=values[i]) for i in range(0, len(values))]
 
         return result
 

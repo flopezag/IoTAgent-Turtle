@@ -33,6 +33,5 @@ class TitleConcept(SDMXConcept):
         super().__init__(
             entity_id="title",
             label="Title",
-            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
-            "CROSS_DOMAIN_CONCEPTS[1.0].TITLE",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:" "CROSS_DOMAIN_CONCEPTS[1.0].TITLE",
         )

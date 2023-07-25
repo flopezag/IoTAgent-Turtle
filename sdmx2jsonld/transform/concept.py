@@ -80,16 +80,11 @@ class Concept(CommonClass):
         try:
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
-            logger.warning(
-                f"The Concept {concept_id} has a "
-                f"skos:prefLabel without language tag: {description}"
-            )
+            logger.warning(f"The Concept {concept_id} has a " f"skos:prefLabel without language tag: {description}")
 
             aux = len(description)
             if aux != 1:
-                logger.error(
-                    f"Concept: there is more than 1 description ({aux}), values: {description}"
-                )
+                logger.error(f"Concept: there is more than 1 description ({aux}), values: {description}")
             else:
                 # There is no language tag, we use by default 'en'
                 languages = ["en"]
@@ -139,9 +134,7 @@ class Concept(CommonClass):
             position = data.index("rdfs:subClassOf") + 1
             self.data["rdfs:subClassOf"]["value"] = data[position][0]
         except ValueError:
-            logger.info(
-                f"The Concept {self.concept_id} has no rdfs:subClassOf property, deleting the key in the data"
-            )
+            logger.info(f"The Concept {self.concept_id} has no rdfs:subClassOf property, deleting the key in the data")
 
             # We delete the "rdfs:subClassOf" property from the final structure
             self.data.pop("rdfs:subClassOf")

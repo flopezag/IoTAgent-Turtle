@@ -33,8 +33,7 @@ class RefArea(SDMXDimension):
         super().__init__(
             entity_id="refArea",
             label="Reference Area",
-            description="The country or geographic area to which the measured statistical "
-            "phenomenon relates.",
+            description="The country or geographic area to which the measured statistical " "phenomenon relates.",
             concept_id="refArea",
             identifier="refArea",
             entity_range="xsd:string",

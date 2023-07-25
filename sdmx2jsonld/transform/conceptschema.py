@@ -67,15 +67,12 @@ class ConceptSchema(CommonClass):
             languages = [x[1].replace("@", "").lower() for x in description]
         except IndexError:
             logger.warning(
-                f"The ConceptSchema {concept_schema_id} has a "
-                f"skos:prefLabel without language tag: {description}"
+                f"The ConceptSchema {concept_schema_id} has a " f"skos:prefLabel without language tag: {description}"
             )
 
             aux = len(description)
             if aux != 1:
-                logger.error(
-                    f"ConceptSchema: there is more than 1 description ({aux}), values: {description}"
-                )
+                logger.error(f"ConceptSchema: there is more than 1 description ({aux}), values: {description}")
             else:
                 # There is no language tag, we use by default 'en'
                 languages = ["en"]
@@ -102,9 +99,7 @@ class ConceptSchema(CommonClass):
         # TODO: We need to control that the concept id extracted here are the same that we analyse afterwards.
         # skos:hasTopConcept, this is a list of ids
         position = data.index("skos:hasTopConcept") + 1
-        result = list(
-            map(lambda x: self.generate_id(value=x, entity="Concept"), data[position])
-        )
+        result = list(map(lambda x: self.generate_id(value=x, entity="Concept"), data[position]))
         self.data["hasTopConcept"]["object"] = result
 
         # Get the rest of data, dct:created and dct:modified properties
@@ -115,9 +110,7 @@ class ConceptSchema(CommonClass):
                 "value": flatten_value(data[position]),
             }
         except ValueError:
-            logger.warning(
-                f"dct:created is not present in the Concept Schema: {concept_schema_id}"
-            )
+            logger.warning(f"dct:created is not present in the Concept Schema: {concept_schema_id}")
 
         try:
             position = data.index("dct:modified") + 1
@@ -126,9 +119,7 @@ class ConceptSchema(CommonClass):
                 "value": flatten_value(data[position]),
             }
         except ValueError:
-            logger.warning(
-                f"dct:modified is not present in the Concept Schema: {concept_schema_id}"
-            )
+            logger.warning(f"dct:modified is not present in the Concept Schema: {concept_schema_id}")
 
         # Order the keys in the final json-ld
         a = Context()

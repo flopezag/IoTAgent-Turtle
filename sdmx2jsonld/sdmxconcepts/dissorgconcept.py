@@ -34,6 +34,5 @@ class DissOrgConcept(SDMXConcept):
         super().__init__(
             entity_id="dissOrg",
             label="Data Dissemination Agency",
-            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
-            "CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:" "CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG",
         )
