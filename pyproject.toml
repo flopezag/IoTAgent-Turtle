@@ -40,6 +40,7 @@ types-docopt = "0.6.11.3"
 types-python-dateutil = "2.8.19.14"
 types-pytz = "2023.3.0.0"
 types-requests = "2.31.0.2"
+coverage = "7.2.7"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -63,7 +64,6 @@ paths.source = [
     "common",
     "ngsild",
     "sdmx2jsonld",
-    "tests",
 ]
 report.fail_under = 88
 run.parallel = true
@@ -80,16 +80,6 @@ module = [
     "common",
     "ngsild",
     "sdmx2jsonld",
-    "tests",
 ]
 ignore_missing_imports = true
 warn_unused_ignores = true
-
-[tool.towncrier]
-name = "tox"
-filename = "docs/changelog.rst"
-directory = "docs/changelog"
-title_format = false
-issue_format = ":issue:`{issue}`"
-template = "docs/changelog/template.jinja2"
-# possible types, all default: feature, bugfix, doc, removal, misc
