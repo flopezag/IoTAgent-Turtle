@@ -37,12 +37,14 @@ def filter_key_with_prefix(prefix_key, not_allowed_keys, further_process_keys):
             # this is a key with prefix that we want to keep
             return True
         else:
-            if aux[1] not in ['component', 'label']:
+            if aux[1] not in ["component", "label"]:
                 # These are the identified not allowed keys, we need to inform about them
-                logger.warning(f'The property {aux[1]} is not supported in statDCAT-AP')
+                logger.warning(f"The property {aux[1]} is not supported in statDCAT-AP")
             else:
                 # These are the identified keys managed in a different way
-                logger.info(f'The property {aux[1]} is manage afterwards in Dataset Class or in Property Class')
+                logger.info(
+                    f"The property {aux[1]} is manage afterwards in Dataset Class or in Property Class"
+                )
 
             return False
     else:
@@ -70,9 +72,9 @@ def flatten_value(y):
                     result.append(flatten_value(y[i]))
             return result
         else:  # in case of len == 0 be return the empty string
-            return ''
+            return ""
     else:
-        return y.replace('"', '')
+        return y.replace('"', "")
 
 
 def get_rest_data(data, not_allowed_keys=None, further_process_keys=None):
@@ -84,7 +86,11 @@ def get_rest_data(data, not_allowed_keys=None, further_process_keys=None):
 
     # We need to get the list of keys from the dict
     new_keys = list(
-        filter(lambda x: filter_key_with_prefix(x, not_allowed_keys, further_process_keys), list(aux.keys())))
+        filter(
+            lambda x: filter_key_with_prefix(x, not_allowed_keys, further_process_keys),
+            list(aux.keys()),
+        )
+    )
 
     new_data = {k: aux[k] for k in new_keys}
     corrected_dict = {k.replace(k, extract_prefix(k)): v for k, v in new_data.items()}
@@ -95,16 +101,20 @@ def get_rest_data(data, not_allowed_keys=None, further_process_keys=None):
 def extract_prefix(attribute):
     result = None
     if attribute is None or len(attribute) == 0:
-        raise ClassExtractPrefixError(data=attribute, message=f"Unexpected data received: '{attribute}'")
+        raise ClassExtractPrefixError(
+            data=attribute, message=f"Unexpected data received: '{attribute}'"
+        )
     else:
-        data = attribute.split(':')
+        data = attribute.split(":")
 
         if len(data) == 1:
             result = data[0]
         elif len(data) == 2:
             result = data[1]
         else:
-            raise ClassExtractPrefixError(data=attribute, message=f"Unexpected number of prefixes: '{attribute}'")
+            raise ClassExtractPrefixError(
+                data=attribute, message=f"Unexpected number of prefixes: '{attribute}'"
+            )
 
     return result
 
@@ -112,7 +122,7 @@ def extract_prefix(attribute):
 def get_property_value(data, property_name):
     # At the moment, we only find the first occurs of the property
     i = 0
-    key = ''
+    key = ""
     found = -1
     for i in range(0, len(data)):
         key = data[i]
@@ -123,6 +133,6 @@ def get_property_value(data, property_name):
                 break
 
     if found != -1:
-        return i, key, data[i+1]
+        return i, key, data[i + 1]
     else:
-        return -1, '', ''
+        return -1, "", ""

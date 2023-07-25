@@ -29,6 +29,4 @@ class TestRegToParser(TestCase):
 
     def test_get_id(self):
         re = RegParser()
-        assert(re.obtain_id("https://elmundo.es/episode-one") == "episode-one")
-
-
+        assert re.obtain_id("https://elmundo.es/episode-one") == "episode-one"

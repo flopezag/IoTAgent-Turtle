@@ -31,7 +31,9 @@ class TimePeriodConcept(SDMXConcept):
         #   skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:
         #   CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD";
         #   skos:inScheme sdmx-concept:cog.
-        super().__init__(entity_id='timePeriod',
-                         label='Time Period',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD')
+        super().__init__(
+            entity_id="timePeriod",
+            label="Time Period",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
+            "CROSS_DOMAIN_CONCEPTS[1.0].TIME_PERIOD",
+        )

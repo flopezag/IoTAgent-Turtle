@@ -43,14 +43,14 @@ class Code:
         # any other value will return an error
         number: int() = 0
 
-        m = search(f'sdmx-code:{self.typecode}-(.*)', str(value))
+        m = search(f"sdmx-code:{self.typecode}-(.*)", str(value))
 
         if m is not None:
             number = int(m.group(1))
         else:
             # The data is not following the sdmx-code:<value> we have to check which one
             # 1) Check if there is a value without the prefix
-            m = search(f'{self.typecode}-(.*)', str(value))
+            m = search(f"{self.typecode}-(.*)", str(value))
 
             if m is not None:
                 number = int(m.group(1))
@@ -63,11 +63,14 @@ class Code:
                     try:
                         number = int(value)
                     except ValueError:
-                        raise ClassCode(data=value,
-                                        message=f'Data is not a valid value')
+                        raise ClassCode(
+                            data=value, message=f"Data is not a valid value"
+                        )
 
         if number not in self.data_range:
-            raise ClassCode(data=value,
-                            message=f'{self.typecode} out of range, got: {number}   {self.data_range}')
+            raise ClassCode(
+                data=value,
+                message=f"{self.typecode} out of range, got: {number}   {self.data_range}",
+            )
 
         return number

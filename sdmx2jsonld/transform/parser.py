@@ -33,7 +33,7 @@ from sdmx2jsonld.transform.distribution import Distribution
 
 
 logger = getLogger(__name__)
-__version__ = "0.5.2"
+__version__ = "1.0.0"
 
 
 class Parser:
@@ -42,7 +42,7 @@ class Parser:
         with open(GRAMMARFILE) as f:
             grammar = f.read()
 
-        self.parser = Lark(grammar, start='start', parser='lalr')
+        self.parser = Lark(grammar, start="start", parser="lalr")
 
     def parsing(self, content: TextIOBase, out: bool = False):
         """
@@ -83,7 +83,7 @@ class Parser:
 
         if out:
             # Save the generated content into files
-            logger.info('Save the generated content into files')
+            logger.info("Save the generated content into files")
             transform.save()
         elif content is not None:
             print()
@@ -93,14 +93,14 @@ class Parser:
             ds = transform.get_dataset()
             if ds is not None:
                 self.__check_pprint__(transform.get_dataset())
-            [pprint(x.get()) for x in transform.get_dimensions()]
-            [pprint(x.get()) for x in transform.get_attributes()]
-            [pprint(x.get()) for x in transform.get_concept_schemas()]
-            [pprint(x.get()) for x in transform.get_concept_lists()]
+            [pprint(x.get()) for x in transform.get_dimensions()]  # type: ignore[func-returns-value]
+            [pprint(x.get()) for x in transform.get_attributes()]  # type: ignore[func-returns-value]
+            [pprint(x.get()) for x in transform.get_concept_schemas()]  # type: ignore[func-returns-value]
+            [pprint(x.get()) for x in transform.get_concept_lists()]  # type: ignore[func-returns-value]
 
             observations = transform.entity_type.get_observation()
             if len(observations) != 0:
-                [pprint(x.get()) for x in observations]
+                [pprint(x.get()) for x in observations]  # type: ignore[func-returns-value]
 
                 # If we have several observations, we need to generate the DCAT-AP:Distribution class
                 distribution = Distribution()
@@ -128,19 +128,17 @@ class Parser:
             result.append(ds)
 
         dimensions = transform.get_dimensions()
-        [result.append(x.get()) for x in dimensions]
+        [result.append(x.get()) for x in dimensions]  # type: ignore[func-returns-value]
 
-        [result.append(x.get()) for x in transform.get_attributes()]
+        [result.append(x.get()) for x in transform.get_attributes()]  # type: ignore[func-returns-value]
 
-        [result.append(x.get()) for x in transform.get_concept_schemas()]
+        [result.append(x.get()) for x in transform.get_concept_schemas()]  # type: ignore[func-returns-value]
 
-        [result.append(x.get()) for x in transform.get_concept_lists()]
-        # jicg - [result.append(x.get()) for x in transform.get_observation()]
+        [result.append(x.get()) for x in transform.get_concept_lists()]  # type: ignore[func-returns-value]
 
         observations = transform.entity_type.get_observation()
-        # jicg - observations = transform.get_observation()
         if len(observations) != 0:
-            [result.append(x.get()) for x in observations]
+            [result.append(x.get()) for x in observations]  # type: ignore[func-returns-value]
 
             # If we have several observations, we need to generate the DCAT-AP:Distribution class
             distribution = Distribution()

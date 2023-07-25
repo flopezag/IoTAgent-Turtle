@@ -32,10 +32,14 @@ class TestCommonClass(TestCase):
         examples_folder = dirname(dirname(__file__))
         output_folder = dirname(examples_folder)
 
-        examples_folder = join(examples_folder, 'files')
-        self.output_folder = join(output_folder, 'output')
+        examples_folder = join(examples_folder, "files")
+        self.output_folder = join(output_folder, "output")
 
-        tests_files = ["observations.ttl", "structures-accounts.ttl", "structures-tourism.ttl"]
+        tests_files = [
+            "observations.ttl",
+            "structures-accounts.ttl",
+            "structures-tourism.ttl",
+        ]
         self.tests_files = [join(examples_folder, x) for x in tests_files]
 
         self.parser = Parser()
@@ -48,7 +52,7 @@ class TestCommonClass(TestCase):
                     unlink(file_path)
             except Exception as e:
                 print("----------------------------")
-                print(e.message)
+                print(e)
                 print("----------------------------")
 
     def test_files_from_StringIO_web_interface_loop(self):
@@ -65,9 +69,11 @@ class TestCommonClass(TestCase):
             try:
                 _ = self.parser.parsing(content=StringIO(rdf_data), out=False)
             except Exception as e:
-                assert False, f"\nThe parser was not completed," \
-                              f"\n   file: {a}" \
-                              f"\n   exception:\n {e.message}"
+                assert False, (
+                    f"\nThe parser was not completed,"
+                    f"\n   file: {a}"
+                    f"\n   exception:\n {e.message}"
+                )
 
             print("Parsing completed...\n")
 
@@ -87,9 +93,11 @@ class TestCommonClass(TestCase):
             try:
                 _ = self.parser.parsing(content=rdf_data, out=True)
             except Exception as e:
-                assert False, f"\nThe parser was not completed," \
-                              f"\n   file: {a}" \
-                              f"\n   exception:\n {e.message}"
+                assert False, (
+                    f"\nThe parser was not completed,"
+                    f"\n   file: {a}"
+                    f"\n   exception:\n {e.message}"
+                )
 
             print("Parsing completed...\n")
 
@@ -109,9 +117,11 @@ class TestCommonClass(TestCase):
             try:
                 _ = self.parser.parsing(content=rdf_data, out=False)
             except Exception as e:
-                assert False, f"\nThe parser was not completed," \
-                              f"\n   file: {a}" \
-                              f"\n   exception:\n {e.message}"
+                assert False, (
+                    f"\nThe parser was not completed,"
+                    f"\n   file: {a}"
+                    f"\n   exception:\n {e.message}"
+                )
 
             print("Parsing completed...\n")
 

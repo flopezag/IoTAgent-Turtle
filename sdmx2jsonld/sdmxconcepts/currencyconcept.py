@@ -31,7 +31,8 @@ class CurrencyConcept(SDMXConcept):
         #     skos:notation
         #     "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].CURRENCY";
         #     skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='currency',
-                         label='Currency',
-                         notation=
-                         'urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].CURRENCY')
+        super().__init__(
+            entity_id="currency",
+            label="Currency",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].CURRENCY",
+        )

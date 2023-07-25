@@ -29,9 +29,11 @@ class Currency(SDMXAttribute):
         #     rdfs:label "Currency"@en ;
         #     rdfs:comment """Monetary denomination of the object being measured."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='currency',
-                         label='Currency',
-                         description='Monetary denomination of the object being measured.',
-                         concept_id='currency',
-                         identifier='currency',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="currency",
+            label="Currency",
+            description="Monetary denomination of the object being measured.",
+            concept_id="currency",
+            identifier="currency",
+            entity_range="xsd:string",
+        )

@@ -23,40 +23,33 @@ from sdmx2jsonld.common.commonclass import CommonClass
 
 
 class SDMXAttribute(CommonClass):
-    def __init__(self, entity_id, label, description, concept_id, identifier, entity_range):
-        super().__init__(entity='AttributeProperty')
+    def __init__(
+        self, entity_id, label, description, concept_id, identifier, entity_range
+    ):
+        super().__init__(entity="AttributeProperty")
         self.data = {
             "id": f"urn:ngsi-ld:AttributeProperty:{entity_id}",
             "type": "AttributeProperty",
-            "language": {
-                "type": "Property",
-                "value": ["en"]
-            },
+            "language": {"type": "Property", "value": ["en"]},
             "label": {
                 "type": "Property",
                 "value": {
                     "en": label,
-                }
+                },
             },
             "description": {
                 "type": "Property",
                 "value": {
                     "en": description,
-                }
+                },
             },
             "concept": {
                 "type": "Relationship",
-                "object": f"urn:ngsi-ld:Concept:{concept_id}"
+                "object": f"urn:ngsi-ld:Concept:{concept_id}",
             },
-            "identifier": {
-                "type": "Property",
-                "value": identifier
-            },
-            "range": {
-                "type": "Property",
-                "value": entity_range
-            },
+            "identifier": {"type": "Property", "value": identifier},
+            "range": {"type": "Property", "value": entity_range},
             "@context": [
                 "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
-            ]
+            ],
         }

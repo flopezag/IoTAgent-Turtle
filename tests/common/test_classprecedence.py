@@ -20,7 +20,11 @@
 # under the License.
 ##
 from unittest import TestCase
-from sdmx2jsonld.common.classprecedence import Precedence, ClassPrecedencePropertyError, ClassPrecedenceClassError
+from sdmx2jsonld.common.classprecedence import (
+    Precedence,
+    ClassPrecedencePropertyError,
+    ClassPrecedenceClassError,
+)
 
 
 class Test(TestCase):
@@ -31,44 +35,52 @@ class Test(TestCase):
         """
         The precedence of one Class will be ALWAYS that Class
         """
-        obtained = self.pre.precedence(['qb:DataStructureDefinition'])
-        expected = 'qb:DataStructureDefinition'
-        assert obtained == expected, f"'qb:DataStructureDefinition' expected, got: '{obtained}'"
+        obtained = self.pre.precedence(["qb:DataStructureDefinition"])
+        expected = "qb:DataStructureDefinition"
+        assert (
+            obtained == expected
+        ), f"'qb:DataStructureDefinition' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['skos:Concept'])
-        expected = 'skos:Concept'
+        obtained = self.pre.precedence(["skos:Concept"])
+        expected = "skos:Concept"
         assert obtained == expected, f"'skos:Concept' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['qb:SliceKey'])
-        expected = 'qb:SliceKey'
+        obtained = self.pre.precedence(["qb:SliceKey"])
+        expected = "qb:SliceKey"
         assert obtained == expected, f"'qb:SliceKey' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['qb:DimensionProperty'])
-        expected = 'qb:DimensionProperty'
-        assert obtained == expected, f"'qb:DimensionProperty' expected, got: '{obtained}'"
+        obtained = self.pre.precedence(["qb:DimensionProperty"])
+        expected = "qb:DimensionProperty"
+        assert (
+            obtained == expected
+        ), f"'qb:DimensionProperty' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['qb:AttributeProperty'])
-        expected = 'qb:AttributeProperty'
-        assert obtained == expected, f"'qb:AttributeProperty' expected, got: '{obtained}'"
+        obtained = self.pre.precedence(["qb:AttributeProperty"])
+        expected = "qb:AttributeProperty"
+        assert (
+            obtained == expected
+        ), f"'qb:AttributeProperty' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['skos:ConceptScheme'])
-        expected = 'skos:ConceptScheme'
+        obtained = self.pre.precedence(["skos:ConceptScheme"])
+        expected = "skos:ConceptScheme"
         assert obtained == expected, f"'skos:ConceptScheme' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['owl:Class'])
-        expected = 'owl:Class'
+        obtained = self.pre.precedence(["owl:Class"])
+        expected = "owl:Class"
         assert obtained == expected, f"'owl:Class' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['qb:ComponentSpecification'])
-        expected = 'qb:ComponentSpecification'
-        assert obtained == expected, f"'qb:ComponentSpecification' expected, got: '{obtained}'"
+        obtained = self.pre.precedence(["qb:ComponentSpecification"])
+        expected = "qb:ComponentSpecification"
+        assert (
+            obtained == expected
+        ), f"'qb:ComponentSpecification' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['qb:MeasureProperty'])
-        expected = 'qb:MeasureProperty'
+        obtained = self.pre.precedence(["qb:MeasureProperty"])
+        expected = "qb:MeasureProperty"
         assert obtained == expected, f"'qb:MeasureProperty' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['skos:ConceptScheme'])
-        expected = 'skos:ConceptScheme'
+        obtained = self.pre.precedence(["skos:ConceptScheme"])
+        expected = "skos:ConceptScheme"
         assert obtained == expected, f"'skos:ConceptScheme' expected, got: '{obtained}'"
 
     def test_precedence_classes_with_dimension_and_attribute_values(self):
@@ -81,52 +93,73 @@ class Test(TestCase):
         with self.assertRaises(ClassPrecedencePropertyError) as error:
             _ = self.pre.precedence(["qb:DimensionProperty", "qb:AttributeProperty"])
 
-        self.assertEqual(str(error.exception),
-                         "['qb:DimensionProperty', 'qb:AttributeProperty'] -> Incompatible multiclass definition")
+        self.assertEqual(
+            str(error.exception),
+            "['qb:DimensionProperty', 'qb:AttributeProperty'] -> Incompatible multiclass definition",
+        )
 
     def test_precedence_classes_with_attribute_and_measure_values(self):
         with self.assertRaises(ClassPrecedencePropertyError) as error:
             _ = self.pre.precedence(["qb:AttributeProperty", "qb:MeasureProperty"])
 
-        self.assertEqual(str(error.exception),
-                         "['qb:AttributeProperty', 'qb:MeasureProperty'] -> Incompatible multiclass definition")
+        self.assertEqual(
+            str(error.exception),
+            "['qb:AttributeProperty', 'qb:MeasureProperty'] -> Incompatible multiclass definition",
+        )
 
     def test_precedence_classes_with_dimension_and_measure_values(self):
         with self.assertRaises(ClassPrecedencePropertyError) as error:
             _ = self.pre.precedence(["qb:DimensionProperty", "qb:MeasureProperty"])
 
-        self.assertEqual(str(error.exception),
-                         "['qb:DimensionProperty', 'qb:MeasureProperty'] -> Incompatible multiclass definition")
+        self.assertEqual(
+            str(error.exception),
+            "['qb:DimensionProperty', 'qb:MeasureProperty'] -> Incompatible multiclass definition",
+        )
 
     def test_precedence_classes_with_class_values(self):
         with self.assertRaises(ClassPrecedenceClassError) as error:
             _ = self.pre.precedence(["rdfs:Class", "owl:Class"])
 
-        self.assertEqual(str(error.exception), "['rdfs:Class', 'owl:Class'] -> Possible redundant Class definition")
+        self.assertEqual(
+            str(error.exception),
+            "['rdfs:Class', 'owl:Class'] -> Possible redundant Class definition",
+        )
 
     def test_attribute_and_coded_property(self):
-        obtained = self.pre.precedence(['qb:AttributeProperty', 'qb:CodedProperty'])
-        expected = 'qb:AttributeProperty'
-        assert obtained == expected, f"'qb:AttributeProperty' expected, got: '{obtained}'"
+        obtained = self.pre.precedence(["qb:AttributeProperty", "qb:CodedProperty"])
+        expected = "qb:AttributeProperty"
+        assert (
+            obtained == expected
+        ), f"'qb:AttributeProperty' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['qb:CodedProperty', 'qb:AttributeProperty'])
-        expected = 'qb:AttributeProperty'
-        assert obtained == expected, f"'qb:AttributeProperty' expected, got: '{obtained}'"
+        obtained = self.pre.precedence(["qb:CodedProperty", "qb:AttributeProperty"])
+        expected = "qb:AttributeProperty"
+        assert (
+            obtained == expected
+        ), f"'qb:AttributeProperty' expected, got: '{obtained}'"
 
     def test_coded_and_dimension_property(self):
-        obtained = self.pre.precedence(['qb:CodedProperty', 'qb:DimensionProperty'])
-        expected = 'qb:DimensionProperty'
-        assert obtained == expected, f"'qb:DimensionProperty' expected, got: '{obtained}'"
+        obtained = self.pre.precedence(["qb:CodedProperty", "qb:DimensionProperty"])
+        expected = "qb:DimensionProperty"
+        assert (
+            obtained == expected
+        ), f"'qb:DimensionProperty' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['qb:DimensionProperty', 'qb:CodedProperty'])
-        expected = 'qb:DimensionProperty'
-        assert obtained == expected, f"'qb:DimensionProperty' expected, got: '{obtained}'"
+        obtained = self.pre.precedence(["qb:DimensionProperty", "qb:CodedProperty"])
+        expected = "qb:DimensionProperty"
+        assert (
+            obtained == expected
+        ), f"'qb:DimensionProperty' expected, got: '{obtained}'"
 
     def test_concept_and_other_property(self):
-        obtained = self.pre.precedence(['skos:Concept', '<http://bauhaus/codes/concept/AjustementSaisonnier>'])
-        expected = 'skos:Concept'
+        obtained = self.pre.precedence(
+            ["skos:Concept", "<http://bauhaus/codes/concept/AjustementSaisonnier>"]
+        )
+        expected = "skos:Concept"
         assert obtained == expected, f"'skos:Concept' expected, got: '{obtained}'"
 
-        obtained = self.pre.precedence(['<http://bauhaus/codes/concept/HebergementNombresEtoiles>', 'skos:Concept'])
-        expected = 'skos:Concept'
+        obtained = self.pre.precedence(
+            ["<http://bauhaus/codes/concept/HebergementNombresEtoiles>", "skos:Concept"]
+        )
+        expected = "skos:Concept"
         assert obtained == expected, f"'skos:Concept' expected, got: '{obtained}'"

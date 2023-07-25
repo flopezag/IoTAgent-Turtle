@@ -38,49 +38,39 @@ class Distribution(CommonClass):
                 "type": "Property",
                 "value": [
                     "/ngsi-ld/v1/entities?type=https://smartdatamodels.org/dataModel.SDMX/Observation"
-                ]
+                ],
             },
             "description": {
                 "type": "Property",
-                "value": "Distribution of statistical data observations."
+                "value": "Distribution of statistical data observations.",
             },
-            "format": {
-                "type": "Property",
-                "value": "JSON_LD"
-            },
-            "language": {
-                "type": "Property",
-                "value": list()
-            },
-            "status": {
-                "type": "Property",
-                "value": "Completed"
-            },
-            "title": {
-                "type": "Property",
-                "value": list()
-            },
+            "format": {"type": "Property", "value": "JSON_LD"},
+            "language": {"type": "Property", "value": list()},
+            "status": {"type": "Property", "value": "Completed"},
+            "title": {"type": "Property", "value": list()},
             "@context": [
                 "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
-            ]
+            ],
         }
 
     def generate_data(self, catalogue):
         # Generate random id for the distribution
         random_bits = getrandbits(128)
         hash1 = "%032x" % random_bits
-        self.data['id'] += hash1
+        self.data["id"] += hash1
 
         # Title is extracted from the dcterms:title from the Catalogue
-        self.data['title']['value'] = catalogue.data['title']['value']
+        self.data["title"]["value"] = catalogue.data["title"]["value"]
 
         # language es obtained from language from the Catalogue
-        self.data['language']['value'] = catalogue.data['language']['value']
+        self.data["language"]["value"] = catalogue.data["language"]["value"]
 
         # accessURL is generated from the configuration file.
         config_path = dirname(dirname(dirname(__file__)))
-        config_path = join(join(config_path, 'common'), 'config.json')
+        config_path = join(join(config_path, "common"), "config.json")
         with open(config_path) as config_file:
             config = load(config_file)
 
-        self.data['accessUrl']['value'][0] = config['broker'] + self.data['accessUrl']['value'][0]
+        self.data["accessUrl"]["value"][0] = (
+            config["broker"] + self.data["accessUrl"]["value"][0]
+        )

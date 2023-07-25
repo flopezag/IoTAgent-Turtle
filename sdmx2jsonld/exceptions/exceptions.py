@@ -27,11 +27,12 @@ class ClassSDMXAttributeError(Exception):
         self.data = data
 
     def __str__(self):
-        return f'{self.data} -> {self.message}'
+        return f"{self.data} -> {self.message}"
 
 
 class ClassConfStatusError(ClassSDMXAttributeError):
     """Raised when the input value is not included in the list of available values for confStatus"""
+
     """Exception raised for errors in the input data.
 
     Attributes:
@@ -45,6 +46,7 @@ class ClassConfStatusError(ClassSDMXAttributeError):
 
 class ClassObsStatusError(ClassSDMXAttributeError):
     """Raised when the input value is not included in the list of available values for obsStatus"""
+
     """Exception raised for errors in the input data.
 
     Attributes:
@@ -58,6 +60,7 @@ class ClassObsStatusError(ClassSDMXAttributeError):
 
 class ClassCode(ClassSDMXAttributeError):
     """Raised when the input value is not included in the list of available values for unitMult and decimals"""
+
     """Exception raised for errors in the input data.
 
     Attributes:
@@ -71,6 +74,7 @@ class ClassCode(ClassSDMXAttributeError):
 
 class ClassFreqError(ClassSDMXAttributeError):
     """Raised when the input value is not included in the list of available values for Freq"""
+
     """Exception raised for errors in the input data.
 
     Attributes:
@@ -84,6 +88,7 @@ class ClassFreqError(ClassSDMXAttributeError):
 
 class ClassExtractPrefixError(ClassSDMXAttributeError):
     """Raised when the input value is None or Empty or includes several prefixes"""
+
     """Exception raised for errors in the input data.
 
     Attributes:

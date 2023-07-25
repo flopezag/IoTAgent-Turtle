@@ -31,11 +31,13 @@ class TimePerCollect(SDMXAttribute):
         #     (such as middle, average or end of period) to compile the indicator
         #     for the target reference period."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='timePerCollect',
-                         label='Time Period - collection',
-                         description='Dates or periods during which the observations have been collected '
-                                     '(such as middle, average or end of period) to compile the indicator '
-                                     'for the target reference period.',
-                         concept_id='timePerCollect',
-                         identifier='timePerCollect',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="timePerCollect",
+            label="Time Period - collection",
+            description="Dates or periods during which the observations have been collected "
+            "(such as middle, average or end of period) to compile the indicator "
+            "for the target reference period.",
+            concept_id="timePerCollect",
+            identifier="timePerCollect",
+            entity_range="xsd:string",
+        )

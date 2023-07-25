@@ -50,7 +50,7 @@ class TreeToJson(Transformer):
         return triple
 
     def predicate(self, pre):
-        result = ''
+        result = ""
         if isinstance(pre[0], str):
             result = pre[0]
         else:
@@ -115,11 +115,11 @@ class TreeToJson(Transformer):
         return self.entity_type.get_catalogue()
 
     def get_observation(self):
-        if self.entity_type.observations.data['id'] != '':
+        if self.entity_type.observations.data["id"] != "":
             return self.entity_type.get_observation()
 
     def get_dataset(self):
-        if self.entity_type.dataset.data['id'] != '':
+        if self.entity_type.dataset.data["id"] != "":
             return self.entity_type.get_dataset()
         return None
 
@@ -136,10 +136,10 @@ class TreeToJson(Transformer):
         return self.entity_type.get_concept_list()
 
     def save(self):
-        self.entity_type.save('catalogue')
+        self.entity_type.save("catalogue")
 
-        if self.entity_type.dataset.data['id'] != '':
-            self.entity_type.save('dataset')
+        if self.entity_type.dataset.data["id"] != "":
+            self.entity_type.save("dataset")
 
         dimensions = self.entity_type.get_dimensions()
         [dimension.save() for dimension in dimensions]

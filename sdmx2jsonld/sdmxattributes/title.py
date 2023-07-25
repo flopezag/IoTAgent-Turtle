@@ -29,9 +29,11 @@ class Title(SDMXAttribute):
         #     rdfs:label "Title"@en ;
         #     rdfs:comment """Textual label used as identification of a statistical object."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='title',
-                         label='Title',
-                         description='Textual label used as identification of a statistical object.',
-                         concept_id='title',
-                         identifier='title',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="title",
+            label="Title",
+            description="Textual label used as identification of a statistical object.",
+            concept_id="title",
+            identifier="title",
+            entity_range="xsd:string",
+        )

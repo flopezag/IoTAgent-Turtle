@@ -29,9 +29,11 @@ class CompilingOrg(SDMXAttribute):
         #     rdfs:label "Compiling agency"@en ;
         #     rdfs:comment """The organisation compiling the data being reported."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='compilingOrg',
-                         label='Compiling agency',
-                         description='The organisation compiling the data being reported.',
-                         concept_id='compilingOrg',
-                         identifier='compilingOrg',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="compilingOrg",
+            label="Compiling agency",
+            description="The organisation compiling the data being reported.",
+            concept_id="compilingOrg",
+            identifier="compilingOrg",
+            entity_range="xsd:string",
+        )

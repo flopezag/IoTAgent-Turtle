@@ -30,10 +30,12 @@ class DataComp(SDMXAttribute):
         #     rdfs:comment """Operations performed on data to derive new information according
         #     to a given set of rules."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='dataComp',
-                         label='Data Compilation',
-                         description='Operations performed on data to derive new information according to a '
-                                     'given set of rules.',
-                         concept_id='dataComp',
-                         identifier='dataComp',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="dataComp",
+            label="Data Compilation",
+            description="Operations performed on data to derive new information according to a "
+            "given set of rules.",
+            concept_id="dataComp",
+            identifier="dataComp",
+            entity_range="xsd:string",
+        )

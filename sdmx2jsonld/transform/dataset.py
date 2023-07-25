@@ -64,30 +64,34 @@ logger = getLogger()
 
 class Dataset(CommonClass):
     def __init__(self):
-        super().__init__(entity='Dataset')
+        super().__init__(entity="Dataset")
 
         # TODO: These dimensions are not defined in the turtle file but defined in a prefix therefore at the moment
         # we create manually their corresponding DimensionProperty entity. Should we generated from checking the prefix
-        self.list_special_components = ['freq', 'refArea', 'timePeriod',
-                                        'obsStatus', 'confStatus', 'timeFormat',
-                                        'timePerCollect', 'decimals', 'title',
-                                        'unitMult', 'compilingOrg', 'dataComp',
-                                        'currency', 'dissOrg', 'measureType']
+        self.list_special_components = [
+            "freq",
+            "refArea",
+            "timePeriod",
+            "obsStatus",
+            "confStatus",
+            "timeFormat",
+            "timePerCollect",
+            "decimals",
+            "title",
+            "unitMult",
+            "compilingOrg",
+            "dataComp",
+            "currency",
+            "dissOrg",
+            "measureType",
+        ]
 
         self.data = {
             "id": str(),
             "type": "Dataset",
-            "title": {
-                "type": "Property",
-                "value": str()
-            },
+            "title": {"type": "Property", "value": str()},
             "identifier": str(),
-            "language": {
-                "type": "Property",
-                "value": list()
-            },
-
-
+            "language": {"type": "Property", "value": list()},
             #################################################
             # TODO: New ETSI CIM NGSI-LD specification 1.4.2
             # Pending to implement in the Context Broker
@@ -97,60 +101,56 @@ class Dataset(CommonClass):
             #     "LanguageMap": dict()
             # },
             #################################################
-            "description": {
-                "type": "Property",
-                "value": dict()
-            },
-
-
+            "description": {"type": "Property", "value": dict()},
             "@context": [
                 "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
-            ]
+            ],
         }
 
         self.components = {
-            'qb:attribute': {
-                'entity': 'AttributeProperty',
-                'key': 'attribute',
-                'value': {
-                    "attribute": {
-                        "type": "Relationship",
-                        "object": list()
-                    }
-                }
+            "qb:attribute": {
+                "entity": "AttributeProperty",
+                "key": "attribute",
+                "value": {"attribute": {"type": "Relationship", "object": list()}},
             },
-            'qb:dimension': {
-                'entity': 'DimensionProperty',
-                'key': 'dimension',
-                'value': {
-                    "dimension": {
-                        "type": "Relationship",
-                        "object": list()
-                    }
-                }
+            "qb:dimension": {
+                "entity": "DimensionProperty",
+                "key": "dimension",
+                "value": {"dimension": {"type": "Relationship", "object": list()}},
             },
-            'qb:measure': {
-                'entity': 'statUnitMeasure',
-                'key': 'statUnitMeasure',
-                'value': {
-                    "statUnitMeasure": {
-                        "type": "Relationship",
-                        "object": list()
-                    }
-                }
-            }
+            "qb:measure": {
+                "entity": "statUnitMeasure",
+                "key": "statUnitMeasure",
+                "value": {
+                    "statUnitMeasure": {"type": "Relationship", "object": list()}
+                },
+            },
         }
 
-        self.keys = {k: k for k in self.data.keys()} | \
-                    {self.components['qb:attribute']['key']: self.components['qb:attribute']['key']} | \
-                    {self.components['qb:dimension']['key']: self.components['qb:dimension']['key']} | \
-                    {self.components['qb:measure']['key']: self.components['qb:measure']['key']}
+        self.keys = (
+            {k: k for k in self.data.keys()}
+            | {
+                self.components["qb:attribute"]["key"]: self.components["qb:attribute"][
+                    "key"
+                ]
+            }
+            | {
+                self.components["qb:dimension"]["key"]: self.components["qb:dimension"][
+                    "key"
+                ]
+            }
+            | {
+                self.components["qb:measure"]["key"]: self.components["qb:measure"][
+                    "key"
+                ]
+            }
+        )
 
         self.sdmx_dimensions = {
             "freq": Frequency(),
             "refArea": RefArea(),
             "timePeriod": TimePeriod(),
-            "measureType": MeasureType()
+            "measureType": MeasureType(),
         }
 
         self.sdmx_attributes = {
@@ -164,12 +164,12 @@ class Dataset(CommonClass):
             "compilingOrg": CompilingOrg(),
             "dataComp": DataComp(),
             "dissOrg": DissOrg(),
-            "currency": Currency()
+            "currency": Currency(),
         }
 
         self.sdmx_components = {
             "DimensionProperty": self.sdmx_dimensions,
-            "AttributeProperty": self.sdmx_attributes
+            "AttributeProperty": self.sdmx_attributes,
         }
 
         self.sdmx_concepts = {
@@ -187,7 +187,7 @@ class Dataset(CommonClass):
             "dataComp": DataCompConcept(),
             "dissOrg": DissOrgConcept(),
             "currency": CurrencyConcept(),
-            "measureType": None
+            "measureType": None,
         }
 
         self.sdmx_concept_schemas = CogConceptSchema()
@@ -195,48 +195,56 @@ class Dataset(CommonClass):
     def add_components(self, component):
         # We need to know which kind of component we have, it should be the verb:
         # qb:attribute, qb:dimension, or qb:measure
-        list_components = ['qb:attribute', 'qb:dimension', 'qb:measure']
+        list_components = ["qb:attribute", "qb:dimension", "qb:measure"]
 
         type_component = [x for x in list_components if x in component][0]
         position = component.index(type_component) + 1
 
         if type_component == "qb:measure":
-            logger.info(f'The qb:measure "{component[position][0]}" is not manage in statDCAT-AP')
+            logger.info(
+                f'The qb:measure "{component[position][0]}" is not manage in statDCAT-AP'
+            )
             new_component, new_concept, new_concept_schema = None, None, None
         else:
-            new_component, new_concept, new_concept_schema = self.manage_components(type_component=type_component,
-                                                                                    component=component,
-                                                                                    position=position)
+            new_component, new_concept, new_concept_schema = self.manage_components(
+                type_component=type_component, component=component, position=position
+            )
 
         return new_component, new_concept, new_concept_schema
 
     def manage_components(self, type_component, component, position):
         new_component, new_concept, new_concept_schema = None, None, None
         try:
-            entity = self.components[type_component]['entity']
-            name, new_id = self.generate_id(entity=entity, value=component[position][0], update_id=False)
-            key = self.components[type_component]['key']
+            entity = self.components[type_component]["entity"]
+            name, new_id = self.generate_id(
+                entity=entity, value=component[position][0], update_id=False
+            )
+            key = self.components[type_component]["key"]
 
             # It is possible that the original file contains already the description
-            if new_id in self.components[type_component]['value'][key]['object']:
+            if new_id in self.components[type_component]["value"][key]["object"]:
                 logger.warning(
-                    f"The component {new_id} is duplicated and already defined in the {self.data['id']}")
+                    f"The component {new_id} is duplicated and already defined in the {self.data['id']}"
+                )
             elif name in self.list_special_components:
                 # We need to create manually the description of these dimensions, concepts, and conceptschemas
                 logger.warning(
                     f"The component {name} is defined probably outside of the file, "
-                    f"creating manually the {entity} entity")
-                self.components[type_component]['value'][key]['object'].append(new_id)
-                self.data = self.data | self.components[type_component]['value']
+                    f"creating manually the {entity} entity"
+                )
+                self.components[type_component]["value"][key]["object"].append(new_id)
+                self.data = self.data | self.components[type_component]["value"]
 
                 new_component = self.sdmx_components[entity][name]
                 new_concept = self.sdmx_concepts[name]
                 new_concept_schema = self.sdmx_concept_schemas
             else:
-                self.components[type_component]['value'][key]['object'].append(new_id)
-                self.data = self.data | self.components[type_component]['value']
+                self.components[type_component]["value"][key]["object"].append(new_id)
+                self.data = self.data | self.components[type_component]["value"]
         except ValueError:
-            logger.error(f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}")
+            logger.error(
+                f"Error, it was identified a qb:ComponentSpecification with a wrong type: {type_component}"
+            )
 
         # Order the keys in the final json-ld
         a = Context()
@@ -254,26 +262,25 @@ class Dataset(CommonClass):
         self.__complete_label__(title=title, data=data)
 
         # Add the title
-        key = self.keys['title']
-        self.data[key]['value'] = title
+        key = self.keys["title"]
+        self.data[key]["value"] = title
 
         # Add the id
-        self.data['id'] = "urn:ngsi-ld:Dataset:" + dataset_id
+        self.data["id"] = "urn:ngsi-ld:Dataset:" + dataset_id
 
         # Get the rest of the data
-        data = get_rest_data(data=data,
-                             not_allowed_keys=[
-                                 'sliceKey',
-                                 'component',
-                                 'disseminationStatus',
-                                 'validationState',
-                                 'notation',
-                                 'label'
-                             ],
-                             further_process_keys=[
-                                 'component',
-                                 'label'
-                             ])
+        data = get_rest_data(
+            data=data,
+            not_allowed_keys=[
+                "sliceKey",
+                "component",
+                "disseminationStatus",
+                "validationState",
+                "notation",
+                "label",
+            ],
+            further_process_keys=["component", "label"],
+        )
 
         # add the new data to the dataset structure
         self.patch_data(data, False)
@@ -284,29 +291,36 @@ class Dataset(CommonClass):
         else:
             # TODO: Add only those properties that are expected, if they are not know or unexpected discard and provide
             #  a logging about the property is discarded due to it is not considered in the statSCAT-AP spec.
-            [self.data.update(self.__generate_property__(key=k, value=v)) for k, v in data.items()]
+            [
+                self.data.update(self.__generate_property__(key=k, value=v))
+                for k, v in data.items()
+            ]
 
     def __complete_label__(self, title, data):
         try:
-            key = self.get_key(requested_key='rdfs:label')
+            key = self.get_key(requested_key="rdfs:label")
             position = data.index(key) + 1
             description = data[position]
 
-            descriptions = [x[0].replace("\"", "") for x in description]
+            descriptions = [x[0].replace('"', "") for x in description]
 
             languages = list()
             try:
                 languages = [x[1].replace("@", "").lower() for x in description]
             except IndexError:
-                logger.warning(f'The Dataset {title} has a '
-                               f'rdfs:label without language tag: {description}')
+                logger.warning(
+                    f"The Dataset {title} has a "
+                    f"rdfs:label without language tag: {description}"
+                )
 
                 aux = len(description)
                 if aux != 1:
-                    logger.error(f"Dataset: there is more than 1 description ({aux}), values: {description}")
+                    logger.error(
+                        f"Dataset: there is more than 1 description ({aux}), values: {description}"
+                    )
                 else:
                     # There is no language tag, we use by default 'en'
-                    languages = ['en']
+                    languages = ["en"]
                     logger.warning('Dataset: selecting default language "en"')
 
             ###############################################################################
@@ -317,14 +331,14 @@ class Dataset(CommonClass):
             #     self.data['rdfs:label']['LanguageMap'][languages[i]] = descriptions[i]
             ###############################################################################
             for i in range(0, len(languages)):
-                key = self.keys['description']
-                self.data[key]['value'][languages[i]] = descriptions[i]
+                key = self.keys["description"]
+                self.data[key]["value"][languages[i]] = descriptions[i]
 
             # Complete the information of the language with the previous information
-            key = self.keys['language']
-            self.data[key]['value'] = languages
+            key = self.keys["language"]
+            self.data[key]["value"] = languages
         except ValueError:
-            logger.info(f'DataStructureDefinition without rdfs:label detail: {title}')
+            logger.info(f"DataStructureDefinition without rdfs:label detail: {title}")
 
     def get_key(self, requested_key):
         try:

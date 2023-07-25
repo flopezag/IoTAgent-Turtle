@@ -29,19 +29,18 @@ from io import StringIO
 from logging import getLogger
 
 
-
 class NGSILDConnector:
     def __init__(self, path=None):
         self.logger = getLogger(__name__)
         if path is None:
-            config_path = Path.cwd().joinpath('common/config.json')
+            config_path = Path.cwd().joinpath("common/config.json")
         else:
             config_path = Path.cwd().joinpath(path)
 
         with open(config_path) as config_file:
             config = json.load(config_file)
 
-        self.base_url = config['broker']
+        self.base_url = config["broker"]
 
     def get_url(self):
         url = f"{self.base_url}/ngsi-ld/v1/entities"
@@ -55,13 +54,15 @@ class NGSILDConnector:
         for elem in d:
             try:
                 rc, r = self.send_data(json.dumps(elem, indent=4))
-                return_info.append({"id": elem['id'],
-                                   "status_code": rc,
-                                   "reason": r})
+                return_info.append({"id": elem["id"], "status_code": rc, "reason": r})
             except TypeError as e:
-                return_info.append({"id": "UNK",
-                                    "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                    "reason": e.args[0]})
+                return_info.append(
+                    {
+                        "id": "UNK",
+                        "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY,
+                        "reason": e.args[0],
+                    }
+                )
             except Exception as e:
                 raise e
                 # reason = getattr(e, 'message', str(e))
@@ -74,7 +75,7 @@ class NGSILDConnector:
     def send_data(self, json_object):
         # Send the data to a FIWARE Context Broker instance
         headers = {
-            'Content-Type': 'application/ld+json'
+            "Content-Type": "application/ld+json"
             # , 'Accept': 'application/ld+json'
         }
 
@@ -96,7 +97,7 @@ class NGSILDConnector:
 
 
 if __name__ == "__main__":
-    c = NGSILDConnector('../common/config.json')
+    c = NGSILDConnector("../common/config.json")
     print(c.get_url())
 
     parser = Parser()

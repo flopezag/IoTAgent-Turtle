@@ -33,7 +33,9 @@ class ConfStatusConcept(SDMXConcept):
         #     "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].CONF_STATUS";
         #     skos:broader sdmx-concept:conf;
         #     skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='confStatus',
-                         label='Confidentiality - status',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].CONF_STATUS')
+        super().__init__(
+            entity_id="confStatus",
+            label="Confidentiality - status",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
+            "CROSS_DOMAIN_CONCEPTS[1.0].CONF_STATUS",
+        )

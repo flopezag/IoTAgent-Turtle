@@ -31,7 +31,9 @@ class DissOrgConcept(SDMXConcept):
         #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:
         #     CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG";
         #     skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='dissOrg',
-                         label='Data Dissemination Agency',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG')
+        super().__init__(
+            entity_id="dissOrg",
+            label="Data Dissemination Agency",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
+            "CROSS_DOMAIN_CONCEPTS[1.0].DISS_ORG",
+        )

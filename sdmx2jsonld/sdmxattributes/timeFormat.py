@@ -29,9 +29,11 @@ class TimeFormat(SDMXAttribute):
         #     rdfs:label "Time Format"@en ;
         #     rdfs:comment """Technical format in which time is represented for the measured phenomenon."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='timeFormat',
-                         label='Time Format',
-                         description='Technical format in which time is represented for the measured phenomenon.',
-                         concept_id='timeFormat',
-                         identifier='timeFormat',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="timeFormat",
+            label="Time Format",
+            description="Technical format in which time is represented for the measured phenomenon.",
+            concept_id="timeFormat",
+            identifier="timeFormat",
+            entity_range="xsd:string",
+        )

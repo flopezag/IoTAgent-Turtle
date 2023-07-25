@@ -22,15 +22,15 @@
 
 
 entities = {
-    'qb:DataStructureDefinition': 'Dataset',
-    'qb:ComponentSpecification': 'Component',
-    'qb:AttributeProperty': 'Attribute',
-    'qb:DimensionProperty': 'Dimension',
-    'qb:CodedProperty': 'Dimension',
-    'rdfs:Class': 'Class',
-    'owl:Class': 'Class',
-    'skos:ConceptScheme': 'ConceptScheme',
-    'skos:Concept': 'Range'
+    "qb:DataStructureDefinition": "Dataset",
+    "qb:ComponentSpecification": "Component",
+    "qb:AttributeProperty": "Attribute",
+    "qb:DimensionProperty": "Dimension",
+    "qb:CodedProperty": "Dimension",
+    "rdfs:Class": "Class",
+    "owl:Class": "Class",
+    "skos:ConceptScheme": "ConceptScheme",
+    "skos:Concept": "Range",
 }
 
 
@@ -47,7 +47,7 @@ class Precedence:
             "skos:Concept": 40,
             "rdfs:Class": 20,
             "owl:Class": 20,
-            "qb:SliceKey": 10
+            "qb:SliceKey": 10,
         }
 
     def get_value(self, aclass: str) -> int:
@@ -72,8 +72,7 @@ class Precedence:
             raise ClassPrecedenceClassError(data)
 
         # In other case, we return the max value of the list
-        aux = max(classes_values)
-        aux = data[classes_values.index(aux)]
+        aux = data[classes_values.index(max(classes_values))]
 
         return aux
 
@@ -86,11 +85,12 @@ class ClassPrecedenceError(Exception):
         self.data = data
 
     def __str__(self):
-        return f'{self.data} -> {self.message}'
+        return f"{self.data} -> {self.message}"
 
 
 class ClassPrecedencePropertyError(ClassPrecedenceError):
     """Raised when the input value is too small"""
+
     """Exception raised for errors in the input data.
 
     Attributes:
@@ -104,6 +104,7 @@ class ClassPrecedencePropertyError(ClassPrecedenceError):
 
 class ClassPrecedenceClassError(ClassPrecedenceError):
     """Raised when the input value is too large"""
+
     """Exception raised for errors in the input data.
 
     Attributes:
@@ -115,6 +116,6 @@ class ClassPrecedenceClassError(ClassPrecedenceError):
         super().__init__(data=data, message=message)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pre = Precedence()
-    obtained = pre.precedence(['qb:DataStructureDefinition'])
+    obtained = pre.precedence(["qb:DataStructureDefinition"])

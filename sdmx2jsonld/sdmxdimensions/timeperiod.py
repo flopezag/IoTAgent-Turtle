@@ -32,12 +32,14 @@ class TimePeriod(SDMXDimension):
         #   rdfs:label "Time Period"@en;
         #   rdfs:comment "The period of time or point in time to which the measured observation refers."@en;
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity_id='timePeriod',
-                         label='Time Period',
-                         description='The period of time or point in time to which the measured observation refers.',
-                         concept_id='timePeriod',
-                         identifier='timePeriod',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="timePeriod",
+            label="Time Period",
+            description="The period of time or point in time to which the measured observation refers.",
+            concept_id="timePeriod",
+            identifier="timePeriod",
+            entity_range="xsd:string",
+        )
 
     @staticmethod
     def fix_value(value):
@@ -47,7 +49,7 @@ class TimePeriod(SDMXDimension):
         # any other value will return an error
         value_upper = value.upper()
 
-        m = search('FREQ-(.*)', value_upper)
+        m = search("FREQ-(.*)", value_upper)
 
         if m is not None:
             status = m.group(1)

@@ -23,50 +23,49 @@ from sdmx2jsonld.common.commonclass import CommonClass
 
 
 class SDMXDimension(CommonClass):
-    def __init__(self, entity_id, identifier, entity_range, label=None, description=None, concept_id=None):
-        super().__init__(entity='DimensionProperty')
+    def __init__(
+        self,
+        entity_id,
+        identifier,
+        entity_range,
+        label=None,
+        description=None,
+        concept_id=None,
+    ):
+        super().__init__(entity="DimensionProperty")
         self.data = {
             "id": f"urn:ngsi-ld:DimensionProperty:{entity_id}",
             "type": "DimensionProperty",
-            "language": {
-                "type": "Property",
-                "value": ["en"]
-            },
+            "language": {"type": "Property", "value": ["en"]},
             "label": {
                 "type": "Property",
                 "value": {
                     "en": label,
-                }
+                },
             },
             "description": {
                 "type": "Property",
                 "value": {
                     "en": description,
-                }
+                },
             },
             "concept": {
                 "type": "Relationship",
-                "object": f"urn:ngsi-ld:Concept:{concept_id}"
+                "object": f"urn:ngsi-ld:Concept:{concept_id}",
             },
-            "identifier": {
-                "type": "Property",
-                "value": identifier
-            },
-            "range": {
-                "type": "Property",
-                "value": entity_range
-            },
+            "identifier": {"type": "Property", "value": identifier},
+            "range": {"type": "Property", "value": entity_range},
             "@context": [
                 "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
-            ]
+            ],
         }
 
         # We need to check if some of the parameters are None, in that case we have to pop the key from data
         if label is None:
-            self.data.pop('label')
+            self.data.pop("label")
 
         if description is None:
-            self.data.pop('description')
+            self.data.pop("description")
 
         if concept_id is None:
-            self.data.pop('concept')
+            self.data.pop("concept")

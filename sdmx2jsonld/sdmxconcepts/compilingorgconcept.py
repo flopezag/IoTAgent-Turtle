@@ -31,7 +31,9 @@ class CompilingOrgConcept(SDMXConcept):
         #     skos:notation
         #     "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].COMPILING_ORG";
         #     skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='compilingOrg',
-                         label='Compiling agency',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept='
-                                  'SDMX:CROSS_DOMAIN_CONCEPTS[1.0].COMPILING_ORG')
+        super().__init__(
+            entity_id="compilingOrg",
+            label="Compiling agency",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept="
+            "SDMX:CROSS_DOMAIN_CONCEPTS[1.0].COMPILING_ORG",
+        )

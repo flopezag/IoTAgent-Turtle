@@ -30,10 +30,12 @@ class RefArea(SDMXDimension):
         #   rdfs:label "Reference Area"@en;
         #   rdfs:comment "The country or geographic area to which the measured statistical phenomenon relates."@en;
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity_id='refArea',
-                         label='Reference Area',
-                         description='The country or geographic area to which the measured statistical '
-                                     'phenomenon relates.',
-                         concept_id='refArea',
-                         identifier='refArea',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="refArea",
+            label="Reference Area",
+            description="The country or geographic area to which the measured statistical "
+            "phenomenon relates.",
+            concept_id="refArea",
+            identifier="refArea",
+            entity_range="xsd:string",
+        )

@@ -27,22 +27,17 @@ class CogConceptSchema(CommonClass):
         # sdmx-concept:cog a skos:ConceptScheme;
         #   rdfs:label "Content Oriented Guidelines concept scheme"@en;
         #   rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity='ConceptSchema')
+        super().__init__(entity="ConceptSchema")
 
         self.data = {
             "id": "urn:ngsi-ld:ConceptSchema:cog",
             "type": "ConceptScheme",
-            "language": {
-                "type": "Property",
-                "value": ["en"]
-            },
+            "language": {"type": "Property", "value": ["en"]},
             "prefLabel": {
                 "type": "Property",
-                "value": {
-                    "en": "Content Oriented Guidelines concept scheme"
-                }
+                "value": {"en": "Content Oriented Guidelines concept scheme"},
             },
             "@context": [
                 "https://raw.githubusercontent.com/smart-data-models/dataModel.STAT-DCAT-AP/master/context.jsonld"
-            ]
+            ],
         }

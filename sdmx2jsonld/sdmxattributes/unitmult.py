@@ -30,10 +30,12 @@ class UnitMult(SDMXAttribute):
         #     rdfs:comment """Exponent in base 10 specified so that multiplying the observation
         #     numeric values by 10^UNIT_MULT gives a value expressed in the UNIT."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='unitMult',
-                         label='Unit Multiplier',
-                         description='Exponent in base 10 specified so that multiplying the observation numeric '
-                                     'values by 10^UNIT_MULT gives a value expressed in the UNIT.',
-                         concept_id='unitMult',
-                         identifier='unitMult',
-                         entity_range='xsd:integer')
+        super().__init__(
+            entity_id="unitMult",
+            label="Unit Multiplier",
+            description="Exponent in base 10 specified so that multiplying the observation numeric "
+            "values by 10^UNIT_MULT gives a value expressed in the UNIT.",
+            concept_id="unitMult",
+            identifier="unitMult",
+            entity_range="xsd:integer",
+        )

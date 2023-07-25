@@ -29,9 +29,11 @@ class DissOrg(SDMXAttribute):
         #     rdfs:label "Data Dissemination Agency"@en ;
         #     rdfs:comment """The organisation disseminating the data."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='dissOrg',
-                         label='Data Dissemination Agency',
-                         description='The organisation disseminating the data.',
-                         concept_id='dissOrg',
-                         identifier='dissOrg',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="dissOrg",
+            label="Data Dissemination Agency",
+            description="The organisation disseminating the data.",
+            concept_id="dissOrg",
+            identifier="dissOrg",
+            entity_range="xsd:string",
+        )

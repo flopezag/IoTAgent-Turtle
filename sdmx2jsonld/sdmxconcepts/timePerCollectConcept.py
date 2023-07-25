@@ -34,7 +34,9 @@ class TimePerCollectConcept(SDMXConcept):
         #     "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS[1.0].TIME_PER_COLLECT";
         #     skos:broader sdmx-concept:timePeriod;
         #     skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='timePerCollect',
-                         label='Time Period - collection',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].TIME_PER_COLLECT')
+        super().__init__(
+            entity_id="timePerCollect",
+            label="Time Period - collection",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
+            "CROSS_DOMAIN_CONCEPTS[1.0].TIME_PER_COLLECT",
+        )

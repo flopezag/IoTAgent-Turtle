@@ -31,7 +31,9 @@ class ObsStatusConcept(SDMXConcept):
         #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:
         #     CROSS_DOMAIN_CONCEPTS[1.0].OBS_STATUS";
         #     skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='obsStatus',
-                         label='Observation Status',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].OBS_STATUS')
+        super().__init__(
+            entity_id="obsStatus",
+            label="Observation Status",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
+            "CROSS_DOMAIN_CONCEPTS[1.0].OBS_STATUS",
+        )

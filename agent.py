@@ -26,12 +26,12 @@ from api.server import launch
 from sdmx2jsonld.exceptions import UnexpectedEOF, UnexpectedInput, UnexpectedToken
 from ngsild.ngsild_connector import NGSILDConnector
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = parse_cli()
 
-    if args['run'] is True:
-        file_in = args['--input']
-        generate_files = args['--output']
+    if args["run"] is True:
+        file_in = args["--input"]
+        generate_files = args["--output"]
 
         my_parser = Parser()
 
@@ -44,10 +44,8 @@ if __name__ == '__main__':
         except UnexpectedEOF as e:
             print(e)
 
-    elif args['server'] is True:
-        port = int(args['--port'])
-        host = args['--host']
+    elif args["server"] is True:
+        port = int(args["--port"])
+        host = args["--host"]
 
-        launch(app="api.server:application",
-               host=host,
-               port=port)
+        launch(app="api.server:application", host=host, port=port)

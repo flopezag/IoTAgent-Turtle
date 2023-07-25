@@ -31,7 +31,9 @@ class TimeFormatConcept(SDMXConcept):
         #     skos:notation "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:
         #     CROSS_DOMAIN_CONCEPTS[1.0].TIME_FORMAT";
         #     skos:inScheme sdmx-concept:cog .
-        super().__init__(entity_id='timeFormat',
-                         label='Time Format',
-                         notation='urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:'
-                                  'CROSS_DOMAIN_CONCEPTS[1.0].TIME_FORMAT')
+        super().__init__(
+            entity_id="timeFormat",
+            label="Time Format",
+            notation="urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:"
+            "CROSS_DOMAIN_CONCEPTS[1.0].TIME_FORMAT",
+        )

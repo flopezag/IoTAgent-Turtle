@@ -32,12 +32,14 @@ class Frequency(SDMXDimension):
         #    rdfs:label "Frequency"@en;
         #    rdfs:comment """The time interval at which observations occur over a given time period."""@en;
         #    rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf>.
-        super().__init__(entity_id='freq',
-                         label='Frequency',
-                         description='The time interval at which observations occur over a given time period.',
-                         concept_id='freq',
-                         identifier='freq',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="freq",
+            label="Frequency",
+            description="The time interval at which observations occur over a given time period.",
+            concept_id="freq",
+            identifier="freq",
+            entity_range="xsd:string",
+        )
 
     @staticmethod
     def fix_value(value):
@@ -47,7 +49,7 @@ class Frequency(SDMXDimension):
         # any other value will return an error
         value_upper = value.upper()
 
-        m = search('FREQ-(.*)', value_upper)
+        m = search("FREQ-(.*)", value_upper)
 
         if m is not None:
             status = m.group(1)

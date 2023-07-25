@@ -45,7 +45,7 @@ class ObsStatus(SDMXAttribute):
         "J",
         "N",
         "U",
-        "V"
+        "V",
     ]
 
     def __init__(self):
@@ -54,12 +54,14 @@ class ObsStatus(SDMXAttribute):
         #     rdfs:label "Observation Status"@en ;
         #     rdfs:comment """Information on the quality of a value or an unusual or missing value."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='obsStatus',
-                         label='Observation Status',
-                         description='Information on the quality of a value or an unusual or missing value.',
-                         concept_id='obsStatus',
-                         identifier='obsStatus',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="obsStatus",
+            label="Observation Status",
+            description="Information on the quality of a value or an unusual or missing value.",
+            concept_id="obsStatus",
+            identifier="obsStatus",
+            entity_range="xsd:string",
+        )
 
     def fix_value(self, value):
         # Need to check if the value received is in the list of possible values -> return that value
@@ -72,7 +74,7 @@ class ObsStatus(SDMXAttribute):
             return value_upper
         else:
             # we could receive a value in the format obsStatus-<value>
-            m = search('OBSSTATUS-(.*)', value_upper)
+            m = search("OBSSTATUS-(.*)", value_upper)
 
             if m is not None:
                 status = m.group(1)
@@ -80,9 +82,11 @@ class ObsStatus(SDMXAttribute):
                 if status in self.status:
                     return status
                 else:
-                    message = f"ObsStatus value is not included in the list of available values,\n" \
-                              f"    got:{value}\n" \
-                              f"    expected:{['obsStatus-'+x for x in self.status]}"
+                    message = (
+                        f"ObsStatus value is not included in the list of available values,\n"
+                        f"    got:{value}\n"
+                        f"    expected:{['obsStatus-'+x for x in self.status]}"
+                    )
 
                     raise ClassObsStatusError(data=value, message=message)
 

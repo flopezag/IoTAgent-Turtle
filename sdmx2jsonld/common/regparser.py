@@ -30,14 +30,14 @@ class RegParser:
         # Compile the Regex
         self.re = re.compile(regex)
 
-    def obtain_id(self, string_to_parse, prefix_string=''):
+    def obtain_id(self, string_to_parse, prefix_string=""):
         # Return if the string matched the ReGex
         out = self.re.match(string_to_parse)
 
         if out is None:
             # Check if the prefixed name include ':'
             try:
-                obtained_id = string_to_parse.split(':')[1]
+                obtained_id = string_to_parse.split(":")[1]
             except IndexError:
                 # We have a normal prefix or data
                 obtained_id = string_to_parse
@@ -47,6 +47,6 @@ class RegParser:
             out = out.split("/")
 
             # we get the last value which corresponds to the id
-            obtained_id = prefix_string + out[(len(out) - 1):][0]
+            obtained_id = prefix_string + out[(len(out) - 1) :][0]
 
         return obtained_id

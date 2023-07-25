@@ -30,64 +30,94 @@ class TestDataTypeConversion(TestCase):
 
     def test_string_to_integer(self):
         dtc = DataTypeConversion()
-        token_type = 'xsd:int'
+        token_type = "xsd:int"
         # token = Token('FORMATCONNECTOR', "432112")
 
         i: int = dtc.convert("432112", token_type)
-        assert (i == 432112)
+        assert i == 432112
 
         i = dtc.convert("-100", token_type)
-        assert (i == -100)
+        assert i == -100
 
         i = dtc.convert("19223372036854775808", token_type)
-        assert (i == 19223372036854775808)
+        assert i == 19223372036854775808
         assert type(i) is int
 
         try:
             dtc.convert("invalid value", token_type)
-            assert (False)
+            assert False
         except Exception:
-            assert (True)
+            assert True
 
     def test_string_to_bool(self):
         dtc = DataTypeConversion()
-        token_type = 'xsd:boolean'
+        token_type = "xsd:boolean"
 
         values = ("True", "true", "y", "yes", "T", "1", 1, True)
         for value in values:
-            assert (dtc.convert(f'"{value}"', token_type))
+            assert dtc.convert(f'"{value}"', token_type)
 
-        values = ("fAlsE", "False", "N", "No", "F", "0", "0.0", "", "None", None, [], {}, 0, 0.0)
+        values = (
+            "fAlsE",
+            "False",
+            "N",
+            "No",
+            "F",
+            "0",
+            "0.0",
+            "",
+            "None",
+            None,
+            [],
+            {},
+            0,
+            0.0,
+        )
         for value in values:
-            assert (not dtc.convert(f'"{value}"', token_type))
+            assert not dtc.convert(f'"{value}"', token_type)
 
         invalid_values = (5, 4.2, "invalid value", "nil")
         for value in invalid_values:
             try:
                 dtc.convert(value, token_type)
-                assert (False)
+                assert False
             except Exception:
-                assert (True)
+                assert True
 
     def test_string_to_dates(self):
         dtc = DataTypeConversion()
-        token_type = 'xsd:dateTime'
+        token_type = "xsd:dateTime"
 
-        dates = ('"2022-01-15T08:00:00.000+00:00"', '"2022-01-10T09:00:00.000"',
-                 '"2021-07-01T11:50:37.3"', '"2021-09-28T15:31:24.05"',
-                 '"Mon Jan 13 09:52:52 MST 2014"', '"Thu Jun 02 11:56:53 CDT 2011"',
-                 '"2022-12-12T10:00:00"', '"2022-05-11T10:00:00"',
-                 '"Tue Dec 13 11:00:00 K 2022"', '"2021-07-01T11:58:08.642000"')
-        expected = ("2022-01-15T08:00:00+00:00", "2022-01-10T08:00:00+00:00",
-                    "2021-07-01T09:50:37.300000+00:00", "2021-09-28T13:31:24.050000+00:00",
-                    "2014-01-13T16:52:52+00:00", "2011-06-02T16:56:53+00:00",
-                    "2022-12-12T09:00:00+00:00",  "2022-05-11T08:00:00+00:00",
-                    "2022-12-13T01:00:00+00:00", "2021-07-01T09:58:08.642000+00:00")
-                                               # "2021-07-01T09:58:08.642000+00:00"
+        dates = (
+            '"2022-01-15T08:00:00.000+00:00"',
+            '"2022-01-10T09:00:00.000"',
+            '"2021-07-01T11:50:37.3"',
+            '"2021-09-28T15:31:24.05"',
+            '"Mon Jan 13 09:52:52 MST 2014"',
+            '"Thu Jun 02 11:56:53 CDT 2011"',
+            '"2022-12-12T10:00:00"',
+            '"2022-05-11T10:00:00"',
+            '"Tue Dec 13 11:00:00 K 2022"',
+            '"2021-07-01T11:58:08.642000"',
+        )
+        expected = (
+            "2022-01-15T08:00:00+00:00",
+            "2022-01-10T08:00:00+00:00",
+            "2021-07-01T09:50:37.300000+00:00",
+            "2021-09-28T13:31:24.050000+00:00",
+            "2014-01-13T16:52:52+00:00",
+            "2011-06-02T16:56:53+00:00",
+            "2022-12-12T09:00:00+00:00",
+            "2022-05-11T08:00:00+00:00",
+            "2022-12-13T01:00:00+00:00",
+            "2021-07-01T09:58:08.642000+00:00",
+        )
+        # "2021-07-01T09:58:08.642000+00:00"
         d = zip(dates, expected)
 
         for test_date, expected_date in d:
-            assert (expected_date == dtc.convert(test_date, token_type))
+            assert expected_date == dtc.convert(test_date, token_type)
+
 
 class Test(TestCase):
     def setUp(self):
@@ -97,31 +127,39 @@ class Test(TestCase):
         """
         Check if we can get a correct datetime value from a string, case 1
         """
-        obtained = self.conversion.convert('"2022-01-15T08:00:00.000 UTC"', 'xsd:dateTime')
-        expected = '2022-01-15T08:00:00+00:00'
-        assert obtained == expected, f"\n\nDateTime was not the expected," \
-                                     f"\n    got     : {obtained}" \
-                                     f"\n    expected: {expected}"
+        obtained = self.conversion.convert(
+            '"2022-01-15T08:00:00.000 UTC"', "xsd:dateTime"
+        )
+        expected = "2022-01-15T08:00:00+00:00"
+        assert obtained == expected, (
+            f"\n\nDateTime was not the expected,"
+            f"\n    got     : {obtained}"
+            f"\n    expected: {expected}"
+        )
 
     def test_int_string_conversion(self):
         """
         Check if we can get a correct integer from a string
         """
-        obtained = self.conversion.convert('"2"', 'xsd:int')
+        obtained = self.conversion.convert('"2"', "xsd:int")
         expected = 2
-        assert obtained == expected, f"\n\nInteger was not the expected," \
-                                     f"\n    got     : {obtained} {type(obtained)}" \
-                                     f"\n    expected: {expected} {type(expected)}"
+        assert obtained == expected, (
+            f"\n\nInteger was not the expected,"
+            f"\n    got     : {obtained} {type(obtained)}"
+            f"\n    expected: {expected} {type(expected)}"
+        )
 
     def test_int_integer_conversion(self):
         """
         Check if we can get a correct integer from an integer
         """
-        obtained = self.conversion.convert('2', 'xsd:int')
+        obtained = self.conversion.convert("2", "xsd:int")
         expected = 2
-        assert obtained == expected, f"\n\nInteger was not the expected," \
-                                     f"\n    got     : {obtained} {type(obtained)}" \
-                                     f"\n    expected: {expected} {type(expected)}"
+        assert obtained == expected, (
+            f"\n\nInteger was not the expected,"
+            f"\n    got     : {obtained} {type(obtained)}"
+            f"\n    expected: {expected} {type(expected)}"
+        )
 
         # # print(dataConversionType.convert(data23[0], data23[2]) + 10)
         #
@@ -130,21 +168,22 @@ class Test(TestCase):
         """
         Check if we can convert a boolean string into its proper value
         """
-        obtained = self.conversion.convert('"true"', 'xsd:boolean')
+        obtained = self.conversion.convert('"true"', "xsd:boolean")
         expected = True
-        assert obtained == expected, f"\n\nBoolean was not the expected," \
-                                     f"\n    got     : {obtained} {type(obtained)}" \
-                                     f"\n    expected: {expected} {type(expected)}"
+        assert obtained == expected, (
+            f"\n\nBoolean was not the expected,"
+            f"\n    got     : {obtained} {type(obtained)}"
+            f"\n    expected: {expected} {type(expected)}"
+        )
 
     def test_fake_conversion(self):
         """
         Check is a fake value data launch an exception
         """
         with self.assertRaises(Exception) as error:
-            _ = self.conversion.convert('"fake"', 'otraCosa')
+            _ = self.conversion.convert('"fake"', "otraCosa")
 
-        self.assertEqual(str(error.exception),
-                         "Datatype not defined: otraCosa")
+        self.assertEqual(str(error.exception), "Datatype not defined: otraCosa")
 
         # # Convert datetime generated into UTC format: 2021-12-21T16:18:55Z or 2021-12-21T16:18:55+00:00, ISO8601
         #
@@ -162,18 +201,22 @@ class Test(TestCase):
         """
         Check if we can get a correct integer from an string
         """
-        obtained = self.conversion.convert('2345.2', 'xsd:float')
+        obtained = self.conversion.convert("2345.2", "xsd:float")
         expected = 2345.2
-        assert obtained == expected, f"\n\nInteger was not the expected," \
-                                     f"\n    got     : {obtained} {type(obtained)}" \
-                                     f"\n    expected: {expected} {type(expected)}"
+        assert obtained == expected, (
+            f"\n\nInteger was not the expected,"
+            f"\n    got     : {obtained} {type(obtained)}"
+            f"\n    expected: {expected} {type(expected)}"
+        )
 
     def test_float_string_conversion(self):
         """
         Check if we can get a correct integer from an integer
         """
-        obtained = self.conversion.convert('"3016.9"', 'xsd:float')
+        obtained = self.conversion.convert('"3016.9"', "xsd:float")
         expected = 3016.9
-        assert obtained == expected, f"\n\nFloat was not the expected," \
-                                     f"\n    got     : {obtained} {type(obtained)}" \
-                                     f"\n    expected: {expected} {type(expected)}"
+        assert obtained == expected, (
+            f"\n\nFloat was not the expected,"
+            f"\n    got     : {obtained} {type(obtained)}"
+            f"\n    expected: {expected} {type(expected)}"
+        )

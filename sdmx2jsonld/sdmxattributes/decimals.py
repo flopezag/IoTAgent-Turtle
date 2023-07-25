@@ -29,9 +29,11 @@ class Decimals(SDMXAttribute):
         #     rdfs:label "Decimals"@en ;
         #     rdfs:comment """The number of digits of an observation to the right of a decimal point."""@en ;
         #     rdfs:isDefinedBy <https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> .
-        super().__init__(entity_id='decimals',
-                         label='Decimals',
-                         description='The number of digits of an observation to the right of a decimal point.',
-                         concept_id='decimals',
-                         identifier='decimals',
-                         entity_range='xsd:integer')
+        super().__init__(
+            entity_id="decimals",
+            label="Decimals",
+            description="The number of digits of an observation to the right of a decimal point.",
+            concept_id="decimals",
+            identifier="decimals",
+            entity_range="xsd:integer",
+        )

@@ -31,11 +31,13 @@ class MeasureType(SDMXDimension):
         #     rdfs:comment "Generic measure dimension, the value of this dimension indicates which measure (from the set of measures in the DSD) is being given by the obsValue (or other primary measure)"@en;
         #     rdfs:range  qb:MeasureProperty;
         #     rdfs:isDefinedBy <http://purl.org/linked-data/cube>;
-        super().__init__(entity_id='measureType',
-                         label='measure type',
-                         description='Generic measure dimension, the value of this dimension indicates which measure '
-                                     '(from the set of measures in the DSD) is being given by the obsValue '
-                                     '(or other primary measure).',
-                         concept_id=None,
-                         identifier='measureType',
-                         entity_range='xsd:string')
+        super().__init__(
+            entity_id="measureType",
+            label="measure type",
+            description="Generic measure dimension, the value of this dimension indicates which measure "
+            "(from the set of measures in the DSD) is being given by the obsValue "
+            "(or other primary measure).",
+            concept_id=None,
+            identifier="measureType",
+            entity_range="xsd:string",
+        )
