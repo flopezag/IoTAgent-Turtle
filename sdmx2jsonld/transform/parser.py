@@ -33,7 +33,7 @@ from sdmx2jsonld.transform.distribution import Distribution
 
 
 logger = getLogger(__name__)
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 
 class Parser:
