@@ -95,8 +95,8 @@ class Property(CommonClass):
         # TODO: We need to control that the codeList id extracted here are the same that we analyse afterwards.
         try:
             position = data.index("qb:codeList") + 1
-            code_list = self.generate_id(entity="ConceptSchema", value=data[position][0])
-            self.data["codeList"]["object"] = code_list
+            code_list, uri = self.generate_id(entity="ConceptSchema", value=data[position][0])
+            self.data["codeList"]["object"] = uri
         except ValueError:
             logger.warning(f"Property: {property_id} has not qb:codeList, deleting the key in the data")
 
@@ -106,8 +106,8 @@ class Property(CommonClass):
         # qb:concept
         # TODO: the concept id need to check if it is a normal id or an url
         position = data.index("qb:concept") + 1
-        concept = self.generate_id(entity="Concept", value=data[position][0])
-        self.data["concept"]["object"] = concept
+        concept, uri = self.generate_id(entity="Concept", value=data[position][0])
+        self.data["concept"]["object"] = uri
 
         # Get the rest of the data
         data = get_rest_data(
