@@ -1,5 +1,5 @@
 # python3.11, virtualenv -ppython3.11 .venv
-lark==1.1.8
+lark==1.1.9
 secure==0.3.0
 docopt==0.6.2
 schema==0.7.5
