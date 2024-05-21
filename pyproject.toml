@@ -40,7 +40,7 @@ types-docopt = "0.6.11.4"
 types-pytz = "2024.1.0.20240417"
 types-python-dateutil = "2.9.0.20240316"
 types-requests = "2.31.0.20240406"
-coverage = "7.4.3"
+coverage = "7.5.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
